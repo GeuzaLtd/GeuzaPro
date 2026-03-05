@@ -93,12 +93,13 @@ export default function SignInView() {
           {/* Logo */}
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
             <Link href="/" className="inline-block">
-              <span className="text-2xl font-bold">
-                <span className="text-[#0F9E59]">G</span>
-                <span className="text-[#FF7900]">e</span>
-                <span className="text-[#0F9E59]">uza</span>
-              </span>
-              <span className="text-xs text-white/30 ml-1.5 block">Old but still Gold</span>
+              <Image
+              src="/images/logo.png"
+              alt="Geuza Logo"
+              width={100}
+              height={30}
+              className="object-contain"
+              />
             </Link>
           </motion.div>
 
@@ -150,11 +151,13 @@ export default function SignInView() {
         <div className="flex items-center justify-between px-6 md:px-10 py-6 border-b border-gray-100">
           {/* Mobile logo */}
           <Link href="/" className="lg:hidden">
-            <span className="text-xl font-bold">
-              <span className="text-[#0F9E59]">G</span>
-              <span className="text-[#FF7900]">e</span>
-              <span className="text-[#0F9E59]">uza</span>
-            </span>
+            <Image
+              src="/images/logo.png"
+              alt="Geuza Logo"
+              width={100}
+              height={30}
+              className="object-contain"
+              />
           </Link>
           <Link
             href="/"
