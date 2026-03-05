@@ -1,0 +1,116 @@
+'use client';
+
+import React, { useState } from 'react';
+import { SectionHeader, Button } from './ui';
+
+export default function Contact() {
+  const [formData, setFormData] = useState({
+    fullName: '',
+    phoneNumber: '',
+    email: '',
+    organizationType: '',
+    message: '',
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
+  };
+
+  return (
+    <section id="contact" className="py-16 md:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
+        <SectionHeader title="Contact us" />
+
+        <div className="grid md:grid-cols-2 gap-12">
+          {/* Map */}
+          <div className="relative h-[300px] md:h-full min-h-[400px] rounded-xl overflow-hidden bg-gray-200">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63800.41674005383!2d30.0186622!3d-1.9402771!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca4258ed8e797%3A0xf32b36a5411d0bc8!2sKigali%2C%20Rwanda!5e0!3m2!1sen!2sus!4v1635000000000!5m2!1sen!2sus"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Geuza Location Map"
+            />
+          </div>
+
+          {/* Form */}
+          <div>
+            <h3 className="text-xl font-bold text-gray-900 mb-6">
+              Get in Touch With us
+            </h3>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  name="fullName"
+                  placeholder="Full name"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F9E59] focus:border-transparent"
+                  required
+                />
+                <input
+                  type="tel"
+                  name="phoneNumber"
+                  placeholder="Phone number"
+                  value={formData.phoneNumber}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F9E59] focus:border-transparent"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email address"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F9E59] focus:border-transparent"
+                  required
+                />
+                <select
+                  name="organizationType"
+                  value={formData.organizationType}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F9E59] focus:border-transparent text-gray-500"
+                  required
+                >
+                  <option value="">Organization Type</option>
+                  <option value="ngo">NGO</option>
+                  <option value="government">Government</option>
+                  <option value="private">Private Company</option>
+                  <option value="individual">Individual</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <textarea
+                name="message"
+                placeholder="Message"
+                value={formData.message}
+                onChange={handleChange}
+                rows={5}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F9E59] focus:border-transparent resize-none"
+                required
+              />
+              <div className="flex justify-end">
+                <Button type="submit">Send Message</Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

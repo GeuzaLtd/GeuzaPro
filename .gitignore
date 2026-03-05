@@ -46,7 +46,3 @@ next-env.d.ts
 /.claude/
 
 prompt.*
-
-/app/
-/components/
-/lib/
