@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const navigationLinks = [
   { name: 'Company', href: '/company' },
@@ -31,23 +32,22 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Logo and Description */}
           <div>
-            <Link href="/" className="inline-block mb-4">
-              <span className="text-2xl font-bold">
-                <span className="text-[#0F9E59]">G</span>
-                <span className="text-[#FF7900]">e</span>
-                <span className="text-[#0F9E59]">u</span>
-                <span className="text-[#0F9E59]">z</span>
-                <span className="text-[#0F9E59]">a</span>
-              </span>
-              <span className="text-xs text-gray-400 ml-1 block">Old but still Gold</span>
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/images/logo.png"
+                alt="Geuza Logo"
+                width={120}
+                height={40}
+                className="object-contain"
+              />
             </Link>
             <p className="text-gray-400 text-sm mb-6">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Transforming E-Waste into Smart Assistive Devices
             </p>
             <div className="flex gap-4">
               <a
                 href="#"
-                className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-[#0F9E59] hover:text-[#0F9E59] transition-colors"
+                className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
                 aria-label="Facebook"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -56,7 +56,7 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-[#0F9E59] hover:text-[#0F9E59] transition-colors"
+                className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
                 aria-label="Twitter"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -65,7 +65,7 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-[#0F9E59] hover:text-[#0F9E59] transition-colors"
+                className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
                 aria-label="Instagram"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -83,9 +83,9 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-[#FF7900] transition-colors flex items-center gap-2"
+                    className="text-gray-400 hover:text-secondary transition-colors flex items-center gap-2"
                   >
-                    <span className="w-2 h-2 rounded-full bg-[#FF7900]"></span>
+                    <span className="w-2 h-2 rounded-full bg-secondary"></span>
                     {link.name}
                   </Link>
                 </li>
@@ -101,9 +101,9 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-[#FF7900] transition-colors flex items-center gap-2"
+                    className="text-gray-400 hover:text-secondary transition-colors flex items-center gap-2"
                   >
-                    <span className="w-2 h-2 rounded-full bg-[#FF7900]"></span>
+                    <span className="w-2 h-2 rounded-full bg-secondary"></span>
                     {link.name}
                   </Link>
                 </li>
@@ -114,21 +114,18 @@ export default function Footer() {
           {/* Subscribe */}
           <div>
             <h3 className="font-semibold text-lg mb-4">Subscribe</h3>
-            <p className="text-gray-400 text-sm mb-4">
-              Lorem ipsum dolor sit amet, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
             <form onSubmit={handleSubscribe} className="flex">
               <input
                 type="email"
                 placeholder="Email Address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 px-4 py-2 bg-transparent border border-gray-600 rounded-l-lg focus:outline-none focus:border-[#0F9E59] text-sm"
+                className="flex-1 px-4 py-2 bg-transparent border border-gray-600 rounded-l-lg focus:outline-none focus:border-primary text-sm"
                 required
               />
               <button
                 type="submit"
-                className="px-4 py-2 bg-[#FF7900] text-white rounded-r-lg hover:bg-[#e66d00] transition-colors text-sm font-medium"
+                className="px-4 py-2 bg-secondary text-white rounded-r-lg hover:bg-secondary-dark transition-colors text-sm font-medium"
               >
                 Send
               </button>
@@ -143,7 +140,7 @@ export default function Footer() {
           </p>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="w-10 h-10 rounded-full border-2 border-[#FF7900] flex items-center justify-center hover:bg-[#FF7900] transition-colors"
+            className="w-10 h-10 rounded-full border-2 border-secondary flex items-center justify-center hover:bg-secondary transition-colors"
             aria-label="Scroll to top"
           >
             <svg

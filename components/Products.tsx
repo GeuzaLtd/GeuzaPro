@@ -81,7 +81,7 @@ export default function Products() {
           <SectionHeader title="Products" className="mb-0" />
           <Link
             href="#"
-            className="text-gray-500 hover:text-[#0F9E59] text-sm font-medium transition-colors"
+            className="text-gray-500 hover:text-primary text-sm font-medium transition-colors"
           >
             View all →
           </Link>
@@ -121,7 +121,7 @@ export default function Products() {
                   unoptimized
                 />
                 {/* Stock badge */}
-                <span className="absolute top-2 left-2 text-[10px] font-semibold tracking-wider uppercase bg-[#0F9E59]/10 text-[#0F9E59] px-2 py-0.5 rounded-full">
+                <span className="absolute top-2 left-2 text-[10px] font-semibold tracking-wider uppercase bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                   {product.inStock ? 'In Stock' : 'Out of Stock'}
                 </span>
               </div>
@@ -132,11 +132,11 @@ export default function Products() {
                   <h3 className="font-semibold text-gray-900 text-sm leading-snug">
                     {product.name}
                   </h3>
-                  <p className="text-[#0F9E59] font-bold mt-1">{product.price}</p>
+                  <p className="text-primary font-bold mt-1">{product.price}</p>
                 </div>
 
                 <button
-                  className="flex-shrink-0 p-2.5 bg-white rounded-xl shadow-sm border border-gray-100 hover:bg-[#0F9E59] hover:text-white hover:border-[#0F9E59] transition-all duration-200 text-gray-600"
+                  className="flex-shrink-0 p-2.5 bg-white rounded-xl shadow-sm border border-gray-100 hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 text-gray-600"
                   aria-label="Add to cart"
                 >
                   <HiOutlineShoppingCart size={18} />

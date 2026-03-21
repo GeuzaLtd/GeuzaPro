@@ -48,14 +48,14 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="flex items-center justify-between px-4 h-16 border-b border-white/10 flex-shrink-0">
         {!collapsed && (
-          <Link href="/" className="flex flex-col min-w-0">  
+          <Link href="/" className="flex flex-col min-w-0">
             <Image
               src="/images/logo.png"
               alt="Geuza Logo"
               width={60}
               height={15}
               className="object-contain"
-              />
+            />
             <span className="text-[10px] text-white/30 mt-0.5 whitespace-nowrap">Admin Dashboard</span>
           </Link>
         )}
@@ -81,7 +81,7 @@ export default function Sidebar() {
               title={collapsed ? label : undefined}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
                 active
-                  ? 'bg-[#0F9E59] text-white shadow-lg shadow-[#0F9E59]/20'
+                  ? 'bg-primary text-white shadow-lg shadow-primary/20'
                   : 'text-white/50 hover:text-white hover:bg-white/8'
               }`}
             >
@@ -115,7 +115,7 @@ export default function Sidebar() {
         {/* Admin profile */}
         {!collapsed && (
           <div className="flex items-center gap-3 px-3 py-3 mt-1 border-t border-white/10">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#0F9E59] to-[#1bc870] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
               AD
             </div>
             <div className="min-w-0">

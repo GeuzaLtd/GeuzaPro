@@ -26,8 +26,8 @@ export default function AdminTable<T extends { id: string | number }>({
   pageSize = 8,
   actions,
 }: AdminTableProps<T>) {
-  const [query, setQuery]   = useState('');
-  const [page, setPage]     = useState(1);
+  const [query, setQuery]       = useState('');
+  const [page, setPage]         = useState(1);
   const [sortKey, setSortKey]   = useState<string | null>(null);
   const [sortAsc, setSortAsc]   = useState(true);
 
@@ -65,7 +65,7 @@ export default function AdminTable<T extends { id: string | number }>({
       {/* Search bar */}
       {searchKeys.length > 0 && (
         <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100 flex-1 max-w-xs focus-within:border-[#0F9E59]/40 focus-within:ring-2 focus-within:ring-[#0F9E59]/10 transition-all">
+          <div className="flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100 flex-1 max-w-xs focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10 transition-all">
             <HiOutlineSearch size={14} className="text-gray-400 flex-shrink-0" />
             <input
               type="text"
@@ -96,7 +96,7 @@ export default function AdminTable<T extends { id: string | number }>({
                 >
                   {col.label}
                   {col.sortable && sortKey === col.key && (
-                    <span className="ml-1 text-[#0F9E59]">{sortAsc ? '↑' : '↓'}</span>
+                    <span className="ml-1 text-primary">{sortAsc ? '↑' : '↓'}</span>
                   )}
                 </th>
               ))}
@@ -165,7 +165,7 @@ export default function AdminTable<T extends { id: string | number }>({
                 onClick={() => setPage(p)}
                 className={`w-8 h-8 rounded-lg text-xs font-semibold transition-all ${
                   p === page
-                    ? 'bg-[#0F9E59] text-white shadow-sm'
+                    ? 'bg-primary text-white shadow-sm'
                     : 'border border-gray-200 text-gray-500 hover:bg-gray-50'
                 }`}
               >

@@ -3,23 +3,23 @@ interface StatusBadgeProps {
 }
 
 const STATUS_STYLES: Record<string, string> = {
-  published:  'bg-[#0F9E59]/10 text-[#0F9E59]',
+  published:  'bg-primary/10 text-primary',
   draft:      'bg-gray-100 text-gray-500',
-  active:     'bg-[#0F9E59]/10 text-[#0F9E59]',
+  active:     'bg-primary/10 text-primary',
   inactive:   'bg-gray-100 text-gray-400',
   pending:    'bg-yellow-50 text-yellow-600',
-  completed:  'bg-[#0F9E59]/10 text-[#0F9E59]',
+  completed:  'bg-primary/10 text-primary',
   processing: 'bg-blue-50 text-blue-600',
   cancelled:  'bg-red-50 text-red-500',
-  refunded:   'bg-orange-50 text-[#FF7900]',
-  confirmed:  'bg-[#0F9E59]/10 text-[#0F9E59]',
+  refunded:   'bg-secondary/10 text-secondary',
+  confirmed:  'bg-primary/10 text-primary',
   failed:     'bg-red-50 text-red-500',
-  in_stock:   'bg-[#0F9E59]/10 text-[#0F9E59]',
+  in_stock:   'bg-primary/10 text-primary',
   low_stock:  'bg-yellow-50 text-yellow-600',
   out_stock:  'bg-red-50 text-red-500',
   admin:      'bg-purple-50 text-purple-600',
   user:       'bg-blue-50 text-blue-600',
-  donor:      'bg-[#FF7900]/10 text-[#FF7900]',
+  donor:      'bg-secondary/10 text-secondary',
 };
 
 export default function StatusBadge({ status }: StatusBadgeProps) {

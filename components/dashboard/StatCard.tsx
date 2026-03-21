@@ -19,7 +19,7 @@ export default function StatCard({
   change,
   positive = true,
   icon: Icon,
-  color = '#0F9E59',
+  color = 'var(--color-primary)',
   index = 0,
 }: StatCardProps) {
   return (
@@ -32,7 +32,7 @@ export default function StatCard({
       <div className="flex items-start justify-between mb-4">
         <div
           className="w-10 h-10 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
-          style={{ backgroundColor: `${color}18` }}
+          style={{ backgroundColor: `color-mix(in srgb, ${color} 10%, transparent)` }}
         >
           <Icon size={20} style={{ color }} />
         </div>
@@ -40,7 +40,7 @@ export default function StatCard({
           <span
             className={`text-xs font-semibold px-2 py-1 rounded-full ${
               positive
-                ? 'text-[#0F9E59] bg-[#0F9E59]/10'
+                ? 'text-primary bg-primary/10'
                 : 'text-red-500 bg-red-50'
             }`}
           >

@@ -51,20 +51,17 @@ export default function Hero() {
   };
 
   return (
-    <section className="bg-[#0F9E59] min-h-[600px] relative overflow-hidden">
+    <section className="bg-primary min-h-[600px] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-16 md:py-24">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           {/* Left Content */}
           <div className="text-white z-10">
-            <p className="text-[#FF7900] font-semibold mb-4 tracking-wide">
+            <p className="text-secondary font-semibold mb-4 tracking-wide">
               WELCOME TO GEUZA
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-              We are Redefining smart assistive devices
+              Transforming E-Waste into Smart Assistive Devices
             </h1>
-            <p className="text-lg md:text-xl opacity-90 max-w-lg">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
           </div>
 
           {/* Right Image Slideshow */}
@@ -90,40 +87,6 @@ export default function Hero() {
                 />
               </motion.div>
             </AnimatePresence>
-
-            {/* Prev button */}
-            <button
-              onClick={prev}
-              aria-label="Previous image"
-              className="absolute left-2 z-10 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 transition-colors"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            {/* Next button */}
-            <button
-              onClick={next}
-              aria-label="Next image"
-              className="absolute right-2 z-10 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 transition-colors"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-
-            {/* Dot indicators */}
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-              {heroImages.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => { setSlide(([prev]) => [i, i > prev ? 1 : -1]); startTimer(); }}
-                  aria-label={`Go to image ${i + 1}`}
-                  className={`w-2 h-2 rounded-full transition-colors ${i === activeIndex ? 'bg-white' : 'bg-white/40'}`}
-                />
-              ))}
-            </div>
           </div>
         </div>
       </div>

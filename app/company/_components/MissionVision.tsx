@@ -10,10 +10,7 @@ export default function MissionVision() {
               Mission
             </h2>
             <p className="text-gray-600 leading-relaxed text-sm md:text-base">
-              At Geuza, our mission is to transform lives by designing smart, affordable
-              mobility devices that combines sustainable materials with advanced technology.
-              We are committed to making mobility accessible, safe, and empowering ensuring
-              every product we create delivers purpose-driven impact for those who need it most.
+              To transform lives by designing smart, affordable assistive devices that combine sustainable recycled materials with advanced technology and making devices accessible, safe, and empowering for those who need it most.
             </p>
           </div>
 

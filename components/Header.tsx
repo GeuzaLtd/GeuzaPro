@@ -18,7 +18,6 @@ export default function Header() {
     <header className="bg-white py-4 px-4 md:px-8 lg:px-16 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
-        
         <Link href="/" className="flex items-center">
           <Image
             src="/images/logo.png"
@@ -35,7 +34,7 @@ export default function Header() {
             <Link
               key={link.name}
               href={link.href}
-              className="text-gray-700 hover:text-[#0F9E59] font-medium transition-colors"
+              className="text-gray-700 hover:text-primary font-medium transition-colors"
             >
               {link.name}
             </Link>
@@ -46,17 +45,16 @@ export default function Header() {
         <div className="hidden md:flex items-center gap-4">
           <Link
             href="/sign-in"
-            className="px-6 py-2 border-2 border-[#0F9E59] text-[#0F9E59] rounded-full font-medium hover:bg-[#0F9E59] hover:text-white transition-all"
+            className="px-6 py-2 border-2 border-primary text-primary rounded-full font-medium hover:bg-primary hover:text-white transition-all"
           >
             Sign in
           </Link>
           <Link
             href="/donate"
-            className="px-6 py-2 bg-[#0F9E59] text-white rounded-full font-medium hover:bg-[#0d8a4d] transition-all"
+            className="px-6 py-2 bg-primary text-white rounded-full font-medium hover:bg-primary-dark transition-all"
           >
             Donate
           </Link>
-
         </div>
 
         {/* Mobile Menu Button */}
@@ -98,7 +96,7 @@ export default function Header() {
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-gray-700 hover:text-[#0F9E59] font-medium transition-colors"
+                className="text-gray-700 hover:text-primary font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {link.name}
@@ -107,13 +105,13 @@ export default function Header() {
             <div className="flex flex-col gap-3 mt-4">
               <Link
                 href="#"
-                className="px-6 py-2 border-2 border-[#0F9E59] text-[#0F9E59] rounded-full font-medium text-center hover:bg-[#0F9E59] hover:text-white transition-all"
+                className="px-6 py-2 border-2 border-primary text-primary rounded-full font-medium text-center hover:bg-primary hover:text-white transition-all"
               >
                 Sign in
               </Link>
               <Link
                 href="/donate"
-                className="px-6 py-2 bg-[#0F9E59] text-white rounded-full font-medium text-center hover:bg-[#0d8a4d] transition-all"
+                className="px-6 py-2 bg-primary text-white rounded-full font-medium text-center hover:bg-primary-dark transition-all"
               >
                 Donate
               </Link>

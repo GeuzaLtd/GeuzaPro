@@ -25,7 +25,7 @@ export default function PageHeader({ title, description, breadcrumbs, action }: 
                 {b.href ? (
                   <Link
                     href={b.href}
-                    className="text-xs text-gray-400 hover:text-[#0F9E59] transition-colors font-medium"
+                    className="text-xs text-gray-400 hover:text-primary transition-colors font-medium"
                   >
                     {b.label}
                   </Link>

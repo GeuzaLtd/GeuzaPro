@@ -12,19 +12,19 @@ const accordionItems = [
     id: 'sustainability',
     icon: TbRecycle,
     title: 'Sustainability',
-    content: 'We transform electronic waste into valuable assistive devices, reducing environmental impact while creating meaningful solutions.',
+    content: 'We advance a circular innovation model that transforms electronic waste into high-quality, affordable assistive technologies, reducing environmental harm while expanding access to essential support solutions for people living with disabilities, injuries, aging-related conditions, and other long-term health needs.',
   },
   {
     id: 'inclusion',
     icon: HiOutlineUserGroup,
     title: 'Inclusion',
-    content: 'Our mission is to make assistive technology accessible to everyone, regardless of their economic background.',
+    content: 'GEUZA envisions a future where access to assistive technology is not a privilege but a universal standard, where innovation restores independence, circular solutions protect our planet, and no one is left behind in the progress of technology.',
   },
   {
     id: 'innovation',
     icon: HiOutlineLightBulb,
     title: 'Innovation',
-    content: 'We continuously develop new ways to repurpose e-waste into functional and affordable assistive devices.',
+    content: 'At the intersection of circular engineering and health technology, electronic waste is transformed into smart assistive devices powered by IoT sensors and intelligent data systems, unlocking new possibilities for rehabilitation, accessibility, and the future of assistive technology.',
   },
 ];
 
@@ -44,13 +44,13 @@ export default function About() {
           {/* Image — fixed position, unaffected by accordion */}
           <div className="relative h-[300px] md:h-[480px] rounded-2xl overflow-hidden shadow-lg">
             <Image
-              src="/images/about-image.avif"
+              src="/images/ewaste-image.png"
               alt="Recycling bins for e-waste"
               fill
               className="object-cover"
             />
             {/* Subtle green overlay badge */}
-            <div className="absolute bottom-2 left-4 bg-[#0F9E59] text-white text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-full shadow">
+            <div className="absolute bottom-2 left-4 bg-primary text-white text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-full shadow">
               Est. 2023
             </div>
           </div>
@@ -58,11 +58,10 @@ export default function About() {
           {/* Content */}
           <div>
             <h3 className="font-display text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
-              Transforming E-Waste<br />into Empowerment
+              Transforming E-Waste<br />into life-changing assistive technology.
             </h3>
             <p className="text-gray-500 mb-8 leading-relaxed">
-              Born from a vision to address both disability access and environmental waste,
-              GEUZA has grown into a movement for inclusive circular solutions.
+              At GEUZA, we transform discarded electronics into smart, affordable assistive devices through circular innovation and advanced technology, expanding access to rehabilitation and disability support while giving e-waste a second life.
             </p>
 
             {/* Accordion */}
@@ -75,7 +74,7 @@ export default function About() {
                     key={item.id}
                     className={`rounded-xl overflow-hidden border transition-colors duration-300 ${
                       isOpen
-                        ? 'border-[#0F9E59] bg-white shadow-sm'
+                        ? 'border-primary bg-white shadow-sm'
                         : 'border-gray-200 bg-white'
                     }`}
                   >
@@ -87,8 +86,8 @@ export default function About() {
                         <span
                           className={`flex items-center justify-center w-9 h-9 rounded-lg transition-colors duration-300 ${
                             isOpen
-                              ? 'bg-[#0F9E59] text-white'
-                              : 'bg-green-50 text-[#0F9E59]'
+                              ? 'bg-primary text-white'
+                              : 'bg-primary/10 text-primary'
                           }`}
                         >
                           <Icon size={18} />

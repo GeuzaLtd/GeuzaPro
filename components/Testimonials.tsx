@@ -45,9 +45,9 @@ const testimonials = [
 ];
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const BASE   = testimonials.length;                              // 3
-const EXT    = [...testimonials, ...testimonials, ...testimonials]; // 9
-const INIT   = BASE;                                             // start at middle copy index 3
+const BASE   = testimonials.length;
+const EXT    = [...testimonials, ...testimonials, ...testimonials];
+const INIT   = BASE;
 const CARD_W = 300;
 const GAP    = 28;
 const STEP   = CARD_W + GAP;
@@ -59,7 +59,7 @@ function Stars({ count }: { count: number }) {
   return (
     <div className="flex gap-0.5">
       {Array.from({ length: count }).map((_, i) => (
-        <HiStar key={i} size={14} className="text-[#FF7900]" />
+        <HiStar key={i} size={14} className="text-secondary" />
       ))}
     </div>
   );
@@ -72,17 +72,17 @@ function SideCard({ t }: { t: Testimonial }) {
     <div className="h-full bg-white rounded-2xl p-6 shadow-md border border-gray-100 flex flex-col justify-between select-none">
       <div>
         <div className="flex items-center gap-3 mb-3">
-          <div className="relative w-11 h-11 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-[#0F9E59]/20">
+          <div className="relative w-11 h-11 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-primary/20">
             <Image src={t.image} alt={t.name} fill className="object-cover" unoptimized />
           </div>
           <Stars count={t.rating} />
         </div>
-        <p className="text-[#0F9E59] text-4xl font-serif leading-none mb-1">"</p>
+        <p className="text-primary text-4xl font-serif leading-none mb-1">"</p>
         <p className="text-gray-600 text-sm leading-relaxed line-clamp-5">{t.quote}</p>
       </div>
       <div className="border-t border-gray-100 pt-4 mt-4">
         <h4 className="font-display font-bold text-gray-900 text-sm">{t.name}</h4>
-        <p className="text-[#0F9E59] text-xs font-medium mt-0.5">{t.role}</p>
+        <p className="text-primary text-xs font-medium mt-0.5">{t.role}</p>
       </div>
     </div>
   );
@@ -103,9 +103,6 @@ function CenterCard({ t }: { t: Testimonial }) {
   );
 }
 
-// ─── Card wrapper — scale & opacity driven by motion value, not React state ───
-// This is the key fix: useTransform updates synchronously with x.set(),
-// so there is never a frame where position and visual weight are out of sync.
 function CardWrapper({
   trackX,
   cardIndex,
@@ -165,7 +162,6 @@ export default function Testimonials() {
   const isPaused = useRef(false);
   const animCtrl = useRef<AnimationPlaybackControls | null>(null);
 
-  // Detect mobile
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
@@ -173,7 +169,6 @@ export default function Testimonials() {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  // Measure container width
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -188,15 +183,10 @@ export default function Testimonials() {
     [containerW],
   );
 
-  // Initialise position
   useEffect(() => {
     if (containerW > 0) x.set(getX(INIT));
   }, [containerW, getX, x]);
 
-  // ── Core slide function ────────────────────────────────────────────────────
-  // The reset is done in onComplete — AFTER the spring fully lands.
-  // x.set() is called first (sync motion value), setCenter immediately after
-  // so both take effect before the next paint — no frame gap, no visible jump.
   const slideTo = useCallback(
     (newCenter: number) => {
       animCtrl.current?.stop();
@@ -208,8 +198,6 @@ export default function Testimonials() {
           else if (newCenter <      BASE) reset = newCenter + BASE;
 
           if (reset !== null) {
-            // x.set + setCenter called back-to-back: motion value is sync,
-            // React batches the state update into the same commit → one paint.
             x.set(getX(reset));
             setCenter(reset);
           }
@@ -223,7 +211,6 @@ export default function Testimonials() {
   const next = useCallback(() => slideTo(center + 1), [center, slideTo]);
   const prev = useCallback(() => slideTo(center - 1), [center, slideTo]);
 
-  // Auto-slide
   useEffect(() => {
     const id = setInterval(
       () => { if (!isPaused.current) next(); },
@@ -288,7 +275,7 @@ export default function Testimonials() {
             aria-label={`Go to testimonial ${i + 1}`}
             className={`rounded-full transition-all duration-300 ${
               i === activeDot
-                ? 'w-6 h-2.5 bg-[#0F9E59]'
+                ? 'w-6 h-2.5 bg-primary'
                 : 'w-2.5 h-2.5 bg-gray-300 hover:bg-gray-400'
             }`}
           />

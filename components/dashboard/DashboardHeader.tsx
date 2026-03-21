@@ -29,7 +29,7 @@ export default function DashboardHeader({ title, subtitle }: DashboardHeaderProp
 
       <div className="flex items-center gap-3">
         {/* Search */}
-        <div className="hidden md:flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100 focus-within:border-[#0F9E59]/40 focus-within:ring-2 focus-within:ring-[#0F9E59]/10 transition-all">
+        <div className="hidden md:flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100 focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10 transition-all">
           <HiOutlineSearch size={14} className="text-gray-400 flex-shrink-0" />
           <input
             type="text"
@@ -47,7 +47,7 @@ export default function DashboardHeader({ title, subtitle }: DashboardHeaderProp
           >
             <HiOutlineBell size={17} />
             {unread > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#FF7900] rounded-full text-white text-[9px] font-bold flex items-center justify-center">
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-secondary rounded-full text-white text-[9px] font-bold flex items-center justify-center">
                 {unread}
               </span>
             )}
@@ -67,19 +67,19 @@ export default function DashboardHeader({ title, subtitle }: DashboardHeaderProp
                   <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                     <p className="text-xs font-bold text-gray-900 uppercase tracking-widest">Notifications</p>
                     {unread > 0 && (
-                      <span className="text-xs font-medium text-[#0F9E59]">{unread} new</span>
+                      <span className="text-xs font-medium text-primary">{unread} new</span>
                     )}
                   </div>
                   {NOTIFICATIONS.map((n) => (
                     <div
                       key={n.id}
                       className={`px-4 py-3 flex gap-3 hover:bg-gray-50 transition-colors cursor-pointer ${
-                        n.unread ? 'bg-[#0F9E59]/[0.03]' : ''
+                        n.unread ? 'bg-primary/[0.03]' : ''
                       }`}
                     >
                       <span
                         className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
-                          n.unread ? 'bg-[#0F9E59]' : 'bg-gray-200'
+                          n.unread ? 'bg-primary' : 'bg-gray-200'
                         }`}
                       />
                       <div>
@@ -99,7 +99,7 @@ export default function DashboardHeader({ title, subtitle }: DashboardHeaderProp
 
         {/* Admin avatar */}
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#0F9E59] to-[#1bc870] flex items-center justify-center text-white text-xs font-bold">
+          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">
             AD
           </div>
           <div className="hidden md:block">
