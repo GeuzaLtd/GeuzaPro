@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { SectionHeader, Button } from './ui';
+import { createMessage } from '@/actions/messages';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,9 @@ export default function Contact() {
     organizationType: '',
     message: '',
   });
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [sendError, setSendError] = useState('');
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -19,9 +23,25 @@ export default function Contact() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    setSending(true);
+    setSendError('');
+    try {
+      await createMessage({
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phoneNumber,
+        organizationType: formData.organizationType,
+        message: formData.message,
+      });
+      setSent(true);
+      setFormData({ fullName: '', phoneNumber: '', email: '', organizationType: '', message: '' });
+    } catch {
+      setSendError('Failed to send message. Please try again.');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -104,8 +124,16 @@ export default function Contact() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                 required
               />
+              {sent && (
+                <p className="text-primary text-sm font-medium">Message sent! We&apos;ll get back to you soon.</p>
+              )}
+              {sendError && (
+                <p className="text-red-500 text-sm">{sendError}</p>
+              )}
               <div className="flex justify-end">
-                <Button type="submit">Send Message</Button>
+                <Button type="submit" disabled={sending}>
+                  {sending ? 'Sending…' : 'Send Message'}
+                </Button>
               </div>
             </form>
           </div>

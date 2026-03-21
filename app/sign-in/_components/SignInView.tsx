@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import { loginAction } from '@/actions/auth';
 import { AnimatePresence, motion } from 'framer-motion';
 
 /* ── Left-panel floating particles ── */
@@ -42,6 +44,7 @@ function EyeIcon({ open }: { open: boolean }) {
 }
 
 export default function SignInView() {
+  const router = useRouter();
   const [email,    setEmail]    = useState('');
   const [password, setPassword] = useState('');
   const [showPw,   setShowPw]   = useState(false);
@@ -52,8 +55,14 @@ export default function SignInView() {
     e.preventDefault();
     setError('');
     setStatus('loading');
-    await new Promise((r) => setTimeout(r, 1600));
+    const result = await loginAction(email, password);
+    if (!result.success) {
+      setError(result.error ?? 'Something went wrong.');
+      setStatus('idle');
+      return;
+    }
     setStatus('success');
+    setTimeout(() => router.push('/'), 2000);
   };
 
   return (

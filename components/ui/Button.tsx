@@ -7,6 +7,7 @@ interface ButtonProps {
   className?: string;
   onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
 }
 
 export default function Button({
@@ -16,8 +17,9 @@ export default function Button({
   className = '',
   onClick,
   type = 'button',
+  disabled = false,
 }: ButtonProps) {
-  const baseStyles = 'font-medium rounded-full transition-all duration-300 inline-flex items-center justify-center';
+  const baseStyles = 'font-medium rounded-full transition-all duration-300 inline-flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed';
 
   const variants = {
     primary: 'bg-primary text-white hover:bg-primary-dark',
@@ -35,6 +37,7 @@ export default function Button({
     <button
       type={type}
       onClick={onClick}
+      disabled={disabled}
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
     >
       {children}
