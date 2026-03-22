@@ -26,7 +26,7 @@ export async function createTestimonial(data: {
 
 export async function updateTestimonial(
   id: number,
-  data: Partial<{ name: string; role: string; company: string; avatar: string; quote: string; rating: number; isVisible: boolean }>
+  data: Partial<{ name: string; role: string; company: string; avatar: string; quote: string; rating: number; featured: boolean; isVisible: boolean }>
 ) {
   const t = await prisma.testimonial.update({ where: { id }, data });
   revalidatePath('/');

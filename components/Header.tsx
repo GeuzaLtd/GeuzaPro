@@ -1,22 +1,25 @@
-'use client';
-
-import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { auth } from '@/lib/auth';
+import UserMenu from './UserMenu';
+import MobileMenu from './MobileMenu';
 
-export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const navLinks = [
+  { name: 'COMPANY',  href: '/company'  },
+  { name: 'PRODUCTS', href: '/products' },
+  { name: 'SHOP',     href: '/shop'     },
+  { name: 'BLOG',     href: '/blog'     },
+];
 
-  const navLinks = [
-    { name: 'COMPANY', href: '/company' },
-    { name: 'PRODUCTS', href: '/products' },
-    { name: 'SHOP', href: '/shop' },
-    { name: 'BLOG', href: '/blog' },
-  ];
+export default async function Header() {
+  const session = await auth();
+  const user    = session?.user;
+  const isLoggedIn = !!user;
 
   return (
     <header className="bg-white py-4 px-4 md:px-8 lg:px-16 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
+
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
@@ -41,84 +44,43 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Auth Buttons */}
+        {/* Desktop Auth */}
         <div className="hidden md:flex items-center gap-4">
-          <Link
-            href="/sign-in"
-            className="px-6 py-2 border-2 border-primary text-primary rounded-full font-medium hover:bg-primary hover:text-white transition-all"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/donate"
-            className="px-6 py-2 bg-primary text-white rounded-full font-medium hover:bg-primary-dark transition-all"
-          >
-            Donate
-          </Link>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden p-2"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            {isMenuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="md:hidden mt-4 pb-4 border-t pt-4">
-          <nav className="flex flex-col gap-4">
-            {navLinks.map((link) => (
+          {isLoggedIn ? (
+            <>
               <Link
-                key={link.name}
-                href={link.href}
-                className="text-gray-700 hover:text-primary font-medium transition-colors"
-                onClick={() => setIsMenuOpen(false)}
+                href="/donate"
+                className="px-6 py-2 bg-primary text-white rounded-full font-medium hover:bg-primary-dark transition-all"
               >
-                {link.name}
+                Donate
               </Link>
-            ))}
-            <div className="flex flex-col gap-3 mt-4">
+              <UserMenu
+                name={user?.name ?? 'User'}
+                email={user?.email ?? ''}
+                role={user?.role ?? 'user'}
+              />
+            </>
+          ) : (
+            <>
               <Link
-                href="#"
-                className="px-6 py-2 border-2 border-primary text-primary rounded-full font-medium text-center hover:bg-primary hover:text-white transition-all"
+                href="/sign-in"
+                className="px-6 py-2 border-2 border-primary text-primary rounded-full font-medium hover:bg-primary hover:text-white transition-all"
               >
                 Sign in
               </Link>
               <Link
                 href="/donate"
-                className="px-6 py-2 bg-primary text-white rounded-full font-medium text-center hover:bg-primary-dark transition-all"
+                className="px-6 py-2 bg-primary text-white rounded-full font-medium hover:bg-primary-dark transition-all"
               >
                 Donate
               </Link>
-            </div>
-          </nav>
+            </>
+          )}
         </div>
-      )}
+
+        {/* Mobile toggle + menu */}
+        <MobileMenu navLinks={navLinks} isLoggedIn={isLoggedIn} />
+      </div>
     </header>
   );
 }

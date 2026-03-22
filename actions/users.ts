@@ -5,7 +5,11 @@ import { revalidatePath } from 'next/cache';
 
 export async function getUsers() {
   return prisma.user.findMany({
-    select: { id: true, name: true, email: true, phone: true, avatar: true, role: true, isVisible: true, createdAt: true },
+    select: {
+      id: true, name: true, email: true, phone: true, avatar: true,
+      role: true, isVisible: true, createdAt: true,
+      _count: { select: { orders: true, donations: true } },
+    },
     orderBy: { createdAt: 'desc' },
   });
 }

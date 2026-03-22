@@ -62,7 +62,8 @@ export default function SignInView() {
       return;
     }
     setStatus('success');
-    setTimeout(() => router.push('/'), 2000);
+    const dest = result.role === 'admin' ? '/dashboard' : '/';
+    setTimeout(() => router.push(dest), 2000);
   };
 
   return (

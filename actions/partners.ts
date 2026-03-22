@@ -12,11 +12,14 @@ export async function getPartners(visible?: boolean) {
 
 export async function createPartner(data: {
   name: string;
+  type?: string;
   logo?: string;
   website?: string;
   description?: string;
   contactName?: string;
   contactEmail?: string;
+  contactPhone?: string;
+  country?: string;
 }) {
   const partner = await prisma.partner.create({ data });
   revalidatePath('/dashboard/partners');
@@ -25,7 +28,7 @@ export async function createPartner(data: {
 
 export async function updatePartner(
   id: number,
-  data: Partial<{ name: string; logo: string; website: string; description: string; contactName: string; contactEmail: string; isVisible: boolean }>
+  data: Partial<{ name: string; type: string; logo: string; website: string; description: string; contactName: string; contactEmail: string; contactPhone: string; country: string; isVisible: boolean }>
 ) {
   const partner = await prisma.partner.update({ where: { id }, data });
   revalidatePath('/dashboard/partners');

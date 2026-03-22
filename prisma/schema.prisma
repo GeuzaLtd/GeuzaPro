@@ -31,14 +31,17 @@ model User {
 // ─── EMPLOYEES (team section display only) ────────────────────────────────────
 
 model Employee {
-  id        Int      @id @default(autoincrement())
-  name      String
-  role      String
-  avatar    String?
-  bio       String?
-  order     Int?
-  isVisible Boolean  @default(true)
-  createdAt DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  name       String
+  role       String
+  department String?
+  email      String?
+  phone      String?
+  avatar     String?
+  bio        String?
+  order      Int?
+  isVisible  Boolean  @default(true)
+  createdAt  DateTime @default(now())
 
   @@map("employees")
 }
@@ -194,11 +197,14 @@ model Donation {
 model Partner {
   id           Int      @id @default(autoincrement())
   name         String
+  type         String?
   logo         String?
   website      String?
   description  String?
   contactName  String?
   contactEmail String?
+  contactPhone String?
+  country      String?
   isVisible    Boolean  @default(true)
   createdAt    DateTime @default(now())
 
@@ -215,6 +221,7 @@ model Testimonial {
   avatar    String?
   quote     String
   rating    Int      @default(5)
+  featured  Boolean  @default(false)
   isVisible Boolean  @default(true)
   createdAt DateTime @default(now())
 

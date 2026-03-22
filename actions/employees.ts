@@ -13,6 +13,9 @@ export async function getEmployees(visible?: boolean) {
 export async function createEmployee(data: {
   name: string;
   role: string;
+  department?: string;
+  email?: string;
+  phone?: string;
   avatar?: string;
   bio?: string;
   order?: number;
@@ -25,7 +28,7 @@ export async function createEmployee(data: {
 
 export async function updateEmployee(
   id: number,
-  data: Partial<{ name: string; role: string; avatar: string; bio: string; order: number; isVisible: boolean }>
+  data: Partial<{ name: string; role: string; department: string; email: string; phone: string; avatar: string; bio: string; order: number; isVisible: boolean }>
 ) {
   const employee = await prisma.employee.update({ where: { id }, data });
   revalidatePath('/company');
