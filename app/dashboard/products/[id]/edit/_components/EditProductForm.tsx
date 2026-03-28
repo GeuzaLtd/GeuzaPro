@@ -5,27 +5,37 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
   HiOutlineArrowLeft,
-  HiOutlinePhotograph,
   HiOutlineSave,
   HiOutlinePlus,
   HiOutlineX,
   HiOutlineTrash,
 } from 'react-icons/hi';
 import { DashboardHeader, PageHeader } from '@/components/dashboard';
+import ImageUploadSlot from '@/components/dashboard/ImageUploadSlot';
 import { updateProduct, deleteProduct } from '@/actions/products';
 import { useRouter } from 'next/navigation';
 
 interface ProductData {
-  id: number;
-  name: string;
+  id:          number;
+  name:        string;
   description: string | null;
-  price: string;
-  stock: number;
-  status: string;
-  category: string | null;
+  price:       string;
+  stock:       number;
+  status:      string;
+  category:    string | null;
+  colors?:     string[];
+  images?:     { url: string }[];
 }
 
-const CATEGORIES = ['Wheelchair', 'Crutches', 'Walking Aid', 'Cane', 'Transfer Aid', 'Daily Living'];
+const CATEGORIES = ['Wheelchair', 'Crutches', 'Walking Aid', 'Prosthetics', 'Cane', 'Transfer Aid', 'Daily Living'];
+
+const COLOURS = [
+  { name: 'White',  hex: '#f9fafb' },
+  { name: 'Black',  hex: '#111827' },
+  { name: 'Yellow', hex: '#eab308' },
+  { name: 'Green',  hex: '#22c55e' },
+  { name: 'Red',    hex: '#ef4444' },
+];
 
 const fieldVariants = {
   hidden:   { opacity: 0, y: 16 },
@@ -46,9 +56,29 @@ export default function EditProductForm({ product, id }: { product: ProductData 
     weight:      '',
     dimensions:  '',
   });
+  const [images, setImages] = useState<{ url: string | null; publicId: string | null }[]>(() => {
+    const slots: { url: string | null; publicId: string | null }[] = [
+      { url: null, publicId: null },
+      { url: null, publicId: null },
+      { url: null, publicId: null },
+      { url: null, publicId: null },
+    ];
+    (product?.images ?? []).forEach((img, i) => {
+      if (i < 4) slots[i] = { url: img.url, publicId: null };
+    });
+    return slots;
+  });
+  const [selectedColors, setSelectedColors] = useState<string[]>(product?.colors ?? []);
   const [featureInput, setFeatureInput] = useState('');
   const [saving, setSaving]             = useState(false);
   const [saved, setSaved]               = useState(false);
+
+  const toggleColor = (name: string) =>
+    setSelectedColors((prev) => prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name]);
+
+  const setImage = (index: number) => (url: string | null, publicId: string | null) => {
+    setImages((prev) => prev.map((img, i) => (i === index ? { url, publicId } : img)));
+  };
 
   const addFeature = () => {
     const f = featureInput.trim();
@@ -60,12 +90,17 @@ export default function EditProductForm({ product, id }: { product: ProductData 
   const handleSave = async () => {
     setSaving(true);
     const statusMap: Record<string, string> = { 'In Stock': 'in_stock', 'Low Stock': 'low_stock', 'Out Stock': 'out_stock' };
+    const uploadedImages = images
+      .filter((img) => img.url)
+      .map((img, i) => ({ url: img.url!, isPrimary: i === 0 }));
     await updateProduct(parseInt(id), {
-      name: form.name,
+      name:        form.name,
       description: form.description,
-      price: parseFloat(form.price.replace(/,/g, '')),
-      stock: parseInt(form.stock),
-      status: statusMap[form.status] ?? 'in_stock',
+      price:       parseFloat(form.price.replace(/,/g, '')),
+      stock:       parseInt(form.stock),
+      status:      statusMap[form.status] ?? 'in_stock',
+      colors:      selectedColors,
+      ...(uploadedImages.length > 0 && { images: uploadedImages }),
     });
     setSaving(false);
     setSaved(true);
@@ -132,18 +167,10 @@ export default function EditProductForm({ product, id }: { product: ProductData 
                 <div className="bg-white rounded-2xl border border-gray-100 p-6">
                   <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Product Images</label>
                   <div className="grid grid-cols-4 gap-3">
-                    <div className="border-2 border-dashed border-gray-200 rounded-xl h-28 col-span-2 flex flex-col items-center justify-center gap-2 text-gray-400 hover:border-[#0F9E59]/50 hover:text-[#0F9E59] transition-all cursor-pointer group">
-                      <div className="w-10 h-10 rounded-xl bg-gray-100 group-hover:bg-[#0F9E59]/10 flex items-center justify-center transition-all">
-                        <HiOutlinePhotograph size={20} className="group-hover:scale-110 transition-transform" />
-                      </div>
-                      <p className="text-xs font-semibold text-center px-2">Replace main image</p>
-                    </div>
-                    {[1, 2, 3].map((i) => (
-                      <div key={i} className="border-2 border-dashed border-gray-100 rounded-xl h-28 flex flex-col items-center justify-center gap-1 text-gray-300 hover:border-gray-300 hover:text-gray-400 transition-all cursor-pointer">
-                        <HiOutlinePlus size={18} />
-                        <p className="text-xs">Add</p>
-                      </div>
-                    ))}
+                    <ImageUploadSlot value={images[0].url} onChange={setImage(0)} isPrimary size="lg" folder="geuza/products" />
+                    <ImageUploadSlot value={images[1].url} onChange={setImage(1)} size="sm" folder="geuza/products" />
+                    <ImageUploadSlot value={images[2].url} onChange={setImage(2)} size="sm" folder="geuza/products" />
+                    <ImageUploadSlot value={images[3].url} onChange={setImage(3)} size="sm" folder="geuza/products" />
                   </div>
                 </div>
               </motion.div>
@@ -273,7 +300,35 @@ export default function EditProductForm({ product, id }: { product: ProductData 
                 </div>
               </motion.div>
 
+              {/* Colours */}
               <motion.div custom={8} variants={fieldVariants} initial="hidden" animate="visible">
+                <div className="bg-white rounded-2xl border border-gray-100 p-5">
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Available Colours</p>
+                  <div className="flex flex-col gap-2">
+                    {COLOURS.map((c) => {
+                      const selected = selectedColors.includes(c.name);
+                      return (
+                        <button key={c.name} type="button" onClick={() => toggleColor(c.name)}
+                          className={`flex items-center gap-3 py-2.5 px-3 rounded-xl border-2 text-sm font-medium transition-all ${
+                            selected ? 'border-[#0F9E59] bg-[#0F9E59]/5 text-gray-900' : 'border-gray-100 text-gray-500 hover:border-gray-200'
+                          }`}>
+                          <span className="w-5 h-5 rounded-full flex-shrink-0 border border-gray-300"
+                            style={{ backgroundColor: c.hex }} />
+                          {c.name}
+                          {selected && (
+                            <svg className="ml-auto" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0F9E59" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Stock status */}
+              <motion.div custom={9} variants={fieldVariants} initial="hidden" animate="visible">
                 <div className="bg-white rounded-2xl border border-gray-100 p-5">
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Stock Status</p>
                   <div className="flex flex-col gap-2">

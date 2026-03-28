@@ -22,21 +22,23 @@ export async function getProductById(id: number) {
 }
 
 export async function createProduct(data: {
-  name: string;
+  name:         string;
   description?: string;
-  price: number;
-  stock?: number;
-  categoryId?: number;
-  images?: { url: string; isPrimary?: boolean }[];
+  price:        number;
+  stock?:       number;
+  categoryId?:  number;
+  colors?:      string[];
+  sizes?:       string[];
+  images?:      { url: string; isPrimary?: boolean }[];
 }) {
   const { images, ...rest } = data;
   const product = await prisma.product.create({
     data: {
       ...rest,
-      price: rest.price,
-      ...(images?.length
-        ? { images: { create: images } }
-        : {}),
+      price:  rest.price,
+      colors: rest.colors ?? [],
+      sizes:  rest.sizes  ?? [],
+      ...(images?.length ? { images: { create: images } } : {}),
     },
     include: { images: true },
   });
@@ -48,16 +50,28 @@ export async function createProduct(data: {
 export async function updateProduct(
   id: number,
   data: Partial<{
-    name: string;
+    name:        string;
     description: string;
-    price: number;
-    stock: number;
-    status: string;
-    isVisible: boolean;
-    categoryId: number;
+    price:       number;
+    stock:       number;
+    status:      string;
+    isVisible:   boolean;
+    categoryId:  number;
+    colors:      string[];
+    sizes:       string[];
+    images:      { url: string; isPrimary?: boolean }[];
   }>
 ) {
-  const product = await prisma.product.update({ where: { id }, data });
+  const { images, ...rest } = data;
+  const product = await prisma.product.update({
+    where: { id },
+    data: {
+      ...rest,
+      ...(images?.length
+        ? { images: { create: images } }
+        : {}),
+    },
+  });
   revalidatePath('/shop');
   revalidatePath('/dashboard/products');
   return product;
@@ -71,4 +85,11 @@ export async function deleteProduct(id: number) {
 
 export async function toggleProductVisibility(id: number, isVisible: boolean) {
   return prisma.product.update({ where: { id }, data: { isVisible } });
+}
+
+export async function getProductsVariants(ids: number[]) {
+  return prisma.product.findMany({
+    where: { id: { in: ids } },
+    select: { id: true, colors: true, sizes: true },
+  });
 }

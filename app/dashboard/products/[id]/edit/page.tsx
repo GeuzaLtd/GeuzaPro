@@ -5,7 +5,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
   const { id } = await params;
   const product = await prisma.product.findUnique({
     where: { id: parseInt(id) },
-    include: { category: { select: { name: true } } },
+    include: { category: { select: { name: true } }, images: { orderBy: { isPrimary: 'desc' } } },
   });
   const data = product ? {
     id: product.id,
@@ -15,6 +15,8 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
     stock: product.stock,
     status: product.status === 'in_stock' ? 'In Stock' : product.status === 'low_stock' ? 'Low Stock' : 'Out Stock',
     category: product.category?.name ?? null,
+    colors:   product.colors,
+    images:   product.images.map((img) => ({ url: img.url })),
   } : null;
   return <EditProductForm product={data} id={id} />;
 }
