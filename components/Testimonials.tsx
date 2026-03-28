@@ -13,41 +13,18 @@ import type { AnimationPlaybackControls } from 'framer-motion';
 import { HiStar } from 'react-icons/hi2';
 import { SectionHeader } from './ui';
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
-const testimonials = [
-  {
-    id: 1,
-    name: 'MUTABAZI John',
-    role: 'CEO Enviroserve',
-    image: '/images/testimonials/person1.png',
-    rating: 5,
-    quote:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-  },
-  {
-    id: 2,
-    name: 'MUTABAZI John',
-    role: 'CEO Enviroserve',
-    image: '/images/testimonials/person2.png',
-    rating: 5,
-    quote:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
-  },
-  {
-    id: 3,
-    name: 'MUTABAZI John',
-    role: 'CEO Enviroserve',
-    image: '/images/testimonials/person3.png',
-    rating: 5,
-    quote:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
-  },
-];
+// ─── Types ────────────────────────────────────────────────────────────────────
+export interface TestimonialItem {
+  id: number;
+  name: string;
+  role: string | null;
+  company: string | null;
+  avatar: string | null;
+  quote: string;
+  rating: number;
+}
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const BASE   = testimonials.length;
-const EXT    = [...testimonials, ...testimonials, ...testimonials];
-const INIT   = BASE;
 const CARD_W = 300;
 const GAP    = 28;
 const STEP   = CARD_W + GAP;
@@ -65,16 +42,32 @@ function Stars({ count }: { count: number }) {
   );
 }
 
-type Testimonial = (typeof testimonials)[0];
+function Avatar({ src, name }: { src: string | null; name: string }) {
+  if (src) {
+    return (
+      <div className="relative w-11 h-11 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-primary/20">
+        <Image src={src} alt={name} fill className="object-cover" unoptimized />
+      </div>
+    );
+  }
+  return (
+    <div className="w-11 h-11 rounded-full flex-shrink-0 ring-2 ring-primary/20 bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
+      {name.charAt(0).toUpperCase()}
+    </div>
+  );
+}
 
-function SideCard({ t }: { t: Testimonial }) {
+function roleLabel(t: TestimonialItem): string {
+  if (t.role && t.company) return `${t.role}, ${t.company}`;
+  return t.role ?? t.company ?? '';
+}
+
+function SideCard({ t }: { t: TestimonialItem }) {
   return (
     <div className="h-full bg-white rounded-2xl p-6 shadow-md border border-gray-100 flex flex-col justify-between select-none">
       <div>
         <div className="flex items-center gap-3 mb-3">
-          <div className="relative w-11 h-11 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-primary/20">
-            <Image src={t.image} alt={t.name} fill className="object-cover" unoptimized />
-          </div>
+          <Avatar src={t.avatar} name={t.name} />
           <Stars count={t.rating} />
         </div>
         <p className="text-primary text-4xl font-serif leading-none mb-1">"</p>
@@ -82,22 +75,28 @@ function SideCard({ t }: { t: Testimonial }) {
       </div>
       <div className="border-t border-gray-100 pt-4 mt-4">
         <h4 className="font-display font-bold text-gray-900 text-sm">{t.name}</h4>
-        <p className="text-primary text-xs font-medium mt-0.5">{t.role}</p>
+        <p className="text-primary text-xs font-medium mt-0.5">{roleLabel(t)}</p>
       </div>
     </div>
   );
 }
 
-function CenterCard({ t }: { t: Testimonial }) {
+function CenterCard({ t }: { t: TestimonialItem }) {
   return (
     <div className="h-full relative rounded-2xl overflow-hidden shadow-2xl select-none">
-      <Image src={t.image} alt={t.name} fill className="object-cover object-top" unoptimized priority />
+      {t.avatar ? (
+        <Image src={t.avatar} alt={t.name} fill className="object-cover object-top" unoptimized priority />
+      ) : (
+        <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-bold text-6xl">
+          {t.name.charAt(0).toUpperCase()}
+        </div>
+      )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-6 text-white">
         <Stars count={t.rating} />
         <p className="text-sm italic opacity-90 my-3 leading-relaxed line-clamp-4">"{t.quote}"</p>
         <h4 className="font-display font-bold text-lg">{t.name}</h4>
-        <p className="text-xs opacity-70 mt-0.5">{t.role}</p>
+        <p className="text-xs opacity-70 mt-0.5">{roleLabel(t)}</p>
       </div>
     </div>
   );
@@ -113,7 +112,7 @@ function CardWrapper({
   trackX: MotionValue<number>;
   cardIndex: number;
   containerW: number;
-  t: Testimonial;
+  t: TestimonialItem;
   isCenter: boolean;
 }) {
   const scale = useTransform(trackX, (xVal) => {
@@ -152,7 +151,11 @@ function CardWrapper({
 }
 
 // ─── Main carousel ────────────────────────────────────────────────────────────
-export default function Testimonials() {
+export default function Testimonials({ testimonials }: { testimonials: TestimonialItem[] }) {
+  const BASE = testimonials.length;
+  const EXT  = [...testimonials, ...testimonials, ...testimonials];
+  const INIT = BASE;
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerW, setContainerW] = useState(0);
   const [center, setCenter]         = useState(INIT);
@@ -185,7 +188,7 @@ export default function Testimonials() {
 
   useEffect(() => {
     if (containerW > 0) x.set(getX(INIT));
-  }, [containerW, getX, x]);
+  }, [containerW, getX, x, INIT]);
 
   const slideTo = useCallback(
     (newCenter: number) => {
@@ -205,7 +208,7 @@ export default function Testimonials() {
       });
       setCenter(newCenter);
     },
-    [x, getX],
+    [x, getX, BASE],
   );
 
   const next = useCallback(() => slideTo(center + 1), [center, slideTo]);
@@ -218,6 +221,8 @@ export default function Testimonials() {
     );
     return () => clearInterval(id);
   }, [next, isMobile]);
+
+  if (BASE === 0) return null;
 
   const activeDot = center % BASE;
 

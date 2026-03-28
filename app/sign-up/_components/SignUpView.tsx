@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import { registerAction } from '@/actions/auth';
 import { AnimatePresence, motion } from 'framer-motion';
 
 /* ── Particles ── */
@@ -60,6 +62,7 @@ function EyeIcon({ open }: { open: boolean }) {
 }
 
 export default function SignUpView() {
+  const router = useRouter();
   const [form, setForm]           = useState({ name: '', email: '', password: '', confirm: '' });
   const [showPw,   setShowPw]     = useState(false);
   const [showConf, setShowConf]   = useState(false);
@@ -85,7 +88,12 @@ export default function SignUpView() {
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setErrors({});
     setStatus('loading');
-    await new Promise((r) => setTimeout(r, 1700));
+    const result = await registerAction({ name: form.name, email: form.email, password: form.password });
+    if (!result.success) {
+      setErrors({ email: result.error ?? 'Registration failed.' });
+      setStatus('idle');
+      return;
+    }
     setStatus('success');
   };
 
