@@ -1,81 +1,104 @@
 import Image from 'next/image';
-import type { BlogPost } from '@/lib/blog-posts';
+import type { BlogPostDb } from '@/lib/db-blogs';
+import { formatBlogDate } from '@/lib/db-blogs';
 
-export default function BlogContent({ post }: { post: BlogPost }) {
+// Detect if content is HTML (from the Tiptap editor) or plain text (legacy)
+function isHtml(s: string): boolean {
+  return /<[a-z][\s\S]*>/i.test(s);
+}
+
+// Split plain-text content into paragraphs (legacy fallback)
+function splitPlain(s: string): string[] {
+  return s
+    .split(/\n{2,}/)
+    .flatMap((chunk) => chunk.split(/\n/))
+    .map((p) => p.trim())
+    .filter(Boolean);
+}
+
+export default function BlogContent({ post }: { post: BlogPostDb }) {
+  const authorName   = post.author?.name   ?? 'Geuza';
+  const authorAvatar = post.author?.avatar ?? null;
+  const category     = post.category?.name ?? null;
+  const date         = formatBlogDate(post.publishedAt ?? post.createdAt);
+
+  const contentIsHtml = isHtml(post.content);
+
+  // Estimate read time
+  const words    = post.content.replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean).length;
+  const readTime = Math.max(1, Math.round(words / 200));
+
   return (
-    <article className="flex flex-col gap-6">
-      {/* Featured image */}
-      <div className="relative h-[280px] md:h-[360px] rounded-2xl overflow-hidden">
-        <Image
-          src={post.image}
-          alt={post.title}
-          fill
-          className="object-cover"
-          priority
-          unoptimized
-        />
-      </div>
+    <article className="flex flex-col gap-8 min-w-0">
 
-      {/* Author + date */}
-      <div className="flex items-center gap-3">
-        <div className="relative w-9 h-9 rounded-full overflow-hidden flex-shrink-0 border-2 border-[#0F9E59]/20">
-          <Image src={post.authorAvatar} alt={post.author} fill className="object-cover" unoptimized />
-        </div>
-        <span className="text-sm font-medium text-gray-700">{post.author}</span>
-        <span className="text-gray-300 text-sm">·</span>
-        <div className="flex items-center gap-1.5 text-gray-400 text-sm">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-            <line x1="16" y1="2" x2="16" y2="6" />
-            <line x1="8" y1="2" x2="8" y2="6" />
-            <line x1="3" y1="10" x2="21" y2="10" />
-          </svg>
-          {post.date}
-        </div>
-      </div>
+      {/* Category badge */}
+      {category && (
+        <span className="self-start bg-[#0F9E59]/10 text-[#0F9E59] text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">
+          {category}
+        </span>
+      )}
 
       {/* Title */}
-      <h1 className="font-display font-black text-gray-900 text-2xl md:text-3xl lg:text-4xl leading-tight">
-        {post.fullTitle}
+      <h1 className="font-display font-black text-gray-900 text-2xl md:text-3xl lg:text-[2.25rem] leading-tight">
+        {post.title}
       </h1>
 
-      {/* Body — first half */}
-      <div className="flex flex-col gap-4">
-        {post.content.slice(0, Math.ceil(post.content.length / 2)).map((para, i) => (
-          <p key={i} className="text-gray-600 text-sm md:text-base leading-relaxed">
-            {para}
-          </p>
-        ))}
+      {/* Excerpt pull-quote */}
+      {post.excerpt && (
+        <p className="text-lg text-gray-500 italic leading-relaxed border-l-4 border-[#0F9E59]/40 pl-5 py-1">
+          {post.excerpt}
+        </p>
+      )}
+
+      {/* Author + date + read time */}
+      <div className="flex items-center gap-3 flex-wrap pb-6 border-b border-gray-100">
+        {authorAvatar ? (
+          <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border-2 border-[#0F9E59]/20">
+            <Image src={authorAvatar} alt={authorName} fill className="object-cover" unoptimized />
+          </div>
+        ) : (
+          <div className="w-10 h-10 rounded-full flex-shrink-0 border-2 border-[#0F9E59]/20 bg-[#0F9E59]/10 flex items-center justify-center text-[#0F9E59] font-bold text-sm">
+            {authorName.charAt(0).toUpperCase()}
+          </div>
+        )}
+        <div className="flex flex-col">
+          <span className="text-sm font-semibold text-gray-800">{authorName}</span>
+          <div className="flex items-center gap-2 text-xs text-gray-400">
+            {date && <span>{date}</span>}
+            {date && <span>·</span>}
+            <span>{readTime} min read</span>
+          </div>
+        </div>
       </div>
 
-      {/* Gallery */}
-      {post.gallery.length > 0 && (
-        <div className="mt-2">
-          <h2 className="font-display font-bold text-gray-900 text-xl mb-4">Gallery</h2>
-          <div className="grid grid-cols-2 gap-3">
-            {post.gallery.map((src, i) => (
-              <div key={i} className="relative h-36 md:h-44 rounded-xl overflow-hidden">
-                <Image
-                  src={src}
-                  alt={`Gallery image ${i + 1}`}
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-300"
-                  unoptimized
-                />
-              </div>
-            ))}
-          </div>
+      {/* Featured image */}
+      {post.coverImage && (
+        <div className="relative h-[260px] md:h-[380px] rounded-2xl overflow-hidden shadow-md">
+          <Image
+            src={post.coverImage}
+            alt={post.title}
+            fill
+            className="object-cover"
+            priority
+            unoptimized
+          />
         </div>
       )}
 
-      {/* Body — second half */}
-      <div className="flex flex-col gap-4">
-        {post.content.slice(Math.ceil(post.content.length / 2)).map((para, i) => (
-          <p key={i} className="text-gray-600 text-sm md:text-base leading-relaxed">
-            {para}
-          </p>
-        ))}
-      </div>
+      {/* Body — HTML or plain text */}
+      {contentIsHtml ? (
+        <div
+          className="blog-content"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
+      ) : (
+        <div className="blog-content flex flex-col gap-4">
+          {splitPlain(post.content).map((para, i) => (
+            <p key={i}>{para}</p>
+          ))}
+        </div>
+      )}
+
     </article>
   );
 }

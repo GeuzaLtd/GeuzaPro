@@ -3,23 +3,24 @@ import Link from 'next/link';
 import type { BlogPostDb } from '@/lib/db-blogs';
 import { formatBlogDate } from '@/lib/db-blogs';
 
-export default function OtherPosts({ posts }: { posts: BlogPostDb[] }) {
+export default function MorePosts({ posts }: { posts: BlogPostDb[] }) {
   if (posts.length === 0) return null;
 
   return (
-    <section className="py-12 md:py-16 bg-gray-50">
+    <section className="py-14 md:py-20 bg-gray-50 border-t border-gray-100">
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
-        {/* Section label */}
+
+        {/* Heading */}
         <div className="flex items-center gap-4 mb-10">
           <span className="w-10 h-px bg-[#0F9E59] flex-shrink-0" />
           <h2 className="text-[#0F9E59] text-sm font-bold tracking-[0.22em] uppercase leading-none flex-shrink-0">
-            More Posts
+            More from Our Blog
           </h2>
           <span className="flex-1 h-px bg-gray-200" />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((post) => {
+          {posts.slice(0, 3).map((post) => {
             const date       = formatBlogDate(post.publishedAt ?? post.createdAt);
             const authorName = post.author?.name ?? 'Geuza';
             const category   = post.category?.name ?? null;
@@ -51,6 +52,7 @@ export default function OtherPosts({ posts }: { posts: BlogPostDb[] }) {
                         </svg>
                       </div>
                     )}
+                    {/* Category badge over image */}
                     {category && (
                       <span className="absolute top-3 left-3 bg-[#0F9E59] text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">
                         {category}
@@ -62,8 +64,8 @@ export default function OtherPosts({ posts }: { posts: BlogPostDb[] }) {
                 {/* Content */}
                 <div className="flex flex-col flex-1 p-5 gap-3">
 
-                  {/* Author + date + read time */}
-                  <div className="flex items-center gap-2 text-xs text-gray-400 flex-wrap">
+                  {/* Author + date */}
+                  <div className="flex items-center gap-2 text-xs text-gray-400">
                     <span className="font-medium text-gray-500">{authorName}</span>
                     {date && (
                       <>
@@ -82,12 +84,14 @@ export default function OtherPosts({ posts }: { posts: BlogPostDb[] }) {
                     </h3>
                   </Link>
 
+                  {/* Excerpt */}
                   {post.excerpt && (
                     <p className="text-gray-500 text-sm leading-relaxed line-clamp-3 flex-1">
                       {post.excerpt}
                     </p>
                   )}
 
+                  {/* CTA */}
                   <Link
                     href={`/blog/${post.slug}`}
                     className="mt-auto pt-2 inline-flex items-center gap-1.5 text-[#0F9E59] text-sm font-semibold hover:gap-3 transition-all duration-200 group/link"
@@ -102,6 +106,16 @@ export default function OtherPosts({ posts }: { posts: BlogPostDb[] }) {
               </article>
             );
           })}
+        </div>
+
+        {/* View all link */}
+        <div className="mt-10 text-center">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 px-7 py-3 rounded-full border-2 border-[#0F9E59] text-[#0F9E59] text-sm font-bold hover:bg-[#0F9E59] hover:text-white transition-all duration-300"
+          >
+            View All Posts
+          </Link>
         </div>
       </div>
     </section>
