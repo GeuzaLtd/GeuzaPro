@@ -7,9 +7,9 @@ export default async function EmployeesPage() {
     id: e.id,
     name: e.name,
     role: e.role,
-    department: e.bio ?? null,
-    email: null as string | null,
-    phone: null as string | null,
+    department: e.department ?? null,
+    email: e.email ?? null,
+    phone: e.phone ?? null,
     status: e.isVisible ? 'Active' : 'Inactive',
     joined: e.createdAt.toLocaleDateString('en-US', {
       month: 'short',

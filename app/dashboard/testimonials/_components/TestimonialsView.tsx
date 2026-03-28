@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -15,6 +16,7 @@ import {
 import { DashboardHeader, StatusBadge, AdminTable, PageHeader } from '@/components/dashboard';
 import type { Column } from '@/components/dashboard/AdminTable';
 import { createTestimonial, updateTestimonial, deleteTestimonial } from '@/actions/testimonials';
+import { uploadImage } from '@/actions/upload';
 
 export interface TestimonialRow {
   id: number;
@@ -58,10 +60,13 @@ function TestimonialModal({
 }: {
   testimonial: Partial<TestimonialRow> | null;
   onClose: () => void;
-  onSave: (t: { name: string; role: string; organization: string; quote: string; rating: number; status: string; featured: boolean; isNew: boolean; id?: number }) => Promise<void>;
+  onSave: (t: { name: string; role: string; organization: string; quote: string; rating: number; status: string; featured: boolean; avatar: string | null; isNew: boolean; id?: number }) => Promise<void>;
 }) {
   const isNew = !testimonial?.id;
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving]       = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [avatar, setAvatar]       = useState<string | null>(testimonial?.avatar ?? null);
+  const fileRef                   = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({
     name:         testimonial?.name         ?? '',
     role:         testimonial?.role         ?? '',
@@ -72,9 +77,21 @@ function TestimonialModal({
     featured:     testimonial?.featured     ?? false,
   });
 
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const fd = new FormData();
+    fd.append('file', file);
+    const result = await uploadImage(fd, 'geuza/avatars').catch(() => null);
+    if (result) setAvatar(result.url);
+    setUploading(false);
+    e.target.value = '';
+  };
+
   const handleSave = async () => {
     setSaving(true);
-    await onSave({ ...form, isNew, id: testimonial?.id });
+    await onSave({ ...form, avatar, isNew, id: testimonial?.id });
     setSaving(false);
   };
 
@@ -100,11 +117,21 @@ function TestimonialModal({
         </div>
 
         <div className="px-6 py-5 flex flex-col gap-4">
-          {/* Avatar placeholder + name */}
+          {/* Avatar upload + name */}
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-300 hover:border-amber-300 hover:text-amber-400 transition-all cursor-pointer flex-shrink-0">
-              <HiOutlinePhotograph size={20} />
+            <div
+              onClick={() => !uploading && fileRef.current?.click()}
+              className="w-14 h-14 rounded-full border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-300 hover:border-amber-300 hover:text-amber-400 transition-all cursor-pointer flex-shrink-0 overflow-hidden relative"
+            >
+              {avatar ? (
+                <Image src={avatar} alt="Avatar" fill className="object-cover" unoptimized />
+              ) : uploading ? (
+                <div className="w-5 h-5 rounded-full border-2 border-amber-300/40 border-t-amber-400 animate-spin" />
+              ) : (
+                <HiOutlinePhotograph size={20} />
+              )}
             </div>
+            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
             <div className="flex-1">
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
               <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -188,7 +215,7 @@ export default function TestimonialsView({ initialData }: { initialData: Testimo
   const openEdit   = (t: TestimonialRow) => { setModal(t); setShowModal(true); };
   const closeModal = () => { setShowModal(false); setTimeout(() => setModal(null), 200); };
 
-  const handleSave = async (data: { name: string; role: string; organization: string; quote: string; rating: number; status: string; featured: boolean; isNew: boolean; id?: number }) => {
+  const handleSave = async (data: { name: string; role: string; organization: string; quote: string; rating: number; status: string; featured: boolean; avatar: string | null; isNew: boolean; id?: number }) => {
     const isVisible = data.status === 'Published';
     if (data.isNew) {
       const created = await createTestimonial({
@@ -197,6 +224,7 @@ export default function TestimonialsView({ initialData }: { initialData: Testimo
         company: data.organization || undefined,
         quote: data.quote,
         rating: data.rating,
+        avatar: data.avatar || undefined,
       });
       setItems((prev) => [
         {
@@ -209,7 +237,7 @@ export default function TestimonialsView({ initialData }: { initialData: Testimo
           status: data.status,
           date: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
           featured: data.featured,
-          avatar: null,
+          avatar: data.avatar,
         },
         ...prev,
       ]);
@@ -221,11 +249,12 @@ export default function TestimonialsView({ initialData }: { initialData: Testimo
         quote: data.quote,
         rating: data.rating,
         isVisible,
+        avatar: data.avatar || undefined,
       });
       setItems((prev) =>
         prev.map((t) =>
           t.id === data.id
-            ? { ...t, name: data.name, role: data.role || null, organization: data.organization || null, quote: data.quote, rating: data.rating, status: data.status, featured: data.featured }
+            ? { ...t, name: data.name, role: data.role || null, organization: data.organization || null, quote: data.quote, rating: data.rating, status: data.status, featured: data.featured, avatar: data.avatar }
             : t
         )
       );

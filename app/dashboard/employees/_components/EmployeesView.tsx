@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -15,6 +16,7 @@ import {
 import { DashboardHeader, StatusBadge, AdminTable, PageHeader } from '@/components/dashboard';
 import type { Column } from '@/components/dashboard/AdminTable';
 import { createEmployee, updateEmployee, deleteEmployee } from '@/actions/employees';
+import { uploadImage } from '@/actions/upload';
 
 export interface EmployeeRow {
   id: number;
@@ -37,10 +39,13 @@ function EmployeeModal({
 }: {
   employee: Partial<EmployeeRow> | null;
   onClose: () => void;
-  onSave: (e: { name: string; role: string; department: string; email: string; phone: string; status: string; isNew: boolean; id?: number }) => Promise<void>;
+  onSave: (e: { name: string; role: string; department: string; email: string; phone: string; status: string; avatar: string | null; isNew: boolean; id?: number }) => Promise<void>;
 }) {
   const isNew = !employee?.id;
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving]     = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [avatar, setAvatar]     = useState<string | null>(employee?.avatar ?? null);
+  const fileRef                 = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({
     name:       employee?.name       ?? '',
     role:       employee?.role       ?? '',
@@ -50,9 +55,21 @@ function EmployeeModal({
     status:     employee?.status     ?? 'Active',
   });
 
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const fd = new FormData();
+    fd.append('file', file);
+    const result = await uploadImage(fd, 'geuza/avatars').catch(() => null);
+    if (result) setAvatar(result.url);
+    setUploading(false);
+    e.target.value = '';
+  };
+
   const handleSave = async () => {
     setSaving(true);
-    await onSave({ ...form, isNew, id: employee?.id });
+    await onSave({ ...form, avatar, isNew, id: employee?.id });
     setSaving(false);
   };
 
@@ -78,11 +95,21 @@ function EmployeeModal({
         </div>
 
         <div className="px-6 py-5 flex flex-col gap-4">
-          {/* Avatar placeholder */}
+          {/* Avatar upload */}
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-300 hover:border-[#0F9E59]/50 hover:text-[#0F9E59] transition-all cursor-pointer flex-shrink-0">
-              <HiOutlinePhotograph size={22} />
+            <div
+              onClick={() => !uploading && fileRef.current?.click()}
+              className="w-16 h-16 rounded-full border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-300 hover:border-[#0F9E59]/50 hover:text-[#0F9E59] transition-all cursor-pointer flex-shrink-0 overflow-hidden relative"
+            >
+              {avatar ? (
+                <Image src={avatar} alt="Avatar" fill className="object-cover" unoptimized />
+              ) : uploading ? (
+                <div className="w-5 h-5 rounded-full border-2 border-[#0F9E59]/30 border-t-[#0F9E59] animate-spin" />
+              ) : (
+                <HiOutlinePhotograph size={22} />
+              )}
             </div>
+            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
             <div className="flex-1">
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
               <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -159,30 +186,45 @@ export default function EmployeesView({ initialData }: { initialData: EmployeeRo
   const openEdit   = (e: EmployeeRow) => { setModal(e); setShowModal(true); };
   const closeModal = () => { setShowModal(false); setTimeout(() => setModal(null), 200); };
 
-  const handleSave = async (data: { name: string; role: string; department: string; email: string; phone: string; status: string; isNew: boolean; id?: number }) => {
+  const handleSave = async (data: { name: string; role: string; department: string; email: string; phone: string; status: string; avatar: string | null; isNew: boolean; id?: number }) => {
     const isVisible = data.status === 'Active';
     if (data.isNew) {
-      const created = await createEmployee({ name: data.name, role: data.role, bio: data.department });
+      const created = await createEmployee({
+        name: data.name,
+        role: data.role,
+        department: data.department || undefined,
+        email: data.email || undefined,
+        phone: data.phone || undefined,
+        avatar: data.avatar || undefined,
+      });
       setEmployees((prev) => [
         {
           id: created.id,
           name: created.name,
           role: created.role,
-          department: data.department,
+          department: data.department || null,
           email: data.email || null,
           phone: data.phone || null,
           status: data.status,
           joined: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
-          avatar: null,
+          avatar: data.avatar || null,
         },
         ...prev,
       ]);
     } else if (data.id !== undefined) {
-      await updateEmployee(data.id, { name: data.name, role: data.role, isVisible });
+      await updateEmployee(data.id, {
+        name: data.name,
+        role: data.role,
+        department: data.department || undefined,
+        email: data.email || undefined,
+        phone: data.phone || undefined,
+        avatar: data.avatar || undefined,
+        isVisible,
+      });
       setEmployees((prev) =>
         prev.map((e) =>
           e.id === data.id
-            ? { ...e, name: data.name, role: data.role, department: data.department, email: data.email || null, phone: data.phone || null, status: data.status }
+            ? { ...e, name: data.name, role: data.role, department: data.department || null, email: data.email || null, phone: data.phone || null, status: data.status, avatar: data.avatar }
             : e
         )
       );

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -11,10 +12,12 @@ import {
   HiOutlineGlobe,
   HiOutlineMail,
   HiOutlinePhone,
+  HiOutlinePhotograph,
 } from 'react-icons/hi';
 import { DashboardHeader, StatusBadge, AdminTable, PageHeader } from '@/components/dashboard';
 import type { Column } from '@/components/dashboard/AdminTable';
 import { createPartner, updatePartner, deletePartner } from '@/actions/partners';
+import { uploadImage } from '@/actions/upload';
 
 export interface PartnerRow {
   id: number;
@@ -27,6 +30,7 @@ export interface PartnerRow {
   status: string;
   since: string;
   description: string | null;
+  logo: string | null;
 }
 
 const TYPES = ['NGO', 'Government', 'Corporate', 'UN Agency', 'International', 'Individual'];
@@ -38,10 +42,13 @@ function PartnerModal({
 }: {
   partner: Partial<PartnerRow> | null;
   onClose: () => void;
-  onSave: (p: { name: string; type: string; contact: string; email: string; phone: string; country: string; status: string; description: string; isNew: boolean; id?: number }) => Promise<void>;
+  onSave: (p: { name: string; type: string; contact: string; email: string; phone: string; country: string; status: string; description: string; logo: string | null; isNew: boolean; id?: number }) => Promise<void>;
 }) {
   const isNew = !partner?.id;
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving]       = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [logo, setLogo]           = useState<string | null>(partner?.logo ?? null);
+  const fileRef                   = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({
     name:        partner?.name        ?? '',
     type:        partner?.type        ?? 'NGO',
@@ -53,9 +60,21 @@ function PartnerModal({
     description: partner?.description ?? '',
   });
 
+  const handleLogoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const fd = new FormData();
+    fd.append('file', file);
+    const result = await uploadImage(fd, 'geuza/logos').catch(() => null);
+    if (result) setLogo(result.url);
+    setUploading(false);
+    e.target.value = '';
+  };
+
   const handleSave = async () => {
     setSaving(true);
-    await onSave({ ...form, isNew, id: partner?.id });
+    await onSave({ ...form, logo, isNew, id: partner?.id });
     setSaving(false);
   };
 
@@ -81,6 +100,27 @@ function PartnerModal({
         </div>
 
         <div className="px-6 py-5 flex flex-col gap-4">
+          {/* Logo upload */}
+          <div>
+            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Logo</label>
+            <div
+              onClick={() => !uploading && fileRef.current?.click()}
+              className="h-20 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center gap-3 cursor-pointer hover:border-[#0F9E59]/50 hover:text-[#0F9E59] text-gray-400 transition-all overflow-hidden relative"
+            >
+              {logo ? (
+                <Image src={logo} alt="Logo" fill className="object-contain p-2" unoptimized />
+              ) : uploading ? (
+                <div className="w-5 h-5 rounded-full border-2 border-[#0F9E59]/30 border-t-[#0F9E59] animate-spin" />
+              ) : (
+                <>
+                  <HiOutlinePhotograph size={20} />
+                  <span className="text-xs font-semibold">Upload logo</span>
+                </>
+              )}
+            </div>
+            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleLogoChange} />
+          </div>
+
           <div>
             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Organization Name</label>
             <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -172,20 +212,24 @@ export default function PartnersView({ initialData }: { initialData: PartnerRow[
   const openEdit   = (p: PartnerRow) => { setModal(p); setShowModal(true); };
   const closeModal = () => { setShowModal(false); setTimeout(() => setModal(null), 200); };
 
-  const handleSave = async (data: { name: string; type: string; contact: string; email: string; phone: string; country: string; status: string; description: string; isNew: boolean; id?: number }) => {
+  const handleSave = async (data: { name: string; type: string; contact: string; email: string; phone: string; country: string; status: string; description: string; logo: string | null; isNew: boolean; id?: number }) => {
     const isVisible = data.status === 'Active';
     if (data.isNew) {
       const created = await createPartner({
         name: data.name,
+        type: data.type || undefined,
         description: data.description || undefined,
         contactName: data.contact || undefined,
         contactEmail: data.email || undefined,
+        contactPhone: data.phone || undefined,
+        country: data.country || undefined,
+        logo: data.logo || undefined,
       });
       setPartners((prev) => [
         {
           id: created.id,
           name: created.name,
-          type: data.type,
+          type: data.type || null,
           contact: data.contact || null,
           email: data.email || null,
           phone: data.phone || null,
@@ -193,21 +237,26 @@ export default function PartnersView({ initialData }: { initialData: PartnerRow[
           status: data.status,
           since: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
           description: data.description || null,
+          logo: data.logo,
         },
         ...prev,
       ]);
     } else if (data.id !== undefined) {
       await updatePartner(data.id, {
         name: data.name,
+        type: data.type || undefined,
         description: data.description || undefined,
         contactName: data.contact || undefined,
         contactEmail: data.email || undefined,
+        contactPhone: data.phone || undefined,
+        country: data.country || undefined,
+        logo: data.logo || undefined,
         isVisible,
       });
       setPartners((prev) =>
         prev.map((p) =>
           p.id === data.id
-            ? { ...p, name: data.name, type: data.type, contact: data.contact || null, email: data.email || null, phone: data.phone || null, country: data.country || null, status: data.status, description: data.description || null }
+            ? { ...p, name: data.name, type: data.type || null, contact: data.contact || null, email: data.email || null, phone: data.phone || null, country: data.country || null, status: data.status, description: data.description || null, logo: data.logo }
             : p
         )
       );
