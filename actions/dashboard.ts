@@ -37,9 +37,8 @@ export async function getDashboardStats() {
     donationTotal: Number(donationAgg._sum.amount ?? 0),
     recentOrders: recentOrders.map((o) => ({
       id:       `#${o.id}`,
-      customer: o.user.name,
+      customer: o.user?.name ?? o.guestName ?? 'Guest',
       item:     o.items[0]?.product.name ?? 'Multiple items',
-      total:    `RWF ${Number(o.total).toLocaleString()}`,
       status:   o.status.charAt(0).toUpperCase() + o.status.slice(1),
       date:     fmtDate(o.createdAt),
     })),

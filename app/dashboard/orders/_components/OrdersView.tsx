@@ -9,16 +9,17 @@ import type { Column } from '@/components/dashboard/AdminTable';
 import { updateOrderStatus } from '@/actions/orders';
 
 export interface OrderRow {
-  id: string;
-  customer: string;
-  email: string;
-  item: string;
-  qty: number;
-  total: string;
-  status: string;
-  date: string;
-  address: string;
-  notes: string | null;
+  id:          string;
+  orderNumber: string;
+  customer:    string;
+  email:       string;
+  phone:       string;
+  item:        string;
+  qty:         number;
+  status:      string;
+  date:        string;
+  address:     string;
+  notes:       string | null;
 }
 
 function OrderDetailModal({
@@ -68,14 +69,15 @@ function OrderDetailModal({
               <StatusBadge status={order.status} />
             </div>
             <div className="text-right">
-              <p className="text-xs text-gray-400 mb-1">Total</p>
-              <p className="font-display font-black text-gray-900 text-xl">{order.total}</p>
+              <p className="text-xs text-gray-400 mb-1">Order No.</p>
+              <p className="font-mono font-bold text-gray-900 text-sm">{order.orderNumber}</p>
             </div>
           </div>
 
           {[
             { label: 'Customer',   value: order.customer },
             { label: 'Email',      value: order.email },
+            { label: 'Phone',      value: order.phone },
             { label: 'Address',    value: order.address },
             { label: 'Item',       value: order.item },
             { label: 'Quantity',   value: String(order.qty) },
@@ -131,7 +133,6 @@ export default function OrdersView({ initialData }: { initialData: OrderRow[] })
     },
     { key: 'item',   label: 'Item',  render: (o) => <span className="text-gray-600 text-sm">{o.item}</span> },
     { key: 'qty',    label: 'Qty',   render: (o) => <span className="text-gray-600 text-sm">{o.qty}</span> },
-    { key: 'total',  label: 'Total', sortable: true, render: (o) => <span className="font-semibold text-gray-800 text-sm">{o.total}</span> },
     { key: 'status', label: 'Status', render: (o) => <StatusBadge status={o.status} /> },
     { key: 'date',   label: 'Date',  sortable: true, render: (o) => <span className="text-gray-400 text-xs whitespace-nowrap">{o.date}</span> },
   ];

@@ -8,7 +8,7 @@ import {
 } from 'react-icons/hi';
 import { DashboardHeader, StatCard, StatusBadge, PageHeader } from '@/components/dashboard';
 
-interface RecentOrder { id: string; customer: string; item: string; total: string; status: string; date: string }
+interface RecentOrder { id: string; customer: string; item: string; status: string; date: string }
 interface RecentBlog  { id: number; title: string; status: string; date: string }
 interface Props {
   stats: {
@@ -49,7 +49,7 @@ export default function DashboardOverviewClient({ stats }: Props) {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-gray-100 bg-gray-50/60">
-                      {['Order','Customer','Item','Total','Status','Date'].map(h => (
+                      {['Order','Customer','Item','Status','Date'].map(h => (
                         <th key={h} className="px-4 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
@@ -60,7 +60,6 @@ export default function DashboardOverviewClient({ stats }: Props) {
                         <td className="px-4 py-3 font-semibold text-primary text-xs">{o.id}</td>
                         <td className="px-4 py-3 text-gray-700 whitespace-nowrap">{o.customer}</td>
                         <td className="px-4 py-3 text-gray-500 whitespace-nowrap">{o.item}</td>
-                        <td className="px-4 py-3 font-semibold text-gray-800 whitespace-nowrap">{o.total}</td>
                         <td className="px-4 py-3"><StatusBadge status={o.status} /></td>
                         <td className="px-4 py-3 text-gray-400 text-xs whitespace-nowrap">{o.date}</td>
                       </motion.tr>
