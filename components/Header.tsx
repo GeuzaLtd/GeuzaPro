@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { auth } from '@/lib/auth';
 import UserMenu from './UserMenu';
 import MobileMenu from './MobileMenu';
+import CartIcon from './CartIcon';
 
 const navLinks = [
   { name: 'COMPANY',  href: '/company'  },
@@ -46,6 +47,7 @@ export default async function Header() {
 
         {/* Desktop Auth */}
         <div className="hidden md:flex items-center gap-4">
+          <CartIcon />
           {isLoggedIn ? (
             <>
               <Link
