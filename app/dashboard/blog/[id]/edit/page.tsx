@@ -15,6 +15,7 @@ export default async function EditBlogPage({ params }: { params: Promise<{ id: s
     status: blog.status === 'published' ? 'Published' : 'Draft',
     author: blog.author?.name ?? 'Admin',
     category: blog.category?.name ?? null,
+    coverImage: blog.coverImage,
   } : null;
   return <EditBlogForm blog={data} id={id} />;
 }
