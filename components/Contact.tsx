@@ -53,7 +53,7 @@ export default function Contact() {
           {/* Map */}
           <div className="relative h-[300px] md:h-full min-h-[400px] rounded-xl overflow-hidden bg-gray-200">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63800.41674005383!2d30.0186622!3d-1.9402771!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca4258ed8e797%3A0xf32b36a5411d0bc8!2sKigali%2C%20Rwanda!5e0!3m2!1sen!2sus!4v1635000000000!5m2!1sen!2sus"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3419.5094097988444!2d30.057543496865957!3d-1.9493444889226081!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca5001ca34f6b%3A0xda51adc484809f11!2sGEUZA%20Ltd!5e0!3m2!1sen!2srw!4v1774699329564!5m2!1sen!2srw"
               width="100%"
               height="100%"
               style={{ border: 0 }}

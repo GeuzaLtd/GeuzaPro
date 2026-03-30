@@ -43,7 +43,7 @@ export default function CompanyHero() {
         </p>
         <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-5">
           Smart, Affordable, and<br />
-          Sustainable mobility aids
+          Sustainable Assistive Devices
         </h1>
         <span className="inline-block bg-[#0F9E59] text-white font-bold tracking-[0.18em] uppercase text-xs px-8 py-3 rounded-md">
           About Us
