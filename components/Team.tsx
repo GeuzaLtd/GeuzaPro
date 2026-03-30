@@ -16,22 +16,19 @@ export interface TeamMember {
 const CARD_W  = 400;  // px  (≈ w-[300px])
 const GAP     = 60;   // px  (gap-10)
 const STEP    = CARD_W + GAP;  // 340 px per slot
-const SPEED   = 48;   // px / second  (rightward)
+const SPEED   = 48;   // px / second  (leftward)
 
 export default function Team({ members }: { members: TeamMember[] }) {
   const N          = members.length;
   const totalWidth = N * STEP;
 
-  // Start at -totalWidth so the second copy is at the left edge.
-  // Moving right (x increases → 0) then reset back to -totalWidth:
-  // the visual is identical at x=0 and x=-totalWidth → seamless loop.
-  const x      = useMotionValue(N > 0 ? -totalWidth : 0);
+  const x      = useMotionValue(0);
   const paused = useRef(false);
 
   useAnimationFrame((_, delta) => {
     if (paused.current || N === 0) return;
-    let next = x.get() + (SPEED * delta) / 1000;
-    if (next >= 0) next -= totalWidth;   // reset to second-copy start
+    let next = x.get() - (SPEED * delta) / 1000;
+    if (next <= -totalWidth) next += totalWidth;
     x.set(next);
   });
 

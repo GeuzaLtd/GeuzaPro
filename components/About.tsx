@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import { TbRecycle } from 'react-icons/tb';
 import { HiOutlineUserGroup, HiOutlineLightBulb, HiChevronDown } from 'react-icons/hi2';
-import { SectionHeader, Button } from './ui';
+import { SectionHeader } from './ui';
 
 const accordionItems = [
   {
@@ -123,7 +124,12 @@ export default function About() {
               })}
             </div>
 
-            <Button className="mt-8">Learn more</Button>
+            <Link
+              href="/company"
+              className="mt-8 inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-primary text-white font-medium hover:bg-primary-dark transition-all duration-300"
+            >
+              Learn more
+            </Link>
           </div>
         </div>
       </div>
