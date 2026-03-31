@@ -31,19 +31,23 @@ export async function getBlogBySlug(slug: string) {
 }
 
 export async function createBlog(data: {
-  title: string;
-  content: string;
-  excerpt?: string;
+  title:       string;
+  content:     string;
+  excerpt?:    string;
   coverImage?: string;
-  authorId?: number;
+  authorId?:   number;
   categoryId?: number;
-  status?: string;
+  tags?:       string[];
+  images?:     string[];
+  status?:     string;
 }) {
   const slug = slugify(data.title);
   const blog = await prisma.blog.create({
     data: {
       ...data,
       slug,
+      tags:        data.tags   ?? [],
+      images:      data.images ?? [],
       publishedAt: data.status === 'published' ? new Date() : null,
     },
   });
@@ -55,13 +59,15 @@ export async function createBlog(data: {
 export async function updateBlog(
   id: number,
   data: Partial<{
-    title: string;
-    content: string;
-    excerpt: string;
-    coverImage: string;
-    categoryId: number;
-    status: string;
-    isVisible: boolean;
+    title:       string;
+    content:     string;
+    excerpt:     string;
+    coverImage:  string;
+    categoryId:  number | null;
+    tags:        string[];
+    images:      string[];
+    status:      string;
+    isVisible:   boolean;
   }>
 ) {
   const updates: Record<string, unknown> = { ...data };

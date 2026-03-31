@@ -9,27 +9,13 @@ import {
   HiOutlineEye,
   HiOutlinePlus,
   HiOutlineX,
-  HiOutlineTrash,
 } from 'react-icons/hi';
 import { DashboardHeader, PageHeader } from '@/components/dashboard';
 import ImageUploadSlot from '@/components/dashboard/ImageUploadSlot';
 import BlogEditor from '@/components/dashboard/BlogEditor';
 import BlogPreview from '@/components/dashboard/BlogPreview';
-import { updateBlog, deleteBlog } from '@/actions/blogs';
+import { createBlog } from '@/actions/blogs';
 import { useRouter } from 'next/navigation';
-
-interface BlogData {
-  id:          number;
-  title:       string;
-  excerpt:     string | null;
-  content:     string | null;
-  status:      string;
-  author:      string | null;
-  categoryId:  number | null;
-  coverImage:  string | null;
-  tags:        string[];
-  images:      string[];
-}
 
 const fieldVariants = {
   hidden:  { opacity: 0, y: 16 },
@@ -38,39 +24,28 @@ const fieldVariants = {
 
 const MAX_GALLERY = 6;
 
-export default function EditBlogForm({
-  blog,
-  id,
+export default function NewBlogForm({
   allCategories,
 }: {
-  blog:          BlogData | null;
-  id:            string;
   allCategories: { id: number; name: string }[];
 }) {
   const router = useRouter();
 
   const [form, setForm] = useState({
-    title:      blog?.title    ?? '',
-    excerpt:    blog?.excerpt  ?? '',
-    author:     blog?.author   ?? 'Admin',
-    categoryId: blog?.categoryId ?? null as number | null,
-    status:     blog?.status   ?? 'Draft',
-    tags:       blog?.tags     ?? [] as string[],
+    title:      '',
+    excerpt:    '',
+    author:     'Admin',
+    categoryId: allCategories[0]?.id ?? null as number | null,
+    status:     'Draft',
+    tags:       [] as string[],
   });
-  const [content, setContent]       = useState(blog?.content ?? '');
-  const [coverImage, setCoverImage] = useState<string | null>(blog?.coverImage ?? null);
-
-  // Initialise gallery: fill existing images into slots, pad with nulls
-  const [gallery, setGallery] = useState<(string | null)[]>(() => {
-    const slots: (string | null)[] = Array(MAX_GALLERY).fill(null);
-    (blog?.images ?? []).forEach((url, i) => { if (i < MAX_GALLERY) slots[i] = url; });
-    return slots;
-  });
-
-  const [tagInput, setTagInput] = useState('');
-  const [saving, setSaving]     = useState(false);
-  const [saved, setSaved]       = useState(false);
-  const [preview, setPreview]   = useState(false);
+  const [content, setContent]       = useState('');
+  const [coverImage, setCoverImage] = useState<string | null>(null);
+  const [gallery, setGallery]       = useState<(string | null)[]>(Array(MAX_GALLERY).fill(null));
+  const [tagInput, setTagInput]     = useState('');
+  const [saving, setSaving]         = useState(false);
+  const [saved, setSaved]           = useState(false);
+  const [preview, setPreview]       = useState(false);
 
   const addTag = () => {
     const t = tagInput.trim();
@@ -85,13 +60,14 @@ export default function EditBlogForm({
   const categoryName = allCategories.find((c) => c.id === form.categoryId)?.name ?? '';
 
   const handleSave = async (status: string) => {
+    if (!form.title.trim()) return;
     setSaving(true);
-    await updateBlog(parseInt(id), {
+    await createBlog({
       title:      form.title,
-      excerpt:    form.excerpt,
       content,
+      excerpt:    form.excerpt,
       status:     status === 'Published' ? 'published' : 'draft',
-      categoryId: form.categoryId,
+      categoryId: form.categoryId ?? undefined,
       tags:       form.tags,
       images:     gallery.filter(Boolean) as string[],
       ...(coverImage ? { coverImage } : {}),
@@ -99,18 +75,12 @@ export default function EditBlogForm({
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
-    setForm((f) => ({ ...f, status }));
-    router.refresh();
-  };
-
-  const handleDelete = async () => {
-    await deleteBlog(parseInt(id));
     router.push('/dashboard/blog');
   };
 
   return (
     <>
-      <DashboardHeader title="Edit Blog Post" />
+      <DashboardHeader title="New Blog Post" />
 
       {preview && (
         <BlogPreview
@@ -135,7 +105,7 @@ export default function EditBlogForm({
             {saved && (
               <motion.span initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }}
                 className="text-xs text-[#0F9E59] font-semibold">
-                ✓ Changes saved
+                ✓ Saved
               </motion.span>
             )}
             <button onClick={() => setPreview(true)}
@@ -152,19 +122,19 @@ export default function EditBlogForm({
                 <motion.span className="w-4 h-4 rounded-full border-2 border-white/40 border-t-white block"
                   animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }} />
               )}
-              Update Post
+              Publish
             </button>
           </div>
         </div>
 
         <div className="max-w-6xl mx-auto px-6 py-8">
           <PageHeader
-            title={blog?.title ?? 'Edit Post'}
-            description={`Editing post #${id}`}
+            title="Create New Post"
+            description="Write and publish a new blog article"
             breadcrumbs={[
               { label: 'Dashboard', href: '/dashboard' },
               { label: 'Blog', href: '/dashboard/blog' },
-              { label: 'Edit' },
+              { label: 'New Post' },
             ]}
           />
 
@@ -223,23 +193,6 @@ export default function EditBlogForm({
                 </div>
               </motion.div>
 
-              {/* Danger zone */}
-              <motion.div custom={9} variants={fieldVariants} initial="hidden" animate="visible">
-                <div className="bg-white rounded-2xl border border-red-100 p-5">
-                  <p className="text-xs font-bold text-red-400 uppercase tracking-widest mb-3">Danger Zone</p>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-gray-700">Delete this post</p>
-                      <p className="text-xs text-gray-400 mt-0.5">This action cannot be undone.</p>
-                    </div>
-                    <button onClick={handleDelete}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-200 text-sm font-medium text-red-500 hover:bg-red-50 transition-all">
-                      <HiOutlineTrash size={14} /> Delete Post
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-
             </div>
 
             {/* ── Sidebar ── */}
@@ -251,7 +204,7 @@ export default function EditBlogForm({
                   <div className="flex flex-col gap-3 mb-4">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-500">Status</span>
-                      <span className={`text-sm font-semibold ${form.status === 'Published' ? 'text-[#0F9E59]' : 'text-gray-500'}`}>{form.status}</span>
+                      <span className="text-sm font-semibold text-gray-700">{form.status}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-500">Author</span>
@@ -265,11 +218,11 @@ export default function EditBlogForm({
                     </button>
                     <button onClick={() => handleSave('Published')} disabled={saving}
                       className="w-full py-2.5 rounded-full bg-[#0F9E59] text-white text-sm font-bold hover:bg-[#0d8a4d] transition-all">
-                      Update &amp; Publish
+                      Publish Now
                     </button>
                     <button onClick={() => handleSave('Draft')} disabled={saving}
                       className="w-full py-2.5 rounded-full border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all">
-                      Revert to Draft
+                      Save as Draft
                     </button>
                   </div>
                 </div>
