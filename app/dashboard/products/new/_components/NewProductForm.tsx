@@ -8,31 +8,18 @@ import {
   HiOutlineSave,
   HiOutlinePlus,
   HiOutlineX,
-  HiOutlineTrash,
 } from 'react-icons/hi';
 import { DashboardHeader, PageHeader } from '@/components/dashboard';
 import ImageUploadSlot from '@/components/dashboard/ImageUploadSlot';
-import { updateProduct, deleteProduct } from '@/actions/products';
+import { createProduct } from '@/actions/products';
 import { useRouter } from 'next/navigation';
 
-interface ProductData {
-  id:          number;
-  name:        string;
-  description: string | null;
-  price:       string;
-  stock:       number;
-  status:      string;
-  categoryIds: number[];
-  colors?:     string[];
-  images?:     { url: string }[];
-}
-
 const COLOURS = [
-  { name: 'White',  hex: '#f9fafb' },
-  { name: 'Black',  hex: '#111827' },
-  { name: 'Yellow', hex: '#eab308' },
-  { name: 'Green',  hex: '#22c55e' },
-  { name: 'Red',    hex: '#ef4444' },
+  { name: 'White',  hex: '#f9fafb', border: true  },
+  { name: 'Black',  hex: '#111827', border: false },
+  { name: 'Yellow', hex: '#eab308', border: false },
+  { name: 'Green',  hex: '#22c55e', border: false },
+  { name: 'Red',    hex: '#ef4444', border: false },
 ];
 
 const fieldVariants = {
@@ -40,54 +27,43 @@ const fieldVariants = {
   visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.06, duration: 0.4 } }),
 };
 
-export default function EditProductForm({
-  product,
-  id,
+export default function NewProductForm({
   allCategories,
 }: {
-  product:       ProductData | null;
-  id:            string;
   allCategories: { id: number; name: string }[];
 }) {
   const router = useRouter();
-
   const [form, setForm] = useState({
-    name:        product?.name        ?? '',
-    price:       product?.price?.replace('RWF ', '').replace(',', '') ?? '',
-    stock:       String(product?.stock ?? 0),
-    status:      product?.status      ?? 'In Stock',
-    description: product?.description ?? '',
+    name:        '',
+    price:       '',
+    stock:       '',
+    sku:         '',
+    status:      'In Stock',
+    description: '',
     features:    [] as string[],
     weight:      '',
     dimensions:  '',
   });
-  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>(product?.categoryIds ?? []);
+  const [images, setImages] = useState<{ url: string | null; publicId: string | null }[]>([
+    { url: null, publicId: null },
+    { url: null, publicId: null },
+    { url: null, publicId: null },
+    { url: null, publicId: null },
+  ]);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
+  const [selectedColors,      setSelectedColors]      = useState<string[]>([]);
+  const [featureInput, setFeatureInput] = useState('');
+  const [saving, setSaving]             = useState(false);
+  const [saved,  setSaved]              = useState(false);
 
   const toggleCategory = (id: number) =>
     setSelectedCategoryIds((prev) => prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]);
-  const [images, setImages] = useState<{ url: string | null; publicId: string | null }[]>(() => {
-    const slots: { url: string | null; publicId: string | null }[] = [
-      { url: null, publicId: null },
-      { url: null, publicId: null },
-      { url: null, publicId: null },
-      { url: null, publicId: null },
-    ];
-    (product?.images ?? []).forEach((img, i) => {
-      if (i < 4) slots[i] = { url: img.url, publicId: null };
-    });
-    return slots;
-  });
-  const [selectedColors, setSelectedColors] = useState<string[]>(product?.colors ?? []);
-  const [featureInput, setFeatureInput] = useState('');
-  const [saving, setSaving]             = useState(false);
-  const [saved, setSaved]               = useState(false);
 
   const toggleColor = (name: string) =>
     setSelectedColors((prev) => prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name]);
 
-  const setImage = (index: number) => (url: string | null, publicId: string | null) => {
+  const setImage = (index: number) => (url: string | null, publicId: string | null) =>
     setImages((prev) => prev.map((img, i) => (i === index ? { url, publicId } : img)));
-  };
 
   const addFeature = () => {
     const f = featureInput.trim();
@@ -98,36 +74,31 @@ export default function EditProductForm({
 
   const handleSave = async () => {
     setSaving(true);
-    const statusMap: Record<string, string> = { 'In Stock': 'in_stock', 'Low Stock': 'low_stock', 'Out Stock': 'out_stock' };
     const uploadedImages = images
       .filter((img) => img.url)
       .map((img, i) => ({ url: img.url!, isPrimary: i === 0 }));
-    await updateProduct(parseInt(id), {
+
+    await createProduct({
       name:        form.name,
       description: form.description,
-      price:       parseFloat(form.price.replace(/,/g, '')),
-      stock:       parseInt(form.stock),
-      status:      statusMap[form.status] ?? 'in_stock',
+      price:       parseFloat(form.price.replace(/,/g, '')) || 0,
+      stock:       parseInt(form.stock) || 0,
       categoryIds: selectedCategoryIds,
       colors:      selectedColors,
-      ...(uploadedImages.length > 0 && { images: uploadedImages }),
+      images:      uploadedImages.length > 0 ? uploadedImages : undefined,
     });
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
-    router.refresh();
-  };
-
-  const handleDelete = async () => {
-    await deleteProduct(parseInt(id));
     router.push('/dashboard/products');
   };
 
   return (
     <>
-      <DashboardHeader title="Edit Product" />
+      <DashboardHeader title="Add Product" />
 
       <main className="flex-1 overflow-y-auto bg-gray-50">
+        {/* Action bar */}
         <div className="bg-white border-b border-gray-100 px-6 py-3 flex items-center justify-between sticky top-0 z-20">
           <Link href="/dashboard/products"
             className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 transition-colors font-medium">
@@ -137,7 +108,7 @@ export default function EditProductForm({
           <div className="flex items-center gap-3">
             {saved && (
               <motion.span initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="text-xs text-[#0F9E59] font-semibold">
-                ✓ Changes saved
+                ✓ Product saved
               </motion.span>
             )}
             <button onClick={handleSave} disabled={saving}
@@ -146,29 +117,32 @@ export default function EditProductForm({
                 <motion.span className="w-4 h-4 rounded-full border-2 border-white/40 border-t-white"
                   animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }} />
               ) : <HiOutlineSave size={14} />}
-              Save Changes
+              Save Product
             </button>
           </div>
         </div>
 
         <div className="max-w-6xl mx-auto px-6 py-8">
           <PageHeader
-            title={product?.name ?? 'Edit Product'}
-            description={`Product #${id}`}
+            title="Add New Product"
+            description="List a new assistive device in the catalogue"
             breadcrumbs={[
               { label: 'Dashboard', href: '/dashboard' },
               { label: 'Products', href: '/dashboard/products' },
-              { label: 'Edit' },
+              { label: 'New Product' },
             ]}
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            {/* ── Main content ── */}
             <div className="lg:col-span-2 flex flex-col gap-5">
 
               <motion.div custom={0} variants={fieldVariants} initial="hidden" animate="visible">
                 <div className="bg-white rounded-2xl border border-gray-100 p-6">
                   <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Product Name</label>
                   <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    placeholder="e.g. Standard Wheelchair"
                     className="w-full text-2xl font-display font-black text-gray-900 placeholder-gray-300 focus:outline-none bg-transparent" />
                 </div>
               </motion.div>
@@ -189,6 +163,7 @@ export default function EditProductForm({
                 <div className="bg-white rounded-2xl border border-gray-100 p-6">
                   <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Description</label>
                   <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    placeholder="Describe the product, its purpose, and who it's designed for..."
                     rows={5}
                     className="w-full text-sm text-gray-700 placeholder-gray-400 focus:outline-none bg-transparent resize-none leading-relaxed" />
                 </div>
@@ -207,9 +182,6 @@ export default function EditProductForm({
                         </button>
                       </div>
                     ))}
-                    {form.features.length === 0 && (
-                      <p className="text-sm text-gray-300 italic">No features added yet</p>
-                    )}
                   </div>
                   <div className="flex gap-3">
                     <input type="text" value={featureInput} onChange={(e) => setFeatureInput(e.target.value)}
@@ -243,35 +215,19 @@ export default function EditProductForm({
                   </div>
                 </div>
               </motion.div>
-
-              {/* Danger zone */}
-              <motion.div custom={9} variants={fieldVariants} initial="hidden" animate="visible">
-                <div className="bg-white rounded-2xl border border-red-100 p-5">
-                  <p className="text-xs font-bold text-red-400 uppercase tracking-widest mb-3">Danger Zone</p>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-gray-700">Delete this product</p>
-                      <p className="text-xs text-gray-400 mt-0.5">This will remove it from the catalogue permanently.</p>
-                    </div>
-                    <button
-                      onClick={handleDelete}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-200 text-sm font-medium text-red-500 hover:bg-red-50 transition-all">
-                      <HiOutlineTrash size={14} />
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
             </div>
 
+            {/* ── Sidebar ── */}
             <div className="flex flex-col gap-5">
+
               <motion.div custom={5} variants={fieldVariants} initial="hidden" animate="visible">
                 <div className="bg-white rounded-2xl border border-gray-100 p-5">
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Pricing</p>
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Price (RWF)</label>
                     <input type="text" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#0F9E59]/10 focus:border-[#0F9E59] transition-all" />
+                      placeholder="e.g. 45,000"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0F9E59]/10 focus:border-[#0F9E59] transition-all" />
                   </div>
                 </div>
               </motion.div>
@@ -281,14 +237,22 @@ export default function EditProductForm({
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Inventory</p>
                   <div className="flex flex-col gap-3">
                     <div>
-                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Quantity</label>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">SKU</label>
+                      <input type="text" value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })}
+                        placeholder="e.g. WC-001"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0F9E59]/10 focus:border-[#0F9E59] transition-all" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Quantity in Stock</label>
                       <input type="number" value={form.stock} min={0} onChange={(e) => setForm({ ...form, stock: e.target.value })}
+                        placeholder="0"
                         className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#0F9E59]/10 focus:border-[#0F9E59] transition-all" />
                     </div>
                   </div>
                 </div>
               </motion.div>
 
+              {/* Categories */}
               <motion.div custom={7} variants={fieldVariants} initial="hidden" animate="visible">
                 <div className="bg-white rounded-2xl border border-gray-100 p-5">
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Categories</p>
@@ -325,8 +289,7 @@ export default function EditProductForm({
                           className={`flex items-center gap-3 py-2.5 px-3 rounded-xl border-2 text-sm font-medium transition-all ${
                             selected ? 'border-[#0F9E59] bg-[#0F9E59]/5 text-gray-900' : 'border-gray-100 text-gray-500 hover:border-gray-200'
                           }`}>
-                          <span className="w-5 h-5 rounded-full flex-shrink-0 border border-gray-300"
-                            style={{ backgroundColor: c.hex }} />
+                          <span className="w-5 h-5 rounded-full flex-shrink-0 border border-gray-300" style={{ backgroundColor: c.hex }} />
                           {c.name}
                           {selected && (
                             <svg className="ml-auto" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0F9E59" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -347,7 +310,9 @@ export default function EditProductForm({
                   <div className="flex flex-col gap-2">
                     {['In Stock', 'Low Stock', 'Out Stock'].map((s) => (
                       <button key={s} type="button" onClick={() => setForm({ ...form, status: s })}
-                        className={`py-2.5 px-4 rounded-xl text-sm font-semibold border text-left transition-all ${form.status === s ? 'bg-[#0F9E59] text-white border-[#0F9E59]' : 'border-gray-200 text-gray-500 hover:bg-gray-50'}`}>
+                        className={`py-2.5 px-4 rounded-xl text-sm font-semibold border text-left transition-all ${
+                          form.status === s ? 'bg-[#0F9E59] text-white border-[#0F9E59] shadow-sm' : 'border-gray-200 text-gray-500 hover:bg-gray-50'
+                        }`}>
                         {s}
                       </button>
                     ))}

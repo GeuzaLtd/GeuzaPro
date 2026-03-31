@@ -61,6 +61,7 @@ model Category {
   @@map("categories")
 }
 
+
 // ─── PRODUCTS ─────────────────────────────────────────────────────────────────
 
 model Product {
@@ -71,14 +72,13 @@ model Product {
   stock       Int            @default(0)
   status      String         @default("in_stock") // in_stock | low_stock | out_stock
   isVisible   Boolean        @default(true)
-  categoryId  Int?
   sizes       String[]       @default([])
   colors      String[]       @default([])
   minOrder    Int            @default(1)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
-  category    Category?      @relation(fields: [categoryId], references: [id])
+  categories  Category[]
   images      ProductImage[]
   cartItems   CartItem[]
   orderItems  OrderItem[]
@@ -170,6 +170,8 @@ model Blog {
   authorId    Int?
   categoryId  Int?
   readTime    Int?      // estimated read time in minutes
+  tags        String[]  @default([])
+  images      String[]  @default([])
   status      String    @default("draft") // draft | published
   isVisible   Boolean   @default(true)
   publishedAt DateTime?

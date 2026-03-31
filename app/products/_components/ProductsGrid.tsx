@@ -16,25 +16,33 @@ interface Product {
   sizes:       string[];
   colors:      string[];
   images:      ProductImage[];
-  category:    Category | null;
+  categories:  Category[];
 }
 
 const ITEMS_PER_PAGE = 6;
 
-export default function ProductsGrid({ products }: { products: Product[] }) {
-  const categories = useMemo(() => {
-    const cats = Array.from(
-      new Set(products.map((p) => p.category?.name).filter(Boolean) as string[])
-    );
-    return ['All', ...cats];
-  }, [products]);
+function getPageNumbers(current: number, total: number): (number | '…')[] {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  if (current <= 4) return [1, 2, 3, 4, 5, '…', total];
+  if (current >= total - 3) return [1, '…', total - 4, total - 3, total - 2, total - 1, total];
+  return [1, '…', current - 1, current, current + 1, '…', total];
+}
+
+export default function ProductsGrid({
+  products,
+  categories,
+}: {
+  products:   Product[];
+  categories: string[];
+}) {
+  const allCategories = useMemo(() => ['All', ...categories], [categories]);
 
   const [active, setActive] = useState('All');
   const [search, setSearch] = useState('');
   const [page,   setPage  ] = useState(1);
 
   const filtered = useMemo(() => {
-    let r = active === 'All' ? products : products.filter((p) => p.category?.name === active);
+    let r = active === 'All' ? products : products.filter((p) => p.categories.some((c) => c.name === active));
     if (search.trim()) {
       const q = search.toLowerCase();
       r = r.filter((p) =>
@@ -63,7 +71,7 @@ export default function ProductsGrid({ products }: { products: Product[] }) {
             <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
           <input type="text" value={search} onChange={handleSearch} placeholder="Search products…"
-            className="w-full pl-11 pr-10 py-3 rounded-full border border-gray-200 bg-white text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-[#0F9E59] focus:ring-2 focus:ring-[#0F9E59]/10 transition-all" />
+            className="w-full pl-11 pr-10 py-3 rounded-full border border-gray-200 bg-white text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all" />
           {search && (
             <button onClick={() => { setSearch(''); setPage(1); }}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
@@ -76,15 +84,19 @@ export default function ProductsGrid({ products }: { products: Product[] }) {
 
         {/* Category filter */}
         <div className="flex flex-wrap gap-2.5 mb-6">
-          {categories.map((cat) => {
-            const count = cat === 'All' ? products.length : products.filter((p) => p.category?.name === cat).length;
+          {allCategories.map((cat) => {
+            const count = cat === 'All' ? products.length : products.filter((p) => p.categories.some((c) => c.name === cat)).length;
             return (
               <button key={cat} onClick={() => handleCategory(cat)}
                 className={`relative px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${
-                  active === cat ? 'bg-[#0F9E59] text-white border-[#0F9E59] shadow-sm' : 'bg-white text-gray-600 border-gray-200 hover:border-[#0F9E59] hover:text-[#0F9E59]'
+                  active === cat
+                    ? 'bg-primary text-white border-primary shadow-sm'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-primary hover:text-primary'
                 }`}>
                 {cat}
-                <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full font-semibold ${active === cat ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'}`}>
+                <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full font-semibold ${
+                  active === cat ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
+                }`}>
                   {count}
                 </span>
               </button>
@@ -113,7 +125,6 @@ export default function ProductsGrid({ products }: { products: Product[] }) {
                     exit={{ opacity: 0, scale: 0.94 }} transition={{ duration: 0.25, delay: i * 0.06 }}>
                     <div className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col h-full">
 
-                      {/* Image */}
                       <Link href={`/shop/${product.id}`} className="block">
                         <div className="relative h-52 bg-gray-50 overflow-hidden flex-shrink-0">
                           {primaryImg ? (
@@ -127,7 +138,7 @@ export default function ProductsGrid({ products }: { products: Product[] }) {
                             </div>
                           )}
                           <span className={`absolute top-3 left-3 text-[10px] font-semibold tracking-wider uppercase px-2.5 py-1 rounded-full ${
-                            inStock ? 'bg-[#0F9E59]/10 text-[#0F9E59]' : 'bg-red-50 text-red-500'
+                            inStock ? 'bg-primary/10 text-primary' : 'bg-red-50 text-red-500'
                           }`}>
                             {inStock ? (product.status === 'low_stock' ? 'Low Stock' : 'In Stock') : 'Out of Stock'}
                           </span>
@@ -139,15 +150,14 @@ export default function ProductsGrid({ products }: { products: Product[] }) {
                         </div>
                       </Link>
 
-                      {/* Info */}
                       <div className="flex flex-col flex-1 p-5">
-                        {product.category && (
+                        {product.categories.length > 0 && (
                           <span className="text-[10px] font-semibold tracking-[0.18em] uppercase text-gray-400 mb-1">
-                            {product.category.name}
+                            {product.categories.map(c => c.name).join(', ')}
                           </span>
                         )}
                         <Link href={`/shop/${product.id}`}>
-                          <h3 className="font-display font-bold text-gray-900 text-lg leading-snug mb-2 hover:text-[#0F9E59] transition-colors">
+                          <h3 className="font-display font-bold text-gray-900 text-lg leading-snug mb-2 hover:text-primary transition-colors">
                             {product.name}
                           </h3>
                         </Link>
@@ -157,7 +167,6 @@ export default function ProductsGrid({ products }: { products: Product[] }) {
                           </p>
                         )}
 
-                        {/* Sizes / colors hint */}
                         {(product.sizes.length > 0 || product.colors.length > 0) && (
                           <div className="flex flex-wrap gap-1.5 mt-3">
                             {product.sizes.length  > 0 && <span className="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{product.sizes.length} sizes</span>}
@@ -167,7 +176,7 @@ export default function ProductsGrid({ products }: { products: Product[] }) {
 
                         <div className="mt-5 pt-4 border-t border-gray-100">
                           <Link href={`/shop/${product.id}`}
-                            className="w-full inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#0F9E59] text-white text-sm font-medium hover:bg-[#0d8a4d] transition-all duration-300">
+                            className="w-full inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-primary text-white text-sm font-medium hover:bg-primary-dark transition-all duration-300">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
                             </svg>
@@ -188,7 +197,7 @@ export default function ProductsGrid({ products }: { products: Product[] }) {
             </svg>
             <p className="text-gray-500 text-base font-medium">No products found</p>
             <p className="text-gray-400 text-sm mt-1 mb-4">Try a different keyword or category.</p>
-            <button onClick={clearFilters} className="text-sm text-[#0F9E59] font-medium hover:underline">
+            <button onClick={clearFilters} className="text-sm text-primary font-medium hover:underline">
               Clear all filters
             </button>
           </div>
@@ -196,19 +205,27 @@ export default function ProductsGrid({ products }: { products: Product[] }) {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-12">
+          <div className="flex items-center justify-center gap-1.5 mt-12">
             <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={safePage === 1}
-              className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:border-[#0F9E59] hover:text-[#0F9E59] disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+              className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:border-primary hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-all">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
             </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-              <button key={n} onClick={() => setPage(n)}
-                className={`w-10 h-10 rounded-full text-sm font-semibold transition-all ${n === safePage ? 'bg-[#0F9E59] text-white shadow-sm' : 'border border-gray-200 bg-white text-gray-600 hover:border-[#0F9E59] hover:text-[#0F9E59]'}`}>
-                {n}
-              </button>
-            ))}
+
+            {getPageNumbers(safePage, totalPages).map((n, i) =>
+              n === '…' ? (
+                <span key={`ellipsis-${i}`} className="w-10 h-10 flex items-center justify-center text-gray-400 text-sm select-none">…</span>
+              ) : (
+                <button key={n} onClick={() => setPage(n)}
+                  className={`w-10 h-10 rounded-full text-sm font-semibold transition-all ${
+                    n === safePage ? 'bg-primary text-white shadow-sm' : 'border border-gray-200 bg-white text-gray-600 hover:border-primary hover:text-primary'
+                  }`}>
+                  {n}
+                </button>
+              )
+            )}
+
             <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={safePage === totalPages}
-              className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:border-[#0F9E59] hover:text-[#0F9E59] disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+              className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:border-primary hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-all">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
             </button>
           </div>

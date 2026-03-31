@@ -16,18 +16,26 @@ interface Product {
   sizes:       string[];
   colors:      string[];
   images:      ProductImage[];
-  category:    Category | null;
+  categories:  Category[];
 }
 
 const ITEMS_PER_PAGE = 8;
 
-export default function ShopGrid({ products }: { products: Product[] }) {
-  const categories = useMemo(() => {
-    const cats = Array.from(
-      new Set(products.map((p) => p.category?.name).filter(Boolean) as string[])
-    );
-    return ['All', ...cats];
-  }, [products]);
+function getPageNumbers(current: number, total: number): (number | '…')[] {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  if (current <= 4) return [1, 2, 3, 4, 5, '…', total];
+  if (current >= total - 3) return [1, '…', total - 4, total - 3, total - 2, total - 1, total];
+  return [1, '…', current - 1, current, current + 1, '…', total];
+}
+
+export default function ShopGrid({
+  products,
+  categories,
+}: {
+  products:   Product[];
+  categories: string[];
+}) {
+  const allCategories = useMemo(() => ['All', ...categories], [categories]);
 
   const [activeFilter, setActiveFilter] = useState('All');
   const [search, setSearch] = useState('');
@@ -35,7 +43,7 @@ export default function ShopGrid({ products }: { products: Product[] }) {
 
   const filtered = useMemo(() => {
     let r = products;
-    if (activeFilter !== 'All') r = r.filter((p) => p.category?.name === activeFilter);
+    if (activeFilter !== 'All') r = r.filter((p) => p.categories.some((c) => c.name === activeFilter));
     if (search.trim()) {
       const q = search.toLowerCase();
       r = r.filter((p) => p.name.toLowerCase().includes(q));
@@ -55,24 +63,45 @@ export default function ShopGrid({ products }: { products: Product[] }) {
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
 
         {/* Toolbar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div className="relative w-full sm:max-w-xs">
             <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
             <input type="text" value={search} onChange={handleSearch} placeholder="Search products…"
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-[#0F9E59] focus:ring-2 focus:ring-[#0F9E59]/10 transition-all" />
+              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all" />
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
-            {categories.map((f) => (
-              <button key={f} onClick={() => handleFilter(f)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeFilter === f ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
-                {f}
-              </button>
-            ))}
+            {allCategories.map((f) => {
+              const count = f === 'All'
+                ? products.length
+                : products.filter((p) => p.categories.some((c) => c.name === f)).length;
+              return (
+                <button key={f} onClick={() => handleFilter(f)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    activeFilter === f
+                      ? 'bg-gray-900 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}>
+                  {f}
+                  <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full font-semibold ${
+                    activeFilter === f ? 'bg-white/20 text-white' : 'bg-white text-gray-400'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
+
+        {/* Results count */}
+        <p className="text-xs text-gray-400 mb-6">
+          {filtered.length === 0
+            ? 'No products found'
+            : `Showing ${(safePage - 1) * ITEMS_PER_PAGE + 1}–${Math.min(safePage * ITEMS_PER_PAGE, filtered.length)} of ${filtered.length} product${filtered.length !== 1 ? 's' : ''}`}
+        </p>
 
         {/* Grid */}
         {paginated.length > 0 ? (
@@ -89,7 +118,6 @@ export default function ShopGrid({ products }: { products: Product[] }) {
                     <Link href={`/shop/${product.id}`}
                       className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col">
 
-                      {/* Image */}
                       <div className="relative h-44 bg-gray-50 overflow-hidden flex-shrink-0">
                         {primaryImg ? (
                           <Image src={primaryImg.url} alt={product.name} fill
@@ -101,6 +129,11 @@ export default function ShopGrid({ products }: { products: Product[] }) {
                             </svg>
                           </div>
                         )}
+                        <span className={`absolute top-2 left-2 text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full ${
+                          inStock ? 'bg-primary/10 text-primary' : 'bg-red-50 text-red-500'
+                        }`}>
+                          {inStock ? (product.status === 'low_stock' ? 'Low Stock' : 'In Stock') : 'Out of Stock'}
+                        </span>
                         {product.images.length > 1 && (
                           <span className="absolute bottom-2 right-2 text-[10px] bg-black/40 text-white px-1.5 py-0.5 rounded-full">
                             +{product.images.length - 1} photos
@@ -108,13 +141,12 @@ export default function ShopGrid({ products }: { products: Product[] }) {
                         )}
                       </div>
 
-                      {/* Info */}
                       <div className="p-4 flex flex-col gap-1.5 flex-1">
-                        {product.category && (
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">{product.category.name}</span>
+                        {product.categories.length > 0 && (
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">{product.categories.map(c => c.name).join(', ')}</span>
                         )}
                         <p className="font-semibold text-gray-900 text-sm leading-snug line-clamp-2">{product.name}</p>
-                        <p className={`text-xs font-medium ${inStock ? 'text-[#0F9E59]' : 'text-red-500'}`}>
+                        <p className={`text-xs font-medium ${inStock ? 'text-primary' : 'text-red-500'}`}>
                           {inStock ? (product.status === 'low_stock' ? 'Low Stock' : 'In Stock') : 'Out of Stock'}
                         </p>
                         {(product.sizes.length > 0 || product.colors.length > 0) && (
@@ -124,8 +156,8 @@ export default function ShopGrid({ products }: { products: Product[] }) {
                           </div>
                         )}
                         <div className="mt-auto pt-2 flex items-center justify-between">
-                          <span className="text-xs text-[#0F9E59] font-semibold group-hover:underline">View Details →</span>
-                          <div className="w-7 h-7 rounded-lg bg-[#0F9E59]/10 text-[#0F9E59] flex items-center justify-center group-hover:bg-[#0F9E59] group-hover:text-white transition-all">
+                          <span className="text-xs text-primary font-semibold group-hover:underline">View Details →</span>
+                          <div className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
                             </svg>
@@ -145,7 +177,7 @@ export default function ShopGrid({ products }: { products: Product[] }) {
             </svg>
             <p className="text-gray-500 text-base font-medium">No products found</p>
             <button onClick={() => { setSearch(''); setActiveFilter('All'); setPage(1); }}
-              className="mt-3 text-sm text-[#0F9E59] font-medium hover:underline">
+              className="mt-3 text-sm text-primary font-medium hover:underline">
               Clear filters
             </button>
           </div>
@@ -153,19 +185,27 @@ export default function ShopGrid({ products }: { products: Product[] }) {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-12">
+          <div className="flex items-center justify-center gap-1.5 mt-12">
             <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={safePage === 1}
-              className="w-9 h-9 rounded-lg border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:border-[#0F9E59] hover:text-[#0F9E59] disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+              className="w-9 h-9 rounded-lg border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:border-primary hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-all">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
             </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-              <button key={n} onClick={() => setPage(n)}
-                className={`w-9 h-9 rounded-lg text-sm font-semibold transition-all ${n === safePage ? 'bg-[#0F9E59] text-white shadow-sm' : 'border border-gray-200 bg-white text-gray-600 hover:border-[#0F9E59] hover:text-[#0F9E59]'}`}>
-                {n}
-              </button>
-            ))}
+
+            {getPageNumbers(safePage, totalPages).map((n, i) =>
+              n === '…' ? (
+                <span key={`ellipsis-${i}`} className="w-9 h-9 flex items-center justify-center text-gray-400 text-sm select-none">…</span>
+              ) : (
+                <button key={n} onClick={() => setPage(n)}
+                  className={`w-9 h-9 rounded-lg text-sm font-semibold transition-all ${
+                    n === safePage ? 'bg-primary text-white shadow-sm' : 'border border-gray-200 bg-white text-gray-600 hover:border-primary hover:text-primary'
+                  }`}>
+                  {n}
+                </button>
+              )
+            )}
+
             <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={safePage === totalPages}
-              className="w-9 h-9 rounded-lg border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:border-[#0F9E59] hover:text-[#0F9E59] disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+              className="w-9 h-9 rounded-lg border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:border-primary hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-all">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
             </button>
           </div>

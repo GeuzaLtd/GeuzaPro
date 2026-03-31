@@ -7,9 +7,9 @@ export async function getProducts(opts?: { categoryId?: number; visible?: boolea
   return prisma.product.findMany({
     where: {
       ...(opts?.visible !== undefined ? { isVisible: opts.visible } : {}),
-      ...(opts?.categoryId ? { categoryId: opts.categoryId } : {}),
+      ...(opts?.categoryId ? { categories: { some: { id: opts.categoryId } } } : {}),
     },
-    include: { images: true, category: true },
+    include: { images: true, categories: true },
     orderBy: { createdAt: 'desc' },
   });
 }
@@ -17,27 +17,28 @@ export async function getProducts(opts?: { categoryId?: number; visible?: boolea
 export async function getProductById(id: number) {
   return prisma.product.findUnique({
     where: { id },
-    include: { images: true, category: true },
+    include: { images: true, categories: true },
   });
 }
 
 export async function createProduct(data: {
-  name:         string;
-  description?: string;
-  price:        number;
-  stock?:       number;
-  categoryId?:  number;
-  colors?:      string[];
-  sizes?:       string[];
-  images?:      { url: string; isPrimary?: boolean }[];
+  name:          string;
+  description?:  string;
+  price:         number;
+  stock?:        number;
+  categoryIds?:  number[];
+  colors?:       string[];
+  sizes?:        string[];
+  images?:       { url: string; isPrimary?: boolean }[];
 }) {
-  const { images, ...rest } = data;
+  const { images, categoryIds, ...rest } = data;
   const product = await prisma.product.create({
     data: {
       ...rest,
       price:  rest.price,
       colors: rest.colors ?? [],
       sizes:  rest.sizes  ?? [],
+      ...(categoryIds?.length ? { categories: { connect: categoryIds.map((id) => ({ id })) } } : {}),
       ...(images?.length ? { images: { create: images } } : {}),
     },
     include: { images: true },
@@ -50,26 +51,27 @@ export async function createProduct(data: {
 export async function updateProduct(
   id: number,
   data: Partial<{
-    name:        string;
-    description: string;
-    price:       number;
-    stock:       number;
-    status:      string;
-    isVisible:   boolean;
-    categoryId:  number;
-    colors:      string[];
-    sizes:       string[];
-    images:      { url: string; isPrimary?: boolean }[];
+    name:         string;
+    description:  string;
+    price:        number;
+    stock:        number;
+    status:       string;
+    isVisible:    boolean;
+    categoryIds:  number[];
+    colors:       string[];
+    sizes:        string[];
+    images:       { url: string; isPrimary?: boolean }[];
   }>
 ) {
-  const { images, ...rest } = data;
+  const { images, categoryIds, ...rest } = data;
   const product = await prisma.product.update({
     where: { id },
     data: {
       ...rest,
-      ...(images?.length
-        ? { images: { create: images } }
+      ...(categoryIds !== undefined
+        ? { categories: { set: categoryIds.map((cid) => ({ id: cid })) } }
         : {}),
+      ...(images?.length ? { images: { create: images } } : {}),
     },
   });
   revalidatePath('/shop');

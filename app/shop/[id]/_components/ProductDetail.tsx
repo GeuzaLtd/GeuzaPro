@@ -19,7 +19,7 @@ interface Product {
   colors:      string[];
   minOrder:    number;
   images:      ProductImage[];
-  category:    Category | null;
+  categories:  Category[];
 }
 
 const COLOR_SWATCHES: Record<string, string> = {
@@ -146,9 +146,9 @@ export default function ProductDetail({ product }: { product: Product }) {
 
           {/* Category + name */}
           <div>
-            {product.category && (
-              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#0F9E59] block mb-2">
-                {product.category.name}
+            {product.categories.length > 0 && (
+              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-primary block mb-2">
+                {product.categories.map(c => c.name).join(' · ')}
               </span>
             )}
             <h1 className="font-display font-black text-gray-900 text-3xl md:text-4xl leading-tight">
