@@ -6,7 +6,7 @@ const reasons = [
   {
     title: 'Sustainable Materials',
     description:
-      'Every device is crafted from responsibly repurposed electronic waste, turning discarded components into life-changing mobility aids.',
+      'Every device is crafted from responsibly repurposed electronic waste, turning discarded components into wheelchairs, prosthetics, hearing aids, and more.',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-8 h-8">
         <polyline points="23 4 23 10 17 10" />
@@ -18,7 +18,7 @@ const reasons = [
   {
     title: 'Direct Community Reach',
     description:
-      '100% of device proceeds go directly to individuals in underserved communities across Rwanda who cannot afford commercial alternatives.',
+      'Every contribution goes directly to individuals in underserved communities across Rwanda and Africa who cannot afford commercial assistive devices.',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-8 h-8">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -31,7 +31,7 @@ const reasons = [
   {
     title: 'Lasting Independence',
     description:
-      'A single assistive device doesn\'t just help someone move — it unlocks employment, education, and a life lived fully on their own terms.',
+      'A single assistive device empowers someone to work, learn, and move through the world on their own terms. From prosthetic limbs to hearing aids, each device opens a door that would otherwise stay closed.',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-8 h-8">
         <circle cx="12" cy="12" r="10" />
@@ -69,7 +69,6 @@ export default function WhyDonate() {
               transition={{ duration: 0.6, delay: i * 0.15 }}
               className="group relative bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 hover:border-[#0F9E59]/40 transition-all duration-400 overflow-hidden"
             >
-              {/* Green glow on hover */}
               <div className="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-[#0F9E59]/10 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
               <div className="text-[#0F9E59] mb-5 group-hover:scale-110 transition-transform duration-300">
@@ -79,7 +78,6 @@ export default function WhyDonate() {
               <h3 className="font-display font-bold text-white text-xl mb-3">{r.title}</h3>
               <p className="text-white/55 text-sm leading-relaxed">{r.description}</p>
 
-              {/* Bottom accent */}
               <motion.div
                 className="absolute bottom-0 left-0 h-0.5 bg-[#0F9E59]"
                 initial={{ width: 0 }}

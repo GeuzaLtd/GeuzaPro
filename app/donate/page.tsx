@@ -9,7 +9,7 @@ import WhyDonate from './_components/WhyDonate';
 export const metadata: Metadata = {
   title: 'Donate | Geuza',
   description:
-    'Support Geuza by donating to fund affordable assistive mobility devices made from recycled e-waste for people with disabilities in Rwanda.',
+    'Support Geuza by donating to fund affordable assistive devices including wheelchairs, prosthetics, hearing aids, and walking aids, made from recycled e-waste for people with disabilities across Africa.',
 };
 
 export default function DonatePage() {

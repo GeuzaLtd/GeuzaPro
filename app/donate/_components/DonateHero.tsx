@@ -85,7 +85,7 @@ export default function DonateHero() {
           className="text-white/65 text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-12"
         >
           Every contribution funds the creation of affordable assistive devices from recycled
-          e-waste — giving mobility, dignity, and a second chance to those who need it most.
+          e-waste, giving independence, dignity, and a second chance to those who need it most.
         </motion.p>
 
         {/* CTA */}
