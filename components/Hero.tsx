@@ -56,8 +56,13 @@ export default function Hero() {
         <div className="grid md:grid-cols-2 gap-8 items-center">
           {/* Left Content */}
           <div className="text-white z-10">
-            <p className="text-secondary font-semibold mb-4 tracking-wide">
-              WELCOME TO GEUZA
+            <p className="text-secondary font-semibold mb-3 tracking-wide uppercase text-sm">
+              Welcome to Geuza Africa
+            </p>
+            <p className="text-white/65 text-sm italic mb-5 tracking-wide">
+              <span className="text-secondary not-italic font-semibold">&ldquo;Geuza&rdquo;</span>
+              {' '} a Swahili word meaning{' '}
+              <span className="text-secondary not-italic font-semibold">&ldquo;to transform&rdquo;</span>
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
               Transforming E-Waste into Smart Assistive Devices
