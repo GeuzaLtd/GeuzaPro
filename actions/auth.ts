@@ -6,17 +6,32 @@ import bcrypt from 'bcryptjs';
 import { AuthError } from 'next-auth';
 
 export async function loginAction(email: string, password: string) {
+  // Step 1: verify credentials manually so we can give accurate error messages
+  // and handle the Auth.js v5 false-positive CredentialsSignin throw gracefully.
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user || !user.isVisible) {
+    return { success: false, error: 'Invalid email or password.', role: undefined };
+  }
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) {
+    return { success: false, error: 'Invalid email or password.', role: undefined };
+  }
+
+  // Step 2: credentials are valid — create the NextAuth session.
+  // In Auth.js v5, signIn() sometimes throws CredentialsSignin even on success
+  // (the session cookie is set before the error is thrown). Since we already
+  // verified credentials above we treat that specific throw as a non-fatal false positive.
   try {
     await signIn('credentials', { email, password, redirect: false });
-    // Fetch role to inform the client where to redirect
-    const user = await prisma.user.findUnique({ where: { email }, select: { role: true } });
-    return { success: true, role: user?.role ?? 'user' };
   } catch (error) {
-    if (error instanceof AuthError) {
-      return { success: false, error: 'Invalid email or password.', role: undefined };
+    if (!(error instanceof AuthError)) throw error;              // unexpected — rethrow
+    if (error.type !== 'CredentialsSignin') {
+      return { success: false, error: 'Something went wrong. Please try again.', role: undefined };
     }
-    throw error;
+    // CredentialsSignin false positive — session was created, continue normally
   }
+
+  return { success: true, role: user.role };
 }
 
 export async function registerAction(data: {

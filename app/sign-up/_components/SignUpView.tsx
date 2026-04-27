@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { registerAction } from '@/actions/auth';
+import { signIn } from 'next-auth/react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 /* ── Particles ── */
@@ -62,7 +62,6 @@ function EyeIcon({ open }: { open: boolean }) {
 }
 
 export default function SignUpView() {
-  const router = useRouter();
   const [form, setForm]           = useState({ name: '', email: '', password: '', confirm: '' });
   const [showPw,   setShowPw]     = useState(false);
   const [showConf, setShowConf]   = useState(false);
@@ -161,7 +160,7 @@ export default function SignUpView() {
               </h2>
               <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-8">
                 Create your free account and become part of a community turning e-waste
-                into mobility devices that restore dignity and independence.
+                into smart assistive devices that restore dignity and independence.
               </p>
 
               {/* Perks list */}
@@ -455,6 +454,7 @@ export default function SignUpView() {
                       </div>
                       <button
                         type="button"
+                        onClick={() => signIn('google', { callbackUrl: '/' })}
                         className="w-full flex items-center justify-center gap-3 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 mt-2"
                       >
                         <svg width="18" height="18" viewBox="0 0 24 24">

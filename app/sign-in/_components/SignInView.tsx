@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { loginAction } from '@/actions/auth';
+import { signIn } from 'next-auth/react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 /* ── Left-panel floating particles ── */
@@ -77,7 +78,7 @@ export default function SignInView() {
         {/* Background image + gradient */}
         <div className="absolute inset-0">
           <Image
-            src="/images/images/company-2.jpeg"
+            src="/images/images/company-2.png"
             alt="Geuza community"
             fill
             className="object-cover"
@@ -122,11 +123,11 @@ export default function SignInView() {
             >
               <div className="text-[#0F9E59]/50 font-serif text-9xl leading-none mb-1 select-none">&ldquo;</div>
               <h2 className="font-display font-black text-white text-3xl xl:text-4xl leading-tight mb-5">
-                Empowering mobility,<br />one device at a time.
+                Smart assistive technology,<br />for a life without limits.
               </h2>
               <p className="text-white/50 text-sm leading-relaxed max-w-sm">
                 Sign in to manage your orders, track your donations, and stay connected
-                with the community making mobility accessible for everyone.
+                with the community making assistive technology accessible for everyone.
               </p>
             </motion.div>
           </div>
@@ -355,6 +356,7 @@ export default function SignInView() {
                     <motion.div custom={7} variants={fieldVariants} initial="hidden" animate="visible">
                       <button
                         type="button"
+                        onClick={() => signIn('google', { callbackUrl: '/' })}
                         className="w-full flex items-center justify-center gap-3 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
                       >
                         <svg width="18" height="18" viewBox="0 0 24 24">
