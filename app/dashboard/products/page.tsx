@@ -16,7 +16,7 @@ export default async function ProductsPage() {
         ? 'Low Stock'
         : 'Out of Stock',
     isVisible: p.isVisible,
-    category: p.category?.name ?? null,
+    category: p.categories.map((c) => c.name).join(', ') || null,
     createdAt: p.createdAt.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
