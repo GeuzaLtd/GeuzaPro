@@ -55,7 +55,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="#"
+                href="https://x.com/GeuzaLtd"
                 className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
                 aria-label="Twitter"
               >
@@ -64,7 +64,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/geuza_ltd?igsh=N3NwZGppdnBucnNx"
                 className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
                 aria-label="Instagram"
               >

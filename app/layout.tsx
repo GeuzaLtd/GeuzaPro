@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { CartProvider } from "@/lib/cart-context";
+import { Providers } from "./providers";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://geuza.rw';
 
@@ -45,9 +45,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <CartProvider>
+        <Providers>
           {children}
-        </CartProvider>
+        </Providers>
       </body>
     </html>
   );

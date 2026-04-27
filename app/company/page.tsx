@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import { Header, Footer } from '@/components';
-import CompanyHero  from './_components/CompanyHero';
-import OurStory    from './_components/OurStory';
-import TheProblem  from './_components/TheProblem';
-import FoundingIdea from './_components/FoundingIdea';
-import OurJourney  from './_components/OurJourney';
+import CompanyHero   from './_components/CompanyHero';
+import OurStory      from './_components/OurStory';
+import TheProblem    from './_components/TheProblem';
+import FoundingIdea  from './_components/FoundingIdea';
+import OurJourney    from './_components/OurJourney';
 import MissionVision from './_components/MissionVision';
+import PartnersStrip from './_components/PartnersStrip';
 import Team, { TeamMember } from '@/components/Team';
 import { prisma } from '@/lib/prisma';
 
@@ -16,10 +17,17 @@ export const metadata: Metadata = {
 };
 
 export default async function CompanyPage() {
-  const rawEmployees = await prisma.employee.findMany({
-    where: { isVisible: true },
-    orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
-  });
+  const [rawEmployees, rawPartners] = await Promise.all([
+    prisma.employee.findMany({
+      where: { isVisible: true },
+      orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
+    }),
+    prisma.partner.findMany({
+      where: { isVisible: true },
+      orderBy: { createdAt: 'asc' },
+      select: { id: true, name: true, logo: true, website: true },
+    }),
+  ]);
 
   const members: TeamMember[] = rawEmployees.map((e) => ({
     id:     e.id,
@@ -39,6 +47,7 @@ export default async function CompanyPage() {
         <OurJourney />
         <MissionVision />
         <Team members={members} />
+        <PartnersStrip partners={rawPartners} />
       </main>
       <Footer />
     </>

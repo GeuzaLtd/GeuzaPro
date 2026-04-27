@@ -9,7 +9,7 @@ export default function FoundingIdea() {
         <div className="w-full lg:w-[320px] flex-shrink-0">
           <div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-lg">
             <Image
-              src="/images/about-image1.jpeg"
+              src="/images/images/company.png"
               alt="Transforming E-Waste into Empowerment"
               fill
               className="object-cover"
