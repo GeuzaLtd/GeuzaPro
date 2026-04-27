@@ -116,6 +116,8 @@ model CartItem {
   cartId    Int
   productId Int
   quantity  Int     @default(1)
+  size      String?
+  color     String?
 
   cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
   product   Product @relation(fields: [productId], references: [id])
@@ -190,6 +192,7 @@ model Donation {
   id         Int      @id @default(autoincrement())
   donorName  String
   email      String
+  phone      String?
   amount     Decimal  @db.Decimal(10, 2)
   currency   String   @default("RWF")
   message    String?

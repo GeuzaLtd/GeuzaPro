@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
+import type { CartItem } from '@/lib/cart-context';
 
 async function getOrCreateCart(userId: number) {
   let cart = await prisma.cart.findFirst({ where: { userId } });
@@ -9,49 +9,59 @@ async function getOrCreateCart(userId: number) {
   return cart;
 }
 
-export async function getCart(userId: number) {
-  return prisma.cart.findFirst({
+/** Load a user's cart from DB, enriching each item with product name + primary image. */
+export async function getDbCart(userId: number): Promise<CartItem[]> {
+  const cart = await prisma.cart.findFirst({
     where: { userId },
-    include: { items: { include: { product: { include: { images: true } } } } },
+    include: {
+      items: {
+        include: {
+          product: {
+            select: {
+              name:   true,
+              images: { where: { isPrimary: true }, take: 1, select: { url: true } },
+            },
+          },
+        },
+      },
+    },
   });
+
+  if (!cart) return [];
+
+  return cart.items.map((item) => ({
+    productId: item.productId,
+    name:      item.product.name,
+    image:     item.product.images[0]?.url ?? null,
+    quantity:  item.quantity,
+    size:      item.size  ?? undefined,
+    color:     item.color ?? undefined,
+  }));
 }
 
-export async function addToCart(userId: number, productId: number, quantity = 1) {
+/** Replace the user's entire DB cart with the provided items. */
+export async function saveDbCart(
+  userId: number,
+  items:  { productId: number; quantity: number; size?: string; color?: string }[],
+): Promise<void> {
   const cart = await getOrCreateCart(userId);
 
-  const existing = await prisma.cartItem.findFirst({
-    where: { cartId: cart.id, productId },
-  });
+  // Use sequential awaits instead of $transaction — PgBouncer (Supabase) can silently
+  // drop batch transactions when using the PrismaPg driver adapter.
+  await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
 
-  if (existing) {
-    await prisma.cartItem.update({
-      where: { id: existing.id },
-      data:  { quantity: existing.quantity + quantity },
+  if (items.length > 0) {
+    await prisma.cartItem.createMany({
+      data: items.map((i) => ({
+        cartId:    cart.id,
+        productId: i.productId,
+        quantity:  i.quantity,
+        size:      i.size,
+        color:     i.color,
+      })),
     });
-  } else {
-    await prisma.cartItem.create({ data: { cartId: cart.id, productId, quantity } });
   }
 
-  revalidatePath('/shop');
-  return { success: true };
-}
-
-export async function updateCartItem(cartItemId: number, quantity: number) {
-  if (quantity <= 0) {
-    await prisma.cartItem.delete({ where: { id: cartItemId } });
-  } else {
-    await prisma.cartItem.update({ where: { id: cartItemId }, data: { quantity } });
-  }
-  revalidatePath('/shop');
-}
-
-export async function removeFromCart(cartItemId: number) {
-  await prisma.cartItem.delete({ where: { id: cartItemId } });
-  revalidatePath('/shop');
-}
-
-export async function clearCart(userId: number) {
-  const cart = await prisma.cart.findFirst({ where: { userId } });
-  if (cart) await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
-  revalidatePath('/shop');
+  // Touch the cart row so updatedAt reflects the last sync time
+  await prisma.cart.update({ where: { id: cart.id }, data: {} });
 }
