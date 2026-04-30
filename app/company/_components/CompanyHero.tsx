@@ -1,6 +1,45 @@
+'use client';
+
 import Image from 'next/image';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+
+const IMAGES = [
+  { src: '/images/home/ACL-Knee-Brace-bg.png',   alt: 'ACL knee brace' },
+  { src: '/images/home/back-spinover-bg.png',     alt: 'Back support device' },
+  { src: '/images/home/blind-device-bg1.png',     alt: 'Vision assistive device' },
+  { src: '/images/home/blind-spects.png',         alt: 'Vision spectacles' },
+  { src: '/images/home/blind-stick-bg.png',       alt: 'Blind walking stick' },
+  { src: '/images/home/blind-typing.png',         alt: 'Blind typing device' },
+  { src: '/images/home/grabber-device.png',       alt: 'Grabber device' },
+  { src: '/images/home/hearing-device1-bg.png',   alt: 'Hearing device' },
+  { src: '/images/home/hearing-device-bg.png',    alt: 'Hearing device' },
+  { src: '/images/home/leg-braces-bg.png',        alt: 'Leg braces' },
+];
+
+const FADE = {
+  initial: { opacity: 0 },
+  animate: { opacity: 0.6 },
+  exit:    { opacity: 0 },
+  transition: { duration: 1.2, ease: 'easeInOut' as const },
+};
 
 export default function CompanyHero() {
+  // Left and right start at different offsets and advance at different intervals
+  // so the two panels are never in sync.
+  const [leftIdx,  setLeftIdx]  = useState(0);
+  const [rightIdx, setRightIdx] = useState(Math.floor(IMAGES.length / 2));
+
+  useEffect(() => {
+    const t = setInterval(() => setLeftIdx((i) => (i + 1) % IMAGES.length), 5000);
+    return () => clearInterval(t);
+  }, []);
+
+  useEffect(() => {
+    const t = setInterval(() => setRightIdx((i) => (i + 1) % IMAGES.length), 7000);
+    return () => clearInterval(t);
+  }, []);
+
   return (
     <section className="relative bg-gray-900 min-h-[480px] md:min-h-[560px] flex items-center justify-center overflow-hidden">
 
@@ -14,26 +53,42 @@ export default function CompanyHero() {
         </span>
       </span>
 
-      {/* Crutches — left */}
+      {/* Left slideshow */}
       <div className="absolute left-0 bottom-0 w-[18%] h-[85%] pointer-events-none">
-        <Image
-          src="/images/products/crutches.png"
-          alt=""
-          fill
-          className="object-contain object-bottom opacity-60"
-          unoptimized
-        />
+        <AnimatePresence>
+          <motion.div
+            key={leftIdx}
+            {...FADE}
+            className="absolute inset-0"
+          >
+            <Image
+              src={IMAGES[leftIdx].src}
+              alt={IMAGES[leftIdx].alt}
+              fill
+              className="object-contain object-bottom"
+              unoptimized
+            />
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {/* Wheelchair person — right */}
+      {/* Right slideshow */}
       <div className="absolute right-0 bottom-0 w-[26%] h-[90%] pointer-events-none">
-        <Image
-          src="/images/hero-image.png"
-          alt=""
-          fill
-          className="object-contain object-bottom opacity-60"
-          unoptimized
-        />
+        <AnimatePresence>
+          <motion.div
+            key={rightIdx}
+            {...FADE}
+            className="absolute inset-0"
+          >
+            <Image
+              src={IMAGES[rightIdx].src}
+              alt={IMAGES[rightIdx].alt}
+              fill
+              className="object-contain object-bottom"
+              unoptimized
+            />
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Center content */}

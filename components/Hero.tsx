@@ -5,8 +5,18 @@ import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const heroImages = [
-  { src: '/images/hero-image.png', alt: 'Person in wheelchair with disco ball' },
-  { src: '/images/hero-image2.png', alt: 'Geuza assistive device' },
+  { src: '/images/hero-image.png',              alt: 'Person using a wheelchair' },
+  { src: '/images/hero-image2.png',             alt: 'Geuza assistive device' },
+  { src: '/images/home/blind-spects.png',       alt: 'Vision assistive spectacles' },
+  { src: '/images/home/leg-braces-bg.png',      alt: 'Leg braces' },
+  { src: '/images/home/ACL-Knee-Brace-bg.png',  alt: 'ACL knee brace' },
+  { src: '/images/home/grabber-device.png',     alt: 'Grabber assistive device' },
+  { src: '/images/home/back-spinover-bg.png',   alt: 'Back support device' },
+  { src: '/images/home/blind-stick-bg.png',     alt: 'Blind walking stick' },
+  { src: '/images/home/blind-typing.png',       alt: 'Blind typing device' },
+  { src: '/images/home/hearing-device-bg.png',  alt: 'Hearing assistive device' },
+  { src: '/images/home/blind-device-bg1.png',   alt: 'Vision assistive device' },
+  { src: '/images/home/hearing-device1-bg.png', alt: 'Hearing device' },
 ];
 
 const slideVariants = {
