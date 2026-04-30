@@ -46,7 +46,7 @@ const FAQS = [
       },
       {
         q: 'What payment methods do you accept?',
-        a: 'We accept mobile money (MTN Mobile Money and Airtel Money), bank transfers, and cash on delivery within Kigali. For institutional orders, we can issue invoices and accept purchase orders. Contact us at info@geuza.rw for institutional pricing.',
+        a: 'We accept mobile money (MTN Mobile Money and Airtel Money), bank transfers, and cash on delivery within Kigali. For institutional orders, we can issue invoices and accept purchase orders. Contact us at info@geuza.africa for institutional pricing.',
       },
       {
         q: 'How long does delivery take?',
@@ -84,7 +84,7 @@ const FAQS = [
       },
       {
         q: 'How do I contact Geuza for support?',
-        a: 'You can reach us through the Contact section on our website, by email at info@geuza.rw, or by phone at +250 790 000 000. Our support team is available Monday to Friday, 8 am to 5 pm (CAT).',
+        a: 'You can reach us through the Contact section on our website, by email at info@geuza.africa, or by phone at +250-796-084-144. Our support team is available Monday to Friday, 8 am to 5 pm (CAT).',
       },
       {
         q: 'Can organisations partner with Geuza?',

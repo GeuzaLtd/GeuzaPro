@@ -82,7 +82,7 @@ async function main() {
   const authorMap   = new Map<string, number>();
 
   for (const name of authorNames) {
-    const email = `${name.toLowerCase().replace(/\s+/g, '.')  }@geuza.rw`;
+    const email = `${name.toLowerCase().replace(/\s+/g, '.')  }@geuza.africa`;
     const user = await prisma.user.upsert({
       where:  { email },
       update: { name },

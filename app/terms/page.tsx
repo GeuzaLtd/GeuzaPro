@@ -42,7 +42,7 @@ export default function TermsPage() {
           <div className="max-w-3xl mx-auto px-6">
 
             <p className="text-gray-500 text-sm leading-relaxed mb-10 p-5 bg-gray-50 rounded-xl border border-gray-100">
-              Please read these Terms and Conditions carefully before using the Geuza website (geuza.rw) or placing an order. By accessing our website or submitting an order, you agree to be bound by these terms. If you do not agree, please do not use our services.
+              Please read these Terms and Conditions carefully before using the Geuza website (geuza.africa) or placing an order. By accessing our website or submitting an order, you agree to be bound by these terms. If you do not agree, please do not use our services.
             </p>
 
             <Section title="1. Who We Are">
@@ -61,7 +61,7 @@ export default function TermsPage() {
             </Section>
 
             <Section title="3. Accounts">
-              <p>When you create an account on our website, you are responsible for keeping your login credentials confidential. You agree to notify us immediately at <a href="mailto:info@geuza.rw" className="text-primary underline">info@geuza.rw</a> if you suspect any unauthorised use of your account.</p>
+              <p>When you create an account on our website, you are responsible for keeping your login credentials confidential. You agree to notify us immediately at <a href="mailto:info@geuza.africa" className="text-primary underline">info@geuza.africa</a> if you suspect any unauthorised use of your account.</p>
               <p>We reserve the right to disable accounts that violate these terms or that have been inactive for an extended period.</p>
             </Section>
 
@@ -78,7 +78,7 @@ export default function TermsPage() {
 
             <Section title="5. Payments">
               <p>Payment is arranged through our team after order confirmation. Accepted methods currently include mobile money (MTN Mobile Money, Airtel Money), bank transfer, and cash on delivery within Kigali. We do not process card payments online at this time.</p>
-              <p>For institutional orders, we can issue formal invoices and purchase orders. Contact us at <a href="mailto:info@geuza.rw" className="text-primary underline">info@geuza.rw</a> for institutional arrangements.</p>
+              <p>For institutional orders, we can issue formal invoices and purchase orders. Contact us at <a href="mailto:info@geuza.africa" className="text-primary underline">info@geuza.africa</a> for institutional arrangements.</p>
             </Section>
 
             <Section title="6. Donations">
@@ -88,7 +88,7 @@ export default function TermsPage() {
 
             <Section title="7. Warranty and Returns">
               <p>All devices come with a 12-month warranty against manufacturing defects from the date of delivery. Consumable or wear-and-tear components carry a 6-month warranty.</p>
-              <p>To make a warranty claim, contact us at <a href="mailto:info@geuza.rw" className="text-primary underline">info@geuza.rw</a> with your order details and a description of the issue. Defective devices will be repaired or replaced at our discretion and at no cost to you.</p>
+              <p>To make a warranty claim, contact us at <a href="mailto:info@geuza.africa" className="text-primary underline">info@geuza.africa</a> with your order details and a description of the issue. Defective devices will be repaired or replaced at our discretion and at no cost to you.</p>
               <p>Devices that have been modified, misused, or damaged through user error are not covered by warranty.</p>
             </Section>
 
@@ -116,8 +116,8 @@ export default function TermsPage() {
               <div className="mt-3 space-y-1">
                 <p><strong className="text-gray-700">Geuza Ltd</strong></p>
                 <p>Kigali, Rwanda</p>
-                <p>Email: <a href="mailto:info@geuza.rw" className="text-primary underline">info@geuza.rw</a></p>
-                <p>Phone: +250 790 000 000</p>
+                <p>Email: <a href="mailto:info@geuza.africa" className="text-primary underline">info@geuza.africa</a></p>
+                <p>Phone: +250-796-084-144</p>
               </div>
             </Section>
           </div>

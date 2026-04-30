@@ -2,14 +2,14 @@
 // Set RESEND_API_KEY, EMAIL_FROM, ADMIN_EMAIL, CONTACT_PHONE in .env
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const BASE_FROM      = process.env.EMAIL_FROM_ADDRESS ?? 'no-reply@geuza.rw';
+const BASE_FROM      = process.env.EMAIL_FROM_ADDRESS ?? 'no-reply@geuza.africa';
 
 const FROM_ORDERS    = `Geuza Orders <${BASE_FROM}>`;
 const FROM_DONATIONS = `Geuza Donations <${BASE_FROM}>`;
 const FROM_MESSAGES  = `Geuza Messages <${BASE_FROM}>`;
 
 export const ADMIN_EMAIL   = process.env.ADMIN_EMAIL    ?? 'admin@geuza.com';
-export const CONTACT_PHONE = process.env.CONTACT_PHONE  ?? '+250 790 000 000';
+export const CONTACT_PHONE = process.env.CONTACT_PHONE  ?? '+250-796-084-144';
 
 async function sendEmail(to: string, subject: string, html: string, from = FROM_ORDERS): Promise<void> {
   if (!RESEND_API_KEY) {

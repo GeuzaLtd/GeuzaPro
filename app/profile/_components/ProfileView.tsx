@@ -262,7 +262,7 @@ function AccountTab({ user }: { user: UserData }) {
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder="+250 790 000 000"
+            placeholder="+250-796-084-144"
             className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 focus:outline-none focus:border-[#0F9E59] focus:ring-2 focus:ring-[#0F9E59]/10 transition-all"
           />
         </div>

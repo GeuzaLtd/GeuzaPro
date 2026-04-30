@@ -42,7 +42,7 @@ export default function PrivacyPolicyPage() {
           <div className="max-w-3xl mx-auto px-6">
 
             <p className="text-gray-500 text-sm leading-relaxed mb-10 p-5 bg-gray-50 rounded-xl border border-gray-100">
-              Geuza Ltd ("Geuza", "we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information when you visit our website at geuza.rw or interact with our services. Please read it carefully.
+              Geuza Ltd ("Geuza", "we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information when you visit our website at geuza.africa or interact with our services. Please read it carefully.
             </p>
 
             <Section title="1. Information We Collect">
@@ -100,7 +100,7 @@ export default function PrivacyPolicyPage() {
                 <li>Request deletion of your account and associated data.</li>
                 <li>Withdraw consent where processing is based on consent.</li>
               </ul>
-              <p className="mt-3">To exercise any of these rights, contact us at <a href="mailto:info@geuza.rw" className="text-primary underline">info@geuza.rw</a>.</p>
+              <p className="mt-3">To exercise any of these rights, contact us at <a href="mailto:info@geuza.africa" className="text-primary underline">info@geuza.africa</a>.</p>
             </Section>
 
             <Section title="8. Third-Party Links">
@@ -116,8 +116,8 @@ export default function PrivacyPolicyPage() {
               <div className="mt-3 space-y-1">
                 <p><strong className="text-gray-700">Geuza Ltd</strong></p>
                 <p>Kigali, Rwanda</p>
-                <p>Email: <a href="mailto:info@geuza.rw" className="text-primary underline">info@geuza.rw</a></p>
-                <p>Phone: +250 790 000 000</p>
+                <p>Email: <a href="mailto:info@geuza.africa" className="text-primary underline">info@geuza.africa</a></p>
+                <p>Phone: +250-796-084-144</p>
               </div>
             </Section>
           </div>

@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { getPublishedBlogs } from '@/lib/db-blogs';
 import { getProducts } from '@/actions/products';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://geuza.rw';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://geuza.africa';
 
 const STATIC_PAGES: MetadataRoute.Sitemap = [
   { url: SITE_URL,                    lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },

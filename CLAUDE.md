@@ -28,7 +28,7 @@ Required in `.env.local`:
 - `AUTH_SECRET` — NextAuth.js secret
 - `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` — Google OAuth
 - `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET`
-- `NEXT_PUBLIC_SITE_URL` — canonical site URL (defaults to `https://geuza.rw`)
+- `NEXT_PUBLIC_SITE_URL` — canonical site URL (defaults to `https://geuza.africa`)
 
 ## Architecture
 

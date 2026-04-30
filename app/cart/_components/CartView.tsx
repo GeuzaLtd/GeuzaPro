@@ -360,7 +360,7 @@ export default function CartView() {
           {[
             { label: 'Full Name *',      key: 'name'  as const, type: 'text',  placeholder: 'Your full name',        required: true  },
             { label: 'Email Address *',  key: 'email' as const, type: 'email', placeholder: 'you@example.com',       required: true  },
-            { label: 'Phone Number *',   key: 'phone' as const, type: 'tel',   placeholder: '+250 790 000 000',      required: true  },
+            { label: 'Phone Number *',   key: 'phone' as const, type: 'tel',   placeholder: '+250-796-084-144',      required: true  },
             { label: 'Delivery Address', key: 'address' as const, type: 'text', placeholder: 'Street, district, city', required: false },
           ].map(({ label, key, type, placeholder, required }) => (
             <div key={key}>

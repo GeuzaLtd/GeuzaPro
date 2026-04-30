@@ -7,7 +7,7 @@ import BlogContent from './_components/BlogContent';
 import BlogSidebar from './_components/BlogSidebar';
 import MorePosts from './_components/MorePosts';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://geuza.rw';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://geuza.africa';
 
 interface Props {
   params: Promise<{ slug: string }>;
