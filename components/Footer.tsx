@@ -12,9 +12,9 @@ const navigationLinks = [
 ];
 
 const otherLinks = [
-  { name: 'Terms & Conditions', href: '#' },
-  { name: 'Privacy policy', href: '#' },
-  { name: 'FAQ', href: '#' },
+  { name: 'Terms & Conditions', href: '/terms' },
+  { name: 'Privacy policy', href: '/privacy-policy' },
+  { name: 'FAQ', href: '/faq' },
 ];
 
 export default function Footer() {
