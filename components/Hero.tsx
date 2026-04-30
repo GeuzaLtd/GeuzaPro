@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const heroImages = [
@@ -74,9 +75,22 @@ export default function Hero() {
               {' '} a Swahili word meaning{' '}
               <span className="text-secondary not-italic font-semibold">&ldquo;to transform&rdquo;</span>
             </p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-8">
               Transforming E-Waste into Smart Assistive Devices
             </h1>
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2.5 bg-white text-primary font-bold px-7 py-3.5 rounded-full hover:bg-secondary hover:text-white transition-colors duration-300 group"
+            >
+              Order a Device
+              <svg
+                width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </Link>
           </div>
 
           {/* Right Image Slideshow */}
