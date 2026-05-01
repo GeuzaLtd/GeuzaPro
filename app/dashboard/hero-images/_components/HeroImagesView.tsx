@@ -9,6 +9,7 @@ import {
   toggleHeroImageVisibility,
   updateHeroImageAlt,
   moveHeroImage,
+  importHeroImage,
 } from '@/actions/hero-images';
 import type { HeroImageItem } from '@/actions/hero-images';
 
@@ -20,8 +21,8 @@ const TABS = [
 type Tab = (typeof TABS)[number]['key'];
 
 export default function HeroImagesView({ images: initial }: { images: HeroImageItem[] }) {
-  const [tab, setTab]         = useState<Tab>('home');
-  const [images, setImages]   = useState(initial);
+  const [tab, setTab]               = useState<Tab>('home');
+  const [images, setImages]         = useState(initial);
   const [uploading, setUploading]   = useState(false);
   const [uploadError, setUploadError] = useState('');
   const [showModal, setShowModal]   = useState(false);
@@ -29,10 +30,22 @@ export default function HeroImagesView({ images: initial }: { images: HeroImageI
   const [pending, startTransition]  = useTransition();
   const fileRef = useRef<HTMLInputElement>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
+  const [showImport, setShowImport] = useState(false);
+  const [importing, setImporting]   = useState<number | null>(null);
+
+  const otherTab   = tab === 'home' ? 'company' : 'home';
+  const otherLabel = tab === 'home' ? 'Company Hero' : 'Home Hero';
 
   const filtered = images
     .filter((i) => i.page === tab)
     .sort((a, b) => a.order - b.order || a.id - b.id);
+
+  // Images from the other tab that are not yet in the current tab (by publicId)
+  const currentPublicIds = new Set(images.filter((i) => i.page === tab).map((i) => i.publicId));
+  const importable = images
+    .filter((i) => i.page === otherTab)
+    .sort((a, b) => a.order - b.order || a.id - b.id);
+  const alreadyImported = (img: HeroImageItem) => currentPublicIds.has(img.publicId);
 
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
@@ -111,6 +124,15 @@ export default function HeroImagesView({ images: initial }: { images: HeroImageI
       await moveHeroImage(id, direction);
       window.location.reload();
     });
+  }
+
+  async function handleImport(sourceId: number) {
+    setImporting(sourceId);
+    const result = await importHeroImage(sourceId, tab);
+    setImporting(null);
+    if (result.success) {
+      window.location.reload();
+    }
   }
 
   function handleAltBlur(id: number, alt: string) {
@@ -265,6 +287,76 @@ export default function HeroImagesView({ images: initial }: { images: HeroImageI
           ))}
         </div>
       )}
+
+      {/* Import panel */}
+      <div className="mt-10">
+        <button
+          onClick={() => setShowImport((v) => !v)}
+          className="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors group"
+        >
+          <svg
+            width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+            className={`transition-transform ${showImport ? 'rotate-90' : ''}`}
+          >
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+          Import from {otherLabel}
+          <span className="text-xs px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-400 group-hover:bg-gray-200 transition-colors">
+            {importable.length}
+          </span>
+        </button>
+
+        {showImport && (
+          <div className="mt-4">
+            {importable.length === 0 ? (
+              <p className="text-sm text-gray-400 py-6 text-center">
+                No images in {otherLabel} to import.
+              </p>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {importable.map((img) => {
+                  const done = alreadyImported(img);
+                  const busy = importing === img.id;
+                  return (
+                    <div
+                      key={img.id}
+                      className={`bg-white rounded-2xl border overflow-hidden transition-all ${done ? 'border-[#0F9E59]/40 opacity-70' : 'border-gray-200'}`}
+                    >
+                      <div className="relative aspect-square bg-gray-50">
+                        <Image src={img.url} alt={img.alt || 'Hero image'} fill className="object-cover" unoptimized />
+                        {done && (
+                          <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
+                            <span className="text-xs font-bold text-[#0F9E59] bg-white px-2 py-0.5 rounded-full border border-[#0F9E59]/30">
+                              Already imported
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      {img.alt && (
+                        <p className="px-3 pt-2 text-xs text-gray-400 truncate">{img.alt}</p>
+                      )}
+                      <div className="px-3 py-2.5">
+                        <button
+                          onClick={() => !done && handleImport(img.id)}
+                          disabled={done || busy}
+                          className={`w-full py-1.5 rounded-xl text-xs font-semibold transition-colors ${
+                            done
+                              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                              : 'bg-[#0F9E59]/10 text-[#0F9E59] hover:bg-[#0F9E59]/20 disabled:opacity-50'
+                          }`}
+                        >
+                          {busy ? 'Importing…' : done ? 'Imported' : 'Import'}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Upload modal */}
       {showModal && (
