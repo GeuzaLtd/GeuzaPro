@@ -2,7 +2,8 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { uploadImage, deleteImage } from '@/actions/upload';
+import { deleteImage } from '@/actions/upload';
+import cloudinary from '@/lib/cloudinary';
 
 export type HeroImageItem = {
   id:        number;
@@ -27,35 +28,58 @@ export async function getAllHeroImages(): Promise<HeroImageItem[]> {
   });
 }
 
-export async function createHeroImage(formData: FormData): Promise<{ success: boolean; error?: string }> {
+// Returns auth params so the client can POST the file directly to Cloudinary,
+// bypassing Next.js body size limits entirely.
+export async function getCloudinarySignature(): Promise<{
+  signature:  string;
+  timestamp:  number;
+  folder:     string;
+  apiKey:     string;
+  cloudName:  string;
+}> {
+  const timestamp = Math.round(Date.now() / 1000);
+  const folder    = 'hero';
+  const signature = cloudinary.utils.api_sign_request(
+    { timestamp, folder },
+    process.env.CLOUDINARY_API_SECRET!
+  );
+  return {
+    signature,
+    timestamp,
+    folder,
+    apiKey:    process.env.CLOUDINARY_API_KEY!,
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME!,
+  };
+}
+
+// Called after the client has already uploaded to Cloudinary — just saves the record.
+export async function saveHeroImageRecord(data: {
+  url:      string;
+  publicId: string;
+  alt:      string;
+  page:     string;
+}): Promise<{ success: boolean; error?: string }> {
   try {
-    const page = (formData.get('page') as string) || 'home';
-    const alt  = (formData.get('alt')  as string) || '';
-
-    const uploaded = await uploadImage(formData, 'hero');
-
     const maxOrder = await prisma.heroImage.aggregate({
-      where: { page },
+      where: { page: data.page },
       _max:  { order: true },
     });
-
     await prisma.heroImage.create({
       data: {
-        url:      uploaded.url,
-        publicId: uploaded.publicId,
-        alt,
-        page,
+        url:      data.url,
+        publicId: data.publicId,
+        alt:      data.alt,
+        page:     data.page,
         order:    (maxOrder._max.order ?? -1) + 1,
       },
     });
-
     revalidatePath('/');
     revalidatePath('/company');
     revalidatePath('/dashboard/hero-images');
     return { success: true };
   } catch (err) {
-    console.error('[createHeroImage]', err);
-    return { success: false, error: 'Upload failed. Please try again.' };
+    console.error('[saveHeroImageRecord]', err);
+    return { success: false, error: 'Failed to save image record.' };
   }
 }
 

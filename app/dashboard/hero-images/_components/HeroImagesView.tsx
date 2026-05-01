@@ -3,7 +3,8 @@
 import { useRef, useState, useTransition } from 'react';
 import Image from 'next/image';
 import {
-  createHeroImage,
+  getCloudinarySignature,
+  saveHeroImageRecord,
   deleteHeroImage,
   toggleHeroImageVisibility,
   updateHeroImageAlt,
@@ -41,25 +42,46 @@ export default function HeroImagesView({ images: initial }: { images: HeroImageI
 
   async function handleUpload(e: React.FormEvent) {
     e.preventDefault();
-    if (!fileRef.current?.files?.[0]) return;
+    const file = fileRef.current?.files?.[0];
+    if (!file) return;
     setUploading(true);
     setUploadError('');
 
-    const fd = new FormData();
-    fd.append('file', fileRef.current.files[0]);
-    fd.append('alt',  altDraft);
-    fd.append('page', tab);
+    try {
+      // Step 1: get a Cloudinary signature from the server (tiny request, no file)
+      const { signature, timestamp, folder, apiKey, cloudName } =
+        await getCloudinarySignature();
 
-    const result = await createHeroImage(fd);
-    setUploading(false);
+      // Step 2: POST the file directly to Cloudinary — bypasses Next.js entirely
+      const fd = new FormData();
+      fd.append('file',      file);
+      fd.append('api_key',   apiKey);
+      fd.append('timestamp', String(timestamp));
+      fd.append('signature', signature);
+      fd.append('folder',    folder);
 
-    if (!result.success) {
-      setUploadError(result.error ?? 'Upload failed.');
-      return;
+      const res  = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        { method: 'POST', body: fd }
+      );
+      if (!res.ok) throw new Error('Cloudinary upload failed.');
+      const data = await res.json() as { secure_url: string; public_id: string };
+
+      // Step 3: save URL + publicId to DB via a small server action
+      const result = await saveHeroImageRecord({
+        url:      data.secure_url,
+        publicId: data.public_id,
+        alt:      altDraft,
+        page:     tab,
+      });
+
+      if (!result.success) throw new Error(result.error);
+      window.location.reload();
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'Upload failed.');
+    } finally {
+      setUploading(false);
     }
-
-    // Refresh via server action revalidation — just reload local state
-    window.location.reload();
   }
 
   function closeModal() {
