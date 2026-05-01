@@ -19,6 +19,7 @@ import {
   HiOutlineMail,
   HiOutlineOfficeBuilding,
   HiOutlineStar,
+  HiOutlinePhotograph,
 } from 'react-icons/hi';
 import Image from 'next/image';
 
@@ -32,6 +33,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/donations',    label: 'Donations',     icon: HiOutlineHeart },
   { href: '/dashboard/partners',     label: 'Partners',      icon: HiOutlineOfficeBuilding },
   { href: '/dashboard/testimonials', label: 'Testimonials',  icon: HiOutlineStar },
+  { href: '/dashboard/hero-images',  label: 'Hero Images',   icon: HiOutlinePhotograph },
   { href: '/dashboard/messages',     label: 'Messages',      icon: HiOutlineMail },
 ];
 

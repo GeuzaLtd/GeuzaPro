@@ -9,6 +9,7 @@ import MissionVision from './_components/MissionVision';
 import PartnersStrip from './_components/PartnersStrip';
 import Team, { TeamMember } from '@/components/Team';
 import { prisma } from '@/lib/prisma';
+import { getHeroImages } from '@/actions/hero-images';
 
 export const metadata: Metadata = {
   title: 'Company | Geuza',
@@ -17,7 +18,8 @@ export const metadata: Metadata = {
 };
 
 export default async function CompanyPage() {
-  const [rawEmployees, rawPartners] = await Promise.all([
+  const [companyHeroImages, rawEmployees, rawPartners] = await Promise.all([
+    getHeroImages('company'),
     prisma.employee.findMany({
       where: { isVisible: true },
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
@@ -40,7 +42,7 @@ export default async function CompanyPage() {
     <>
       <Header />
       <main>
-        <CompanyHero />
+        <CompanyHero images={companyHeroImages.map((i) => ({ url: i.url, alt: i.alt }))} />
         <OurStory />
         <TheProblem />
         <FoundingIdea />

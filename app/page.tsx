@@ -15,9 +15,11 @@ import type { TestimonialItem } from '@/components/Testimonials';
 import type { LatestPost } from '@/components/Blog';
 import type { TeamMember } from '@/components/Team';
 import { prisma } from '@/lib/prisma';
+import { getHeroImages } from '@/actions/hero-images';
 
 export default async function Home() {
-  const [rawProducts, rawTestimonials, latestBlog, rawEmployees] = await Promise.all([
+  const [heroImages, rawProducts, rawTestimonials, latestBlog, rawEmployees] = await Promise.all([
+    getHeroImages('home'),
     prisma.product.findMany({
       where: { isVisible: true },
       orderBy: { createdAt: 'desc' },
@@ -68,7 +70,7 @@ export default async function Home() {
     <>
       <Header />
       <main>
-        <Hero />
+        <Hero images={heroImages.map((i) => ({ url: i.url, alt: i.alt }))} />
         <About />
         <Products products={products} />
         <Blog latestPost={latestPost} />

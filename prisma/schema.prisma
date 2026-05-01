@@ -243,6 +243,21 @@ model Testimonial {
   @@map("testimonials")
 }
 
+// ─── HERO IMAGES ─────────────────────────────────────────────────────────────
+
+model HeroImage {
+  id        Int      @id @default(autoincrement())
+  url       String
+  publicId  String   @default("")
+  alt       String   @default("")
+  page      String   @default("home") // "home" | "company"
+  isVisible Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@map("hero_images")
+}
+
 // ─── MESSAGES (contact form) ──────────────────────────────────────────────────
 
 model Message {
