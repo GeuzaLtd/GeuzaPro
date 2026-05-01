@@ -109,6 +109,41 @@ export async function updateHeroImageAlt(id: number, alt: string): Promise<void>
   revalidatePath('/dashboard/hero-images');
 }
 
+// Copies an existing image record into a different page without re-uploading to Cloudinary.
+// Returns { alreadyExists: true } when the image is already present in the target page.
+export async function importHeroImage(
+  sourceId:   number,
+  targetPage: string,
+): Promise<{ success: boolean; alreadyExists?: boolean; error?: string }> {
+  const source = await prisma.heroImage.findUnique({ where: { id: sourceId } });
+  if (!source) return { success: false, error: 'Source image not found.' };
+
+  const duplicate = await prisma.heroImage.findFirst({
+    where: { page: targetPage, publicId: source.publicId },
+  });
+  if (duplicate) return { success: false, alreadyExists: true };
+
+  const maxOrder = await prisma.heroImage.aggregate({
+    where: { page: targetPage },
+    _max:  { order: true },
+  });
+
+  await prisma.heroImage.create({
+    data: {
+      url:      source.url,
+      publicId: source.publicId,
+      alt:      source.alt,
+      page:     targetPage,
+      order:    (maxOrder._max.order ?? -1) + 1,
+    },
+  });
+
+  revalidatePath('/');
+  revalidatePath('/company');
+  revalidatePath('/dashboard/hero-images');
+  return { success: true };
+}
+
 export async function moveHeroImage(id: number, direction: 'up' | 'down'): Promise<void> {
   const image = await prisma.heroImage.findUnique({ where: { id } });
   if (!image) return;
