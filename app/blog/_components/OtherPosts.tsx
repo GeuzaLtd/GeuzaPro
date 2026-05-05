@@ -33,13 +33,13 @@ export default function OtherPosts({ posts }: { posts: BlogPostDb[] }) {
               >
                 {/* Image */}
                 <Link href={`/blog/${post.slug}`} className="block flex-shrink-0">
-                  <div className="relative h-48 overflow-hidden bg-gray-100">
+                  <div className="relative h-56 overflow-hidden bg-gray-100">
                     {post.coverImage ? (
                       <Image
                         src={post.coverImage}
                         alt={post.title}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
                         unoptimized
                       />
                     ) : (

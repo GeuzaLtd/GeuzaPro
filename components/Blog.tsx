@@ -28,7 +28,7 @@ export default function Blog({ latestPost }: { latestPost: LatestPost | null }) 
               src={image}
               alt={title}
               fill
-              className="object-cover"
+              className="object-cover object-top"
               unoptimized
             />
           </div>
