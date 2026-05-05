@@ -53,7 +53,8 @@ export default function Contact() {
           {/* Map */}
           <div className="relative h-[300px] md:h-full min-h-[400px] rounded-xl overflow-hidden bg-gray-200">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3419.5094097988444!2d30.057543496865957!3d-1.9493444889226081!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca5001ca34f6b%3A0xda51adc484809f11!2sGEUZA%20Ltd!5e0!3m2!1sen!2srw!4v1774699329564!5m2!1sen!2srw"
+                   
+              src="https://www.google.com/maps/embed?pb=!1m24!1m12!1m3!1d422.4181041911447!2d30.102106997130342!3d-1.9640917921145975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m9!3e9!4m3!3m2!1d-2.0016192!2d30.0897769!4m3!3m2!1d-1.963871!2d30.102280999999998!5e0!3m2!1sen!2srw!4v1777973313517!5m2!1sen!2srw"
               width="100%"
               height="100%"
               style={{ border: 0 }}
