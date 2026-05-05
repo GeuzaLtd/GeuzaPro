@@ -19,7 +19,7 @@ export default function Blog({ latestPost }: { latestPost: LatestPost | null }) 
   return (
     <section id="blog" className="py-16 md:py-24 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
-        <SectionHeader title="Blog" />
+        <SectionHeader title="Current Blog" />
 
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Image */}
