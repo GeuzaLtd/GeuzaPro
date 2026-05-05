@@ -26,12 +26,12 @@ export default function TermsPage() {
       <Header />
       <main>
         {/* Hero */}
-        <section className="bg-gray-900 py-20 md:py-28 relative overflow-hidden">
+        <section className="bg-primary py-20 md:py-28 relative overflow-hidden">
           <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
             <span className="font-black text-white/5 text-[10vw] leading-none tracking-tighter uppercase whitespace-nowrap">Terms and Conditions</span>
           </span>
           <div className="relative z-10 text-center px-6 max-w-2xl mx-auto">
-            <span className="inline-block bg-primary/20 text-primary text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-5">Legal</span>
+            <span className="inline-block bg-secondary/20 text-secondary text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-5">Legal</span>
             <h1 className="font-display font-black text-white text-4xl md:text-5xl leading-tight mb-4">Terms and Conditions</h1>
             <p className="text-white/50 text-sm">Last updated: {LAST_UPDATED}</p>
           </div>
