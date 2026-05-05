@@ -28,6 +28,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
     status:      product.status === 'in_stock' ? 'In Stock' : product.status === 'low_stock' ? 'Low Stock' : 'Out Stock',
     categoryIds: product.categories.map((c) => c.id),
     colors:      product.colors,
+    sizes:       product.sizes,
     images:      product.images.map((img) => ({ url: img.url })),
   } : null;
 
