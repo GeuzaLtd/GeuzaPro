@@ -44,9 +44,6 @@ export default function Hero({ images }: { images: HeroImageProp[] }) {
         <div className="grid md:grid-cols-2 gap-8 items-center">
           {/* Left Content */}
           <div className="text-white z-10">
-            <p className="text-secondary font-semibold mb-3 tracking-wide uppercase text-sm">
-              Welcome to Geuza Africa
-            </p>
             <p className="text-white/65 text-sm italic mb-5 tracking-wide">
               <span className="text-secondary not-italic font-semibold">&ldquo;Geuza&rdquo;</span>
               {' '}a Swahili word meaning{' '}
