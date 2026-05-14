@@ -20,6 +20,7 @@ import {
   HiOutlineOfficeBuilding,
   HiOutlineStar,
   HiOutlinePhotograph,
+  HiOutlineTag,
 } from 'react-icons/hi';
 import Image from 'next/image';
 
@@ -27,6 +28,7 @@ const NAV_ITEMS = [
   { href: '/dashboard',              label: 'Overview',      icon: HiOutlineHome },
   { href: '/dashboard/blog',         label: 'Blog Posts',    icon: HiOutlineDocumentText },
   { href: '/dashboard/products',     label: 'Products',      icon: HiOutlineCube },
+  { href: '/dashboard/categories',   label: 'Categories',    icon: HiOutlineTag },
   { href: '/dashboard/orders',       label: 'Orders',        icon: HiOutlineShoppingCart },
   { href: '/dashboard/users',        label: 'Users',         icon: HiOutlineUsers },
   { href: '/dashboard/employees',    label: 'Employees',     icon: HiOutlineUserGroup },
