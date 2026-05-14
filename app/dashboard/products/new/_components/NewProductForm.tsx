@@ -20,6 +20,7 @@ const COLOURS = [
   { name: 'Yellow', hex: '#eab308', border: false },
   { name: 'Green',  hex: '#22c55e', border: false },
   { name: 'Red',    hex: '#ef4444', border: false },
+  { name: 'Grey',   hex: '#9ca3af', border: false },
 ];
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];

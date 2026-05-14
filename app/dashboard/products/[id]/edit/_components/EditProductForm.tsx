@@ -34,6 +34,7 @@ const COLOURS = [
   { name: 'Yellow', hex: '#eab308' },
   { name: 'Green',  hex: '#22c55e' },
   { name: 'Red',    hex: '#ef4444' },
+  { name: 'Grey',   hex: '#9ca3af' },
 ];
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
