@@ -40,7 +40,7 @@ export default function Team({ members }: { members: TeamMember[] }) {
   return (
     <section id="team" className="py-16 md:py-24 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
-        <SectionHeader title="Team" />
+        <SectionHeader title="LEADERSHIP TEAM" />
       </div>
 
       {/* Full-width carousel with edge fade */}
