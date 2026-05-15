@@ -73,26 +73,16 @@ export default function ShopGrid({
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
-            {allCategories.map((f) => {
-              const count = f === 'All'
-                ? products.length
-                : products.filter((p) => p.categories.some((c) => c.name === f)).length;
-              return (
-                <button key={f} onClick={() => handleFilter(f)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    activeFilter === f
-                      ? 'bg-gray-900 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  }`}>
-                  {f}
-                  <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full font-semibold ${
-                    activeFilter === f ? 'bg-white/20 text-white' : 'bg-white text-gray-400'
-                  }`}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
+            {allCategories.map((f) => (
+              <button key={f} onClick={() => handleFilter(f)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  activeFilter === f
+                    ? 'bg-gray-900 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}>
+                {f}
+              </button>
+            ))}
           </div>
         </div>
 

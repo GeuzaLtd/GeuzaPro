@@ -10,6 +10,7 @@ import {
   Contact,
   Footer,
 } from '@/components';
+import WelcomeBanner from '@/components/WelcomeBanner';
 import type { ProductItem } from '@/components/Products';
 import type { TestimonialItem } from '@/components/Testimonials';
 import type { LatestPost } from '@/components/Blog';
@@ -68,6 +69,7 @@ export default async function Home() {
 
   return (
     <>
+      <WelcomeBanner />
       <Header />
       <main>
         <Hero images={heroImages.map((i) => ({ url: i.url, alt: i.alt }))} />

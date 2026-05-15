@@ -24,6 +24,7 @@ const COLOR_SWATCHES: Record<string, string> = {
   yellow: '#eab308',
   green:  '#22c55e',
   red:    '#ef4444',
+  grey:   '#9ca3af',
 };
 
 const KNOWN_COLORS = new Set(Object.keys(COLOR_SWATCHES));

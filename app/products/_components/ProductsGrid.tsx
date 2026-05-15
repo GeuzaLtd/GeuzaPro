@@ -84,24 +84,16 @@ export default function ProductsGrid({
 
         {/* Category filter */}
         <div className="flex flex-wrap gap-2.5 mb-6">
-          {allCategories.map((cat) => {
-            const count = cat === 'All' ? products.length : products.filter((p) => p.categories.some((c) => c.name === cat)).length;
-            return (
-              <button key={cat} onClick={() => handleCategory(cat)}
-                className={`relative px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${
-                  active === cat
-                    ? 'bg-primary text-white border-primary shadow-sm'
-                    : 'bg-white text-gray-600 border-gray-200 hover:border-primary hover:text-primary'
-                }`}>
-                {cat}
-                <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full font-semibold ${
-                  active === cat ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
-                }`}>
-                  {count}
-                </span>
-              </button>
-            );
-          })}
+          {allCategories.map((cat) => (
+            <button key={cat} onClick={() => handleCategory(cat)}
+              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${
+                active === cat
+                  ? 'bg-primary text-white border-primary shadow-sm'
+                  : 'bg-white text-gray-600 border-gray-200 hover:border-primary hover:text-primary'
+              }`}>
+              {cat}
+            </button>
+          ))}
         </div>
 
         {/* Results count */}

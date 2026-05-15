@@ -46,17 +46,20 @@ function CountUp({ end, decimals, suffix, delay }: CountUpProps) {
 
 export default function Impact() {
   return (
-    <section className="relative py-20 md:py-28 bg-gray-900">
+    <section className="relative py-20 md:py-28 bg-primary">
       {/* Background Image Overlay */}
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-30"
+        className="absolute inset-0 bg-cover bg-center opacity-20"
         style={{ backgroundImage: "url('/images/impact-image.png')" }}
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
-        <h2 className="font-display text-white text-center text-lg md:text-xl font-bold tracking-[0.2em] uppercase mb-12">
-          Our Impact So Far
-        </h2>
+        <div className="text-center mb-12">
+          <h2 className="font-display text-white text-lg md:text-xl font-bold tracking-[0.2em] uppercase mb-3">
+            Our Impact So Far
+          </h2>
+          <div className="w-12 h-1 bg-secondary mx-auto rounded-full" />
+        </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
           {stats.map((stat, index) => (

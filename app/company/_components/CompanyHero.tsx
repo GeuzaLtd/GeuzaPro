@@ -31,14 +31,14 @@ export default function CompanyHero({ images }: { images: CompanyHeroImageProp[]
   }, [total]);
 
   return (
-    <section className="relative bg-gray-900 min-h-[480px] md:min-h-[560px] flex items-center justify-center overflow-hidden">
+    <section className="relative bg-primary min-h-[480px] md:min-h-[560px] flex items-center justify-center overflow-hidden">
 
       {/* Large GEUZA watermark */}
       <span
         aria-hidden="true"
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
       >
-        <span className="font-display font-black text-[#0F9E59]/15 text-[22vw] leading-none tracking-tighter uppercase">
+        <span className="font-display font-black text-white/10 text-[22vw] leading-none tracking-tighter uppercase">
           GEUZA
         </span>
       </span>

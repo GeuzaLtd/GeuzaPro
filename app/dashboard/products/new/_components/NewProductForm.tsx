@@ -20,7 +20,10 @@ const COLOURS = [
   { name: 'Yellow', hex: '#eab308', border: false },
   { name: 'Green',  hex: '#22c55e', border: false },
   { name: 'Red',    hex: '#ef4444', border: false },
+  { name: 'Grey',   hex: '#9ca3af', border: false },
 ];
+
+const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 const fieldVariants = {
   hidden:   { opacity: 0, y: 16 },
@@ -52,6 +55,7 @@ export default function NewProductForm({
   ]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
   const [selectedColors,      setSelectedColors]      = useState<string[]>([]);
+  const [selectedSizes,       setSelectedSizes]       = useState<string[]>([]);
   const [featureInput, setFeatureInput] = useState('');
   const [saving, setSaving]             = useState(false);
   const [saved,  setSaved]              = useState(false);
@@ -61,6 +65,9 @@ export default function NewProductForm({
 
   const toggleColor = (name: string) =>
     setSelectedColors((prev) => prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name]);
+
+  const toggleSize = (size: string) =>
+    setSelectedSizes((prev) => prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]);
 
   const setImage = (index: number) => (url: string | null, publicId: string | null) =>
     setImages((prev) => prev.map((img, i) => (i === index ? { url, publicId } : img)));
@@ -85,6 +92,7 @@ export default function NewProductForm({
       stock:       parseInt(form.stock) || 0,
       categoryIds: selectedCategoryIds,
       colors:      selectedColors,
+      sizes:       selectedSizes,
       images:      uploadedImages.length > 0 ? uploadedImages : undefined,
     });
     setSaving(false);
@@ -303,8 +311,30 @@ export default function NewProductForm({
                 </div>
               </motion.div>
 
-              {/* Stock status */}
+              {/* Sizes */}
               <motion.div custom={9} variants={fieldVariants} initial="hidden" animate="visible">
+                <div className="bg-white rounded-2xl border border-gray-100 p-5">
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Available Sizes</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {SIZES.map((size) => {
+                      const selected = selectedSizes.includes(size);
+                      return (
+                        <button key={size} type="button" onClick={() => toggleSize(size)}
+                          className={`py-2 rounded-xl border-2 text-sm font-bold transition-all ${
+                            selected
+                              ? 'border-[#0F9E59] bg-[#0F9E59] text-white'
+                              : 'border-gray-100 text-gray-400 hover:border-gray-300 hover:text-gray-600'
+                          }`}>
+                          {size}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Stock status */}
+              <motion.div custom={10} variants={fieldVariants} initial="hidden" animate="visible">
                 <div className="bg-white rounded-2xl border border-gray-100 p-5">
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Stock Status</p>
                   <div className="flex flex-col gap-2">
