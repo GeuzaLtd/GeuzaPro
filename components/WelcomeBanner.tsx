@@ -4,7 +4,7 @@ import { FaXTwitter } from 'react-icons/fa6';
 
 export default function WelcomeBanner() {
   return (
-    <div className="w-full bg-primary-dark border-b border-white/10 px-4 md:px-8 lg:px-16 py-2">
+    <div className="w-full bg-primary border-b border-white/10 px-4 md:px-8 lg:px-16 py-2">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <span className="w-5 h-5 rounded-full bg-secondary flex items-center justify-center shrink-0">
