@@ -41,7 +41,7 @@ export default function Blog({ latestPost }: { latestPost: LatestPost | null }) 
             <p className="text-gray-600 mb-6 leading-relaxed line-clamp-6">
               {excerpt}
             </p>
-            <Link href={href}>
+            <Link href={href} aria-label={`Read more about ${title}`}>
               <Button>Read more</Button>
             </Link>
           </div>

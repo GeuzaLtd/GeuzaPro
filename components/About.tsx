@@ -126,6 +126,7 @@ export default function About() {
 
             <Link
               href="/company"
+              aria-label="Learn more about Geuza"
               className="mt-8 inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-primary text-white font-medium hover:bg-primary-dark transition-all duration-300"
             >
               Learn more
