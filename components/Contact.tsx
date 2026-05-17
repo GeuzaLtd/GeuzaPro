@@ -105,6 +105,7 @@ export default function Contact() {
                   name="organizationType"
                   value={formData.organizationType}
                   onChange={handleChange}
+                  aria-label="Organization Type"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-500"
                   required
                 >

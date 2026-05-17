@@ -15,16 +15,16 @@ export default function WelcomeBanner() {
           </span>
         </div>
         <div className="hidden sm:flex items-center gap-3.5">
-          <Link href="https://www.facebook.com/geuzaltd" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-white/60 hover:text-secondary transition-colors duration-200">
+          <Link href="https://www.facebook.com/geuzaltd" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-white/80 hover:text-secondary transition-colors duration-200 p-2 -m-2">
             <FaFacebookF size={12} />
           </Link>
-          <Link href="https://x.com/GeuzaLtd" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="text-white/60 hover:text-secondary transition-colors duration-200">
+          <Link href="https://x.com/GeuzaLtd" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="text-white/80 hover:text-secondary transition-colors duration-200 p-2 -m-2">
             <FaXTwitter size={12} />
           </Link>
-          <Link href="https://www.instagram.com/geuza_ltd?igsh=N3NwZGppdnBucnNx" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-white/60 hover:text-secondary transition-colors duration-200">
+          <Link href="https://www.instagram.com/geuza_ltd?igsh=N3NwZGppdnBucnNx" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-white/80 hover:text-secondary transition-colors duration-200 p-2 -m-2">
             <FaInstagram size={12} />
           </Link>
-          <Link href="https://www.linkedin.com/company/geuza-africa/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-white/60 hover:text-secondary transition-colors duration-200">
+          <Link href="https://www.linkedin.com/company/geuza-africa/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-white/80 hover:text-secondary transition-colors duration-200 p-2 -m-2">
             <FaLinkedinIn size={12} />
           </Link>
         </div>

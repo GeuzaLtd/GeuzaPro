@@ -41,7 +41,7 @@ export default function Footer() {
                 className="object-contain"
               />
             </Link>
-            <p className="text-white/60 text-sm mb-6">
+            <p className="text-white/80 text-sm mb-6">
               Transforming E-Waste into Smart Assistive Devices
             </p>
             <div className="flex gap-4">
@@ -49,7 +49,7 @@ export default function Footer() {
                 href="https://www.facebook.com/geuzaltd"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-secondary hover:text-secondary transition-colors"
+                className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center hover:border-secondary hover:text-secondary transition-colors"
                 aria-label="Facebook"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -60,7 +60,7 @@ export default function Footer() {
                 href="https://www.linkedin.com/company/geuza-africa/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-secondary hover:text-secondary transition-colors"
+                className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center hover:border-secondary hover:text-secondary transition-colors"
                 aria-label="LinkedIn"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -71,7 +71,7 @@ export default function Footer() {
                 href="https://x.com/GeuzaLtd"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-secondary hover:text-secondary transition-colors"
+                className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center hover:border-secondary hover:text-secondary transition-colors"
                 aria-label="Twitter"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -82,7 +82,7 @@ export default function Footer() {
                 href="https://www.instagram.com/geuza_ltd?igsh=N3NwZGppdnBucnNx"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-secondary hover:text-secondary transition-colors"
+                className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center hover:border-secondary hover:text-secondary transition-colors"
                 aria-label="Instagram"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -94,13 +94,13 @@ export default function Footer() {
 
           {/* Navigation */}
           <div>
-            <h3 className="font-semibold text-lg mb-4 text-secondary">Navigation</h3>
+            <p className="font-semibold text-lg mb-4 text-secondary">Navigation</p>
             <ul className="space-y-3">
               {navigationLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-white/60 hover:text-secondary transition-colors flex items-center gap-2"
+                    className="text-white/80 hover:text-secondary transition-colors flex items-center gap-2"
                   >
                     <span className="w-2 h-2 rounded-full bg-secondary"></span>
                     {link.name}
@@ -112,13 +112,13 @@ export default function Footer() {
 
           {/* Others */}
           <div>
-            <h3 className="font-semibold text-lg mb-4 text-secondary">Others</h3>
+            <p className="font-semibold text-lg mb-4 text-secondary">Others</p>
             <ul className="space-y-3">
               {otherLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-white/60 hover:text-secondary transition-colors flex items-center gap-2"
+                    className="text-white/80 hover:text-secondary transition-colors flex items-center gap-2"
                   >
                     <span className="w-2 h-2 rounded-full bg-secondary"></span>
                     {link.name}
@@ -130,7 +130,7 @@ export default function Footer() {
 
           {/* Subscribe */}
           <div>
-            <h3 className="font-semibold text-lg mb-4 text-secondary">Subscribe</h3>
+            <p className="font-semibold text-lg mb-4 text-secondary">Subscribe</p>
             <form onSubmit={handleSubscribe} className="flex">
               <input
                 type="email"
@@ -152,7 +152,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-white/60 text-sm">
+          <p className="text-white/80 text-sm">
             &copy; All right reserved to geuza
           </p>
           <button
