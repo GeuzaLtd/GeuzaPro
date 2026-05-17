@@ -94,7 +94,7 @@ export default function Footer() {
 
           {/* Navigation */}
           <div>
-            <p className="font-semibold text-lg mb-4 text-secondary">Navigation</p>
+            <p className="font-semibold text-lg mb-4 text-white">Navigation</p>
             <ul className="space-y-3">
               {navigationLinks.map((link) => (
                 <li key={link.name}>
@@ -112,7 +112,7 @@ export default function Footer() {
 
           {/* Others */}
           <div>
-            <p className="font-semibold text-lg mb-4 text-secondary">Others</p>
+            <p className="font-semibold text-lg mb-4 text-white">Others</p>
             <ul className="space-y-3">
               {otherLinks.map((link) => (
                 <li key={link.name}>
@@ -130,7 +130,7 @@ export default function Footer() {
 
           {/* Subscribe */}
           <div>
-            <p className="font-semibold text-lg mb-4 text-secondary">Subscribe</p>
+            <p className="font-semibold text-lg mb-4 text-white">Subscribe</p>
             <form onSubmit={handleSubscribe} className="flex">
               <input
                 type="email"
@@ -142,7 +142,7 @@ export default function Footer() {
               />
               <button
                 type="submit"
-                className="px-4 py-2 bg-secondary text-white rounded-r-lg hover:bg-secondary-dark transition-colors text-sm font-medium"
+                className="px-4 py-2 bg-secondary text-gray-900 rounded-r-lg hover:bg-secondary-dark transition-colors text-sm font-medium"
               >
                 Send
               </button>

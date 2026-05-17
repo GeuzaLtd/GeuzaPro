@@ -11,7 +11,7 @@ export default function WelcomeBanner() {
             <span className="text-white font-bold text-[10px]">G</span>
           </span>
           <span className="text-white/80 text-xs font-medium tracking-wide whitespace-nowrap">
-            Welcome to <span className="text-secondary font-semibold">Geuza</span> — Transform Your Experience
+            Welcome to <span className="font-bold text-white">Geuza</span> — Transform Your Experience
           </span>
         </div>
         <div className="hidden sm:flex items-center gap-3.5">

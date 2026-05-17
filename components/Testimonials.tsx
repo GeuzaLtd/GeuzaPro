@@ -74,7 +74,7 @@ function SideCard({ t }: { t: TestimonialItem }) {
         <p className="text-gray-600 text-sm leading-relaxed line-clamp-5">{t.quote}</p>
       </div>
       <div className="border-t border-gray-100 pt-4 mt-4">
-        <h4 className="font-display font-bold text-gray-900 text-sm">{t.name}</h4>
+        <p className="font-display font-bold text-gray-900 text-sm">{t.name}</p>
         <p className="text-primary text-xs font-medium mt-0.5">{roleLabel(t)}</p>
       </div>
     </div>
@@ -95,7 +95,7 @@ function CenterCard({ t }: { t: TestimonialItem }) {
       <div className="absolute inset-x-0 bottom-0 p-6 text-white">
         <Stars count={t.rating} />
         <p className="text-sm italic opacity-90 my-3 leading-relaxed line-clamp-4">"{t.quote}"</p>
-        <h4 className="font-display font-bold text-lg">{t.name}</h4>
+        <p className="font-display font-bold text-lg">{t.name}</p>
         <p className="text-xs opacity-70 mt-0.5">{roleLabel(t)}</p>
       </div>
     </div>
@@ -272,18 +272,22 @@ export default function Testimonials({ testimonials }: { testimonials: Testimoni
       </div>
 
       {/* Dot indicators */}
-      <div className="flex justify-center gap-2 mt-2">
+      <div className="flex justify-center mt-2">
         {testimonials.map((_, i) => (
           <button
             key={i}
             onClick={() => slideTo(INIT + (i - activeDot))}
             aria-label={`Go to testimonial ${i + 1}`}
-            className={`rounded-full transition-all duration-300 ${
-              i === activeDot
-                ? 'w-6 h-2.5 bg-primary'
-                : 'w-2.5 h-2.5 bg-gray-300 hover:bg-gray-400'
-            }`}
-          />
+            className="p-3 flex items-center justify-center"
+          >
+            <span
+              className={`rounded-full transition-all duration-300 block ${
+                i === activeDot
+                  ? 'w-6 h-2.5 bg-primary'
+                  : 'w-2.5 h-2.5 bg-gray-300 hover:bg-gray-400'
+              }`}
+            />
+          </button>
         ))}
       </div>
     </section>

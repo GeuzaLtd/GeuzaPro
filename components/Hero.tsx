@@ -45,9 +45,9 @@ export default function Hero({ images }: { images: HeroImageProp[] }) {
           {/* Left Content */}
           <div className="text-white z-10">
             <p className="text-white/80 text-sm italic mb-5 tracking-wide">
-              <span className="text-secondary not-italic font-semibold">&ldquo;Geuza&rdquo;</span>
+              <span className="font-bold not-italic">&ldquo;Geuza&rdquo;</span>
               {' '}a Swahili word meaning{' '}
-              <span className="text-secondary not-italic font-semibold">&ldquo;to transform&rdquo;</span>
+              <span className="font-bold not-italic">&ldquo;to transform&rdquo;</span>
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-8">
               Transforming E-Waste into Smart Assistive Devices
