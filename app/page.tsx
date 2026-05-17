@@ -18,6 +18,29 @@ import type { TeamMember } from '@/components/Team';
 import { prisma } from '@/lib/prisma';
 import { getHeroImages } from '@/actions/hero-images';
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://geuza.africa';
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type':    'Organization',
+  name:        'Geuza',
+  url:         SITE_URL,
+  logo:        `${SITE_URL}/images/logo.png`,
+  description: 'Geuza transforms e-waste into smart assistive devices, empowering people with disabilities across Africa.',
+  sameAs: [
+    'https://www.facebook.com/geuzaltd',
+    'https://x.com/GeuzaLtd',
+    'https://www.instagram.com/geuza_ltd',
+    'https://www.linkedin.com/company/geuza-africa/',
+  ],
+  contactPoint: {
+    '@type':             'ContactPoint',
+    contactType:         'customer support',
+    availableLanguage:   ['English'],
+    url:                 `${SITE_URL}/contact`,
+  },
+};
+
 export default async function Home() {
   const [heroImages, rawProducts, rawTestimonials, latestBlog, rawEmployees] = await Promise.all([
     getHeroImages('home'),
@@ -69,6 +92,10 @@ export default async function Home() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
       <WelcomeBanner />
       <Header />
       <main>
