@@ -87,6 +87,7 @@ export default function Hero({ images }: { images: HeroImageProp[] }) {
                     fill
                     className="object-contain object-center"
                     priority={activeIndex === 0}
+                    fetchPriority={activeIndex === 0 ? 'high' : 'auto'}
                   />
                 </motion.div>
               </AnimatePresence>

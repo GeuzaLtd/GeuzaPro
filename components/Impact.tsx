@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { animate, useInView } from 'framer-motion';
 
 const stats = [
@@ -47,11 +48,15 @@ function CountUp({ end, decimals, suffix, delay }: CountUpProps) {
 export default function Impact() {
   return (
     <section className="relative py-20 md:py-28 bg-primary">
-      {/* Background Image Overlay */}
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-20"
-        style={{ backgroundImage: "url('/images/impact-image.png')" }}
-      />
+      <div className="absolute inset-0 opacity-20" aria-hidden="true">
+        <Image
+          src="/images/impact-image.png"
+          alt=""
+          fill
+          className="object-cover object-center"
+          sizes="100vw"
+        />
+      </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
         <div className="text-center mb-12">
