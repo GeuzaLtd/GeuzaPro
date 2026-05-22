@@ -37,7 +37,21 @@ const organizationJsonLd = {
     '@type':             'ContactPoint',
     contactType:         'customer support',
     availableLanguage:   ['English'],
-    url:                 `${SITE_URL}/contact`,
+    email:               'info@geuza.africa',
+    telephone:           '+250-796-084-144',
+    url:                 `${SITE_URL}/#contact`,
+  },
+};
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type':    'WebSite',
+  name:        'Geuza',
+  url:         SITE_URL,
+  potentialAction: {
+    '@type':       'SearchAction',
+    target:        `${SITE_URL}/shop?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
   },
 };
 
@@ -95,6 +109,10 @@ export default async function Home() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
       />
       <WelcomeBanner />
       <Header />
