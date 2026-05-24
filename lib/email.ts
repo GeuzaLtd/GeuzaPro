@@ -2,7 +2,7 @@
 // Set RESEND_API_KEY, EMAIL_FROM, ADMIN_EMAIL, CONTACT_PHONE in .env
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const BASE_FROM      = process.env.EMAIL_FROM_ADDRESS ?? 'no-reply@geuza.africa';
+const BASE_FROM      = process.env.EMAIL_FROM_ADDRESS || 'no-reply@geuza.africa';
 
 const FROM_ORDERS    = `Geuza Orders <${BASE_FROM}>`;
 const FROM_DONATIONS = `Geuza Donations <${BASE_FROM}>`;
