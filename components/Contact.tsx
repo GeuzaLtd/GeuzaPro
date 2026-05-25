@@ -50,19 +50,46 @@ export default function Contact() {
         <SectionHeader title="Contact us" />
 
         <div className="grid md:grid-cols-2 gap-12">
-          {/* Map */}
-          <div className="relative h-[300px] md:h-full min-h-[400px] rounded-xl overflow-hidden bg-gray-200">
-            <iframe
-                   
-              src="https://www.google.com/maps/embed?pb=!1m24!1m12!1m3!1d422.4181041911447!2d30.102106997130342!3d-1.9640917921145975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m9!3e9!4m3!3m2!1d-2.0016192!2d30.0897769!4m3!3m2!1d-1.963871!2d30.102280999999998!5e0!3m2!1sen!2srw!4v1777973313517!5m2!1sen!2srw"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Geuza Location Map"
-            />
+          {/* Map + contact info */}
+          <div className="flex flex-col gap-5">
+            <div className="relative h-[280px] md:h-[320px] rounded-xl overflow-hidden bg-gray-200">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m24!1m12!1m3!1d422.4181041911447!2d30.102106997130342!3d-1.9640917921145975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m9!3e9!4m3!3m2!1d-2.0016192!2d30.0897769!4m3!3m2!1d-1.963871!2d30.102280999999998!5e0!3m2!1sen!2srw!4v1777973313517!5m2!1sen!2srw"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Geuza Location Map"
+              />
+            </div>
+            <div className="space-y-3 text-sm text-gray-700">
+              <a href="mailto:info@geuza.africa" className="flex items-center gap-3 hover:text-primary transition-colors">
+                <span className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-primary">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                </span>
+                info@geuza.africa
+              </a>
+              <a href="tel:+250796084144" className="flex items-center gap-3 hover:text-primary transition-colors">
+                <span className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-primary">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.29 6.29l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </span>
+                +250 796 084 144
+              </a>
+              <div className="flex items-center gap-3">
+                <span className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-primary">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </span>
+                Kigali, Rwanda, Remera-Gasabo
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-primary">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </span>
+                Mon – Fri, 9:00 AM – 5:00 PM
+              </div>
+            </div>
           </div>
 
           {/* Form */}

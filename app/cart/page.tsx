@@ -2,7 +2,7 @@ import { Header, Footer } from '@/components';
 import CartView from './_components/CartView';
 
 export const metadata = {
-  title: 'Your Cart | Geuza',
+  title: 'Your Cart',
 };
 
 export default function CartPage() {

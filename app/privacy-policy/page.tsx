@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Header, Footer } from '@/components';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Geuza',
+  title: 'Privacy Policy',
   description: 'Learn how Geuza collects, uses, and protects your personal information.',
 };
 

@@ -24,7 +24,7 @@ export default function OtherPosts({ posts }: { posts: BlogPostDb[] }) {
             const authorName = post.author?.name ?? 'Geuza';
             const category   = post.category?.name ?? null;
             const words      = post.content.replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean).length;
-            const readTime   = Math.max(1, Math.round(words / 200));
+            const readTime   = Math.max(1, Math.round(words / 150));
 
             return (
               <article

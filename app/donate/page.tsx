@@ -7,7 +7,7 @@ import DonateSection from './_components/DonateSection';
 import WhyDonate from './_components/WhyDonate';
 
 export const metadata: Metadata = {
-  title: 'Donate | Geuza',
+  title: 'Donate',
   description:
     'Support Geuza by donating to fund affordable assistive devices including wheelchairs, prosthetics, hearing aids, and walking aids, made from recycled e-waste for people with disabilities across Africa.',
 };

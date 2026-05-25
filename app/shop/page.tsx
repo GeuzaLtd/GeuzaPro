@@ -6,7 +6,7 @@ import { getProducts } from '@/actions/products';
 import { prisma } from '@/lib/prisma';
 
 export const metadata: Metadata = {
-  title: 'Shop | Geuza',
+  title: 'Shop',
   description:
     'Shop our full range of affordable assistive mobility devices — wheelchairs, crutches, walking aids, and prosthetics made from repurposed e-waste.',
 };

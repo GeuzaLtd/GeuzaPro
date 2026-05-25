@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Header, Footer } from '@/components';
 
 export const metadata: Metadata = {
-  title: 'Terms and Conditions | Geuza',
+  title: 'Terms and Conditions',
   description: 'Read the terms and conditions governing your use of the Geuza website and services.',
 };
 

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
-import { FaXTwitter } from 'react-icons/fa6';
+import { FaXTwitter, FaTiktok } from 'react-icons/fa6';
 
 export default function WelcomeBanner() {
   return (
@@ -26,6 +26,9 @@ export default function WelcomeBanner() {
           </Link>
           <Link href="https://www.linkedin.com/company/geuza-africa/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-white/80 hover:text-secondary transition-colors duration-200 p-2 -m-2">
             <FaLinkedinIn size={12} />
+          </Link>
+          <Link href="https://www.tiktok.com/@geuza_africa" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="text-white/80 hover:text-secondary transition-colors duration-200 p-2 -m-2">
+            <FaTiktok size={12} />
           </Link>
         </div>
       </div>

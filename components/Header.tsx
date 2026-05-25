@@ -80,8 +80,11 @@ export default async function Header() {
           )}
         </div>
 
-        {/* Mobile toggle + menu */}
-        <MobileMenu navLinks={navLinks} isLoggedIn={isLoggedIn} />
+        {/* Mobile: cart icon + menu toggle */}
+        <div className="flex md:hidden items-center gap-2">
+          <CartIcon />
+          <MobileMenu navLinks={navLinks} isLoggedIn={isLoggedIn} />
+        </div>
       </div>
     </header>
   );

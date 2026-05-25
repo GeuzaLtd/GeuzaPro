@@ -64,7 +64,12 @@ function CountUp({ end, suffix, delay }: { end: number; suffix: string; delay: n
     return () => ctrl.stop();
   }, [isInView, end, suffix, delay]);
 
-  return <span ref={ref}>{display}</span>;
+  return (
+    <>
+      <span className="sr-only">{Math.round(end).toLocaleString()}{suffix}</span>
+      <span ref={ref} aria-hidden="true">{display}</span>
+    </>
+  );
 }
 
 export default function ImpactNumbers() {

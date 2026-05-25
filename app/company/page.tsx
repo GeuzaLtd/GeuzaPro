@@ -12,7 +12,7 @@ import { prisma } from '@/lib/prisma';
 import { getHeroImages } from '@/actions/hero-images';
 
 export const metadata: Metadata = {
-  title: 'Company | Geuza',
+  title: 'Company',
   description:
     'Learn about Geuza — our mission to transform e-waste into affordable assistive devices, our vision for an inclusive Africa, and the team making it happen.',
 };

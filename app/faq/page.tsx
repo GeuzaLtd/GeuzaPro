@@ -3,7 +3,7 @@ import { Header, Footer } from '@/components';
 import FAQAccordions from './_components/FAQAccordions';
 
 export const metadata: Metadata = {
-  title: 'FAQ – Assistive Devices, Ordering & Partnerships | Geuza',
+  title: 'FAQ – Assistive Devices, Ordering & Partnerships',
   description: 'Frequently asked questions about Geuza assistive devices — wheelchairs, crutches, prosthetics — ordering in Rwanda and across Africa, donations, and partnership opportunities.',
 };
 

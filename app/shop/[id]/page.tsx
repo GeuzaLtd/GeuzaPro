@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const ogImage  = primary?.url ?? `${SITE_URL}/og-default.jpg`;
 
   return {
-    title:       `${product.name} | Geuza Shop`,
+    title:       product.name,
     description: product.description ?? `Order ${product.name} from Geuza — smart assistive devices made from repurposed e-waste.`,
     alternates:  { canonical: url },
     openGraph: {

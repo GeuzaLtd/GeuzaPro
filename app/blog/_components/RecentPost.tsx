@@ -9,7 +9,7 @@ export default function RecentPost({ post }: { post: BlogPostDb }) {
   const category     = post.category?.name ?? null;
   const date         = formatBlogDate(post.publishedAt ?? post.createdAt);
   const words        = post.content.replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean).length;
-  const readTime     = Math.max(1, Math.round(words / 200));
+  const readTime     = Math.max(1, Math.round(words / 150));
 
   return (
     <section className="py-12 md:py-16 bg-white">

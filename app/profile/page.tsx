@@ -4,7 +4,7 @@ import { Header, Footer } from '@/components';
 import { getProfileData } from '@/actions/users';
 import ProfileView from './_components/ProfileView';
 
-export const metadata = { title: 'My Profile | Geuza' };
+export const metadata = { title: 'My Profile' };
 
 export default async function ProfilePage() {
   const session = await auth();

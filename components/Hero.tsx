@@ -56,7 +56,7 @@ export default function Hero({ images }: { images: HeroImageProp[] }) {
               href="/products"
               className="inline-flex items-center gap-2.5 bg-white text-primary font-bold px-7 py-3.5 rounded-full hover:bg-secondary hover:text-white transition-colors duration-300 group"
             >
-              For more Info
+              Browse Our Devices
               <svg
                 width="16" height="16" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"

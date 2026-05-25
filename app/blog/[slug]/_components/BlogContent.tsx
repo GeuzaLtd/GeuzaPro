@@ -26,7 +26,7 @@ export default function BlogContent({ post }: { post: BlogPostDb }) {
 
   // Estimate read time
   const words    = post.content.replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean).length;
-  const readTime = Math.max(1, Math.round(words / 200));
+  const readTime = Math.max(1, Math.round(words / 150));
 
   return (
     <article className="flex flex-col gap-8 min-w-0">

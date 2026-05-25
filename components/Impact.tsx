@@ -42,7 +42,12 @@ function CountUp({ end, decimals, suffix, delay }: CountUpProps) {
     return () => controls.stop();
   }, [isInView, end, decimals, suffix, delay]);
 
-  return <span ref={ref}>{display}</span>;
+  return (
+    <>
+      <span className="sr-only">{decimals > 0 ? end.toFixed(decimals) : Math.round(end).toString()}{suffix}</span>
+      <span ref={ref} aria-hidden="true">{display}</span>
+    </>
+  );
 }
 
 export default function Impact() {
