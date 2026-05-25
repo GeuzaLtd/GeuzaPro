@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCart, cartItemKey } from '@/lib/cart-context';
 import type { CartItem } from '@/lib/cart-context';
+import { MdLock, MdPhone, MdRecycling } from 'react-icons/md';
 
 interface ProductImage { id: number; url: string; isPrimary: boolean; }
 interface Category { id: number; name: string; }
@@ -303,12 +304,12 @@ export default function ProductDetail({ product }: { product: Product }) {
           {/* Trust notes */}
           <div className="flex flex-wrap gap-4 pt-2">
             {[
-              { icon: '🔒', text: 'Secure order' },
-              { icon: '📞', text: 'We contact you to confirm' },
-              { icon: '♻️', text: 'Made from repurposed e-waste' },
+              { icon: <MdLock size={14} />, text: 'Secure order' },
+              { icon: <MdPhone size={14} />, text: 'We contact you to confirm' },
+              { icon: <MdRecycling size={14} />, text: 'Made from repurposed e-waste' },
             ].map((n) => (
               <span key={n.text} className="text-xs text-gray-400 flex items-center gap-1.5">
-                <span>{n.icon}</span> {n.text}
+                <span className="text-[#0F9E59]">{n.icon}</span> {n.text}
               </span>
             ))}
           </div>
