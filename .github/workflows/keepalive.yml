@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Ping keepalive endpoint
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${{ secrets.SITE_URL }}/api/keepalive")
+          STATUS=$(curl -s -L -o /dev/null -w "%{http_code}" "${{ secrets.SITE_URL }}/api/keepalive")
           echo "Response status: $STATUS"
           if [ "$STATUS" != "200" ]; then
             echo "Keepalive ping failed with status $STATUS"
