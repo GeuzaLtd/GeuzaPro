@@ -7,28 +7,20 @@ import { registerAction } from '@/actions/auth';
 import { signIn } from 'next-auth/react';
 import { AnimatePresence, motion } from 'framer-motion';
 
-/* ── Particles ── */
-const PARTICLES = [
-  { x: '8%',  size: 4, delay: 0,   dur: 5   },
-  { x: '25%', size: 6, delay: 1.1, dur: 4.5 },
-  { x: '48%', size: 3, delay: 0.6, dur: 5.5 },
-  { x: '68%', size: 5, delay: 1.8, dur: 4   },
-  { x: '85%', size: 4, delay: 0.2, dur: 6   },
-];
-
 const PERKS = [
-  { label: 'Track every order & donation' },
-  { label: 'Access exclusive product drops' },
-  { label: 'Join a community changing lives' },
+  { label: 'Track every order & donation'      },
+  { label: 'Access exclusive product drops'    },
+  { label: 'Join a community changing lives'   },
 ];
 
-/* ── Field stagger ── */
 const fieldVariants = {
   hidden:  { opacity: 0, y: 18 },
-  visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: 0.1 + i * 0.07, duration: 0.5 } }),
+  visible: (i: number) => ({
+    opacity: 1, y: 0,
+    transition: { delay: 0.1 + i * 0.07, duration: 0.5 },
+  }),
 };
 
-/* ── Password strength ── */
 function getStrength(pw: string): { level: number; label: string; color: string } {
   if (!pw) return { level: 0, label: '', color: '' };
   let score = 0;
@@ -46,7 +38,6 @@ function getStrength(pw: string): { level: number; label: string; color: string 
   return { level: score, label: map[score][0], color: map[score][1] };
 }
 
-/* ── Eye icon ── */
 function EyeIcon({ open }: { open: boolean }) {
   return open ? (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -73,11 +64,11 @@ export default function SignUpView() {
 
   const validate = () => {
     const e: Record<string, string> = {};
-    if (form.name.trim().length < 2)          e.name     = 'Please enter your full name.';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Please enter a valid email.';
-    if (form.password.length < 8)             e.password = 'Password must be at least 8 characters.';
-    if (form.password !== form.confirm)       e.confirm  = 'Passwords do not match.';
-    if (!agreed)                              e.terms    = 'Please accept the terms to continue.';
+    if (form.name.trim().length < 2)                         e.name     = 'Please enter your full name.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))     e.email    = 'Please enter a valid email.';
+    if (form.password.length < 8)                            e.password = 'Password must be at least 8 characters.';
+    if (form.password !== form.confirm)                      e.confirm  = 'Passwords do not match.';
+    if (!agreed)                                             e.terms    = 'Please accept the terms to continue.';
     return e;
   };
 
@@ -105,65 +96,95 @@ export default function SignUpView() {
     <div className="min-h-screen flex">
 
       {/* ══════════════════════════════════════════
-          LEFT — Branded panel
+          LEFT — Branded panel (hidden on mobile)
       ══════════════════════════════════════════ */}
-      <div className="hidden lg:flex w-[45%] relative flex-col overflow-hidden">
-
-        <div className="absolute inset-0">
-          <Image
-            src="/images/images/hero.png"
-            alt="Geuza community"
-            fill
-            className="object-cover object-center"
-            priority
-            unoptimized
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-950/92 via-gray-900/78 to-[#0F9E59]/20" />
+      <div
+        className="hidden lg:flex w-[45%] relative flex-col overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #006D2C 0%, #0F9E59 55%, #1cb86c 100%)' }}
+      >
+        {/* Dot-grid decoration */}
+        <div
+          className="absolute top-10 right-12 grid grid-cols-5 gap-2 opacity-[0.18] pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          {Array.from({ length: 20 }).map((_, i) => (
+            <span key={i} className="w-[5px] h-[5px] rounded-full bg-white block" />
+          ))}
         </div>
 
-        {/* Particles */}
-        {PARTICLES.map((p, i) => (
-          <motion.span
-            key={i}
-            className="absolute bottom-0 rounded-full bg-[#0F9E59]"
-            style={{ left: p.x, width: p.size, height: p.size }}
-            animate={{ y: [0, -300, -650], opacity: [0, 0.5, 0] }}
-            transition={{ duration: p.dur, delay: p.delay, repeat: Infinity, ease: 'easeOut' }}
-          />
-        ))}
+        {/* Glow rings behind crutch */}
+        <div
+          className="absolute right-[-60px] top-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full pointer-events-none"
+          style={{ background: 'rgba(255,255,255,0.07)' }}
+          aria-hidden="true"
+        />
+        <div
+          className="absolute right-[-30px] top-1/2 -translate-y-1/2 w-[340px] h-[340px] rounded-full pointer-events-none"
+          style={{ background: 'rgba(255,255,255,0.05)' }}
+          aria-hidden="true"
+        />
 
+        {/* Crutch image */}
+        <div
+          className="absolute right-0 xl:right-[-10px] top-1/2 -translate-y-[54%] w-[200px] xl:w-[230px] h-[380px] xl:h-[430px] pointer-events-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/hero-image2.png"
+            alt=""
+            fill
+            className="object-contain"
+            style={{ filter: 'drop-shadow(0 24px 48px rgba(0,0,0,0.40))' }}
+            priority
+          />
+        </div>
+
+        {/* Main content */}
         <div className="relative z-10 flex flex-col h-full p-10 xl:p-14">
 
           {/* Logo */}
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <Link href="/" className="inline-block">
               <Image
-              src="/images/logo.png"
-              alt="Geuza Logo"
-              width={100}
-              height={30}
-              className="object-contain"
+                src="/images/logo.png"
+                alt="Geuza Logo"
+                width={100}
+                height={30}
+                className="object-contain"
               />
             </Link>
           </motion.div>
 
-          {/* Center content */}
-          <div className="flex-1 flex flex-col justify-center">
+          {/* Centre copy */}
+          <div className="flex-1 flex flex-col justify-center max-w-[58%]">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <div className="text-[#0F9E59]/50 font-serif text-9xl leading-none mb-1 select-none">&ldquo;</div>
-              <h2 className="font-display font-black text-white text-3xl xl:text-4xl leading-tight mb-5">
-                Join the movement.<br />Be the change.
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 bg-white/15 border border-white/25 rounded-full px-3.5 py-1.5 mb-6 w-fit">
+                <span className="w-2 h-2 rounded-full bg-secondary flex-shrink-0" />
+                <span className="text-white text-[11px] font-bold tracking-widest uppercase">
+                  Get Started Free
+                </span>
+              </div>
+
+              <h2 className="font-display font-black text-white text-[1.9rem] xl:text-[2.15rem] leading-tight mb-5">
+                Join the movement.<br />
+                <span className="text-secondary">Be the change.</span>
               </h2>
-              <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-8">
-                Create your free account and become part of a community turning e-waste
-                into smart assistive devices that restore dignity and independence.
+
+              <p className="text-white/65 text-sm leading-relaxed mb-8">
+                Create your free account and become part of a community turning
+                e-waste into assistive devices that restore dignity and independence.
               </p>
 
-              {/* Perks list */}
+              {/* Perks */}
               <ul className="flex flex-col gap-3">
                 {PERKS.map((p, i) => (
                   <motion.li
@@ -171,10 +192,10 @@ export default function SignUpView() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.45 + i * 0.12 }}
-                    className="flex items-center gap-3 text-white/60 text-sm"
+                    className="flex items-center gap-3 text-white/70 text-sm"
                   >
-                    <span className="w-5 h-5 rounded-full bg-[#0F9E59] flex items-center justify-center flex-shrink-0">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <span className="w-5 h-5 rounded-full bg-secondary/90 flex items-center justify-center flex-shrink-0">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
                     </span>
@@ -185,21 +206,25 @@ export default function SignUpView() {
             </motion.div>
           </div>
 
-          {/* Bottom badge */}
+          {/* Bottom social-proof badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="inline-flex items-center gap-3 bg-white/8 border border-white/15 rounded-2xl px-5 py-4 backdrop-blur-sm self-start"
+            className="inline-flex items-center gap-3 bg-white/[0.08] border border-white/15 rounded-2xl px-5 py-4 backdrop-blur-sm self-start"
           >
             <div className="flex -space-x-2">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="w-7 h-7 rounded-full bg-gradient-to-br from-[#0F9E59] to-[#1bc870] border-2 border-gray-900" />
+                <div
+                  key={i}
+                  className="w-7 h-7 rounded-full border-2 border-white/20"
+                  style={{ background: `linear-gradient(135deg, #0F9E59 0%, #1bc870 100%)` }}
+                />
               ))}
             </div>
             <div>
               <p className="text-white text-sm font-bold">147 donors this month</p>
-              <p className="text-white/40 text-xs">making real impact</p>
+              <p className="text-white/45 text-xs">making real impact</p>
             </div>
           </motion.div>
 
@@ -209,20 +234,23 @@ export default function SignUpView() {
       {/* ══════════════════════════════════════════
           RIGHT — Form panel
       ══════════════════════════════════════════ */}
-      <div className="flex-1 flex flex-col bg-white overflow-y-auto">
+      <div className="flex-1 flex flex-col bg-white min-w-0 overflow-y-auto">
 
         {/* Top bar */}
-        <div className="flex items-center justify-between px-6 md:px-10 py-6 border-b border-gray-100 flex-shrink-0">
+        <div className="flex items-center justify-between px-6 md:px-10 py-5 border-b border-gray-100 flex-shrink-0">
           <Link href="/" className="lg:hidden">
             <Image
               src="/images/logo.png"
               alt="Geuza Logo"
-              width={100}
-              height={30}
+              width={90}
+              height={28}
               className="object-contain"
-              />
+            />
           </Link>
-          <Link href="/" className="ml-auto flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition-colors">
+          <Link
+            href="/"
+            className="ml-auto flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition-colors"
+          >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <polyline points="15 18 9 12 15 6" />
             </svg>
@@ -231,8 +259,8 @@ export default function SignUpView() {
         </div>
 
         {/* Form area */}
-        <div className="flex-1 flex items-center justify-center px-6 py-10">
-          <div className="w-full max-w-md">
+        <div className="flex-1 flex items-start justify-center px-5 sm:px-8 py-10">
+          <div className="w-full max-w-[420px]">
 
             <AnimatePresence mode="wait">
               {status === 'success' ? (
@@ -243,30 +271,30 @@ export default function SignUpView() {
                   initial={{ opacity: 0, scale: 0.92 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, type: 'spring', bounce: 0.35 }}
-                  className="flex flex-col items-center text-center gap-5 py-10"
+                  className="flex flex-col items-center text-center gap-5 py-16"
                 >
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.15, type: 'spring', bounce: 0.5 }}
-                    className="w-20 h-20 rounded-full bg-[#0F9E59] shadow-xl shadow-[#0F9E59]/25 flex items-center justify-center"
+                    className="w-20 h-20 rounded-full bg-primary shadow-xl shadow-primary/25 flex items-center justify-center"
                   >
                     <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   </motion.div>
                   <div>
-                    <h2 className="font-display font-black text-gray-900 text-2xl mb-2">
-                      Account Created!
-                    </h2>
+                    <h2 className="font-display font-black text-gray-900 text-2xl mb-2">Account Created!</h2>
                     <p className="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">
-                      Welcome to Geuza, <span className="font-semibold text-gray-700">{form.name.split(' ')[0]}</span>!
-                      A confirmation email has been sent to <span className="font-medium">{form.email}</span>.
+                      Welcome to Geuza,{' '}
+                      <span className="font-semibold text-gray-700">{form.name.split(' ')[0]}</span>!
+                      {' '}A confirmation email has been sent to{' '}
+                      <span className="font-medium">{form.email}</span>.
                     </p>
                   </div>
                   <Link
                     href="/sign-in"
-                    className="inline-flex items-center gap-2 bg-[#0F9E59] text-white text-sm font-bold px-8 py-3 rounded-full hover:bg-[#0d8a4d] transition-colors"
+                    className="inline-flex items-center gap-2 bg-primary text-white text-sm font-bold px-8 py-3 rounded-full hover:bg-[#005523] transition-colors"
                   >
                     Sign In to Your Account
                   </Link>
@@ -274,22 +302,26 @@ export default function SignUpView() {
 
               ) : (
 
-                /* ── Form ── */
-                <motion.div key="form" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.65 }}>
-
-                  {/* Heading */}
+                /* ── Registration form ── */
+                <motion.div
+                  key="form"
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.65 }}
+                >
                   <div className="mb-7">
                     <motion.div
                       custom={0} variants={fieldVariants} initial="hidden" animate="visible"
-                      className="inline-flex items-center gap-2 bg-[#0F9E59]/10 rounded-full px-3 py-1.5 mb-5"
+                      className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-3 py-1.5 mb-5"
                     >
                       <motion.span
-                        className="w-1.5 h-1.5 rounded-full bg-[#0F9E59]"
+                        className="w-1.5 h-1.5 rounded-full bg-primary"
                         animate={{ opacity: [1, 0.3, 1] }}
                         transition={{ duration: 1.5, repeat: Infinity }}
                       />
-                      <span className="text-[#0F9E59] text-xs font-bold tracking-widest uppercase">Get Started Free</span>
+                      <span className="text-primary text-xs font-bold tracking-widest uppercase">Get Started Free</span>
                     </motion.div>
+
                     <motion.h1
                       custom={1} variants={fieldVariants} initial="hidden" animate="visible"
                       className="font-display font-black text-gray-900 text-4xl mb-2"
@@ -301,7 +333,7 @@ export default function SignUpView() {
                       className="text-gray-500 text-sm"
                     >
                       Already have an account?{' '}
-                      <Link href="/sign-in" className="text-[#0F9E59] font-semibold hover:underline">
+                      <Link href="/sign-in" className="text-primary font-semibold hover:underline">
                         Sign In
                       </Link>
                     </motion.p>
@@ -311,35 +343,41 @@ export default function SignUpView() {
 
                     {/* Full Name */}
                     <motion.div custom={3} variants={fieldVariants} initial="hidden" animate="visible">
-                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                        Full Name
+                      </label>
                       <input
                         type="text"
                         required
                         value={form.name}
                         onChange={set('name')}
                         placeholder="e.g. Jean-Paul Habimana"
-                        className={`w-full px-4 py-3 rounded-xl border text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${errors.name ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-gray-200 focus:border-[#0F9E59] focus:ring-[#0F9E59]/10'}`}
+                        className={`w-full px-4 py-3 rounded-xl border text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${errors.name ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-gray-200 focus:border-primary focus:ring-primary/10'}`}
                       />
                       {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                     </motion.div>
 
                     {/* Email */}
                     <motion.div custom={4} variants={fieldVariants} initial="hidden" animate="visible">
-                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Email Address</label>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                        Email Address
+                      </label>
                       <input
                         type="email"
                         required
                         value={form.email}
                         onChange={set('email')}
                         placeholder="you@example.com"
-                        className={`w-full px-4 py-3 rounded-xl border text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${errors.email ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-gray-200 focus:border-[#0F9E59] focus:ring-[#0F9E59]/10'}`}
+                        className={`w-full px-4 py-3 rounded-xl border text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${errors.email ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-gray-200 focus:border-primary focus:ring-primary/10'}`}
                       />
                       {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                     </motion.div>
 
                     {/* Password */}
                     <motion.div custom={5} variants={fieldVariants} initial="hidden" animate="visible">
-                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Password</label>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                        Password
+                      </label>
                       <div className="relative">
                         <input
                           type={showPw ? 'text' : 'password'}
@@ -347,13 +385,17 @@ export default function SignUpView() {
                           value={form.password}
                           onChange={set('password')}
                           placeholder="Min. 8 characters"
-                          className={`w-full px-4 py-3 pr-11 rounded-xl border text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${errors.password ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-gray-200 focus:border-[#0F9E59] focus:ring-[#0F9E59]/10'}`}
+                          className={`w-full px-4 py-3 pr-11 rounded-xl border text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${errors.password ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-gray-200 focus:border-primary focus:ring-primary/10'}`}
                         />
-                        <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                        <button
+                          type="button"
+                          onClick={() => setShowPw(!showPw)}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                          aria-label={showPw ? 'Hide password' : 'Show password'}
+                        >
                           <EyeIcon open={showPw} />
                         </button>
                       </div>
-                      {/* Strength bar */}
                       {form.password && (
                         <div className="mt-2 flex items-center gap-2">
                           <div className="flex gap-1 flex-1">
@@ -376,7 +418,9 @@ export default function SignUpView() {
 
                     {/* Confirm password */}
                     <motion.div custom={6} variants={fieldVariants} initial="hidden" animate="visible">
-                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Confirm Password</label>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                        Confirm Password
+                      </label>
                       <div className="relative">
                         <input
                           type={showConf ? 'text' : 'password'}
@@ -384,9 +428,14 @@ export default function SignUpView() {
                           value={form.confirm}
                           onChange={set('confirm')}
                           placeholder="Re-enter your password"
-                          className={`w-full px-4 py-3 pr-11 rounded-xl border text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${errors.confirm ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-gray-200 focus:border-[#0F9E59] focus:ring-[#0F9E59]/10'}`}
+                          className={`w-full px-4 py-3 pr-11 rounded-xl border text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${errors.confirm ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-gray-200 focus:border-primary focus:ring-primary/10'}`}
                         />
-                        <button type="button" onClick={() => setShowConf(!showConf)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                        <button
+                          type="button"
+                          onClick={() => setShowConf(!showConf)}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                          aria-label={showConf ? 'Hide password' : 'Show password'}
+                        >
                           <EyeIcon open={showConf} />
                         </button>
                       </div>
@@ -395,16 +444,22 @@ export default function SignUpView() {
 
                     {/* Terms */}
                     <motion.div custom={7} variants={fieldVariants} initial="hidden" animate="visible">
-                      <label className="flex items-start gap-3 cursor-pointer group">
+                      <label className="flex items-start gap-3 cursor-pointer">
                         <div className="relative mt-0.5 flex-shrink-0">
                           <input
                             type="checkbox"
                             checked={agreed}
-                            onChange={(e) => { setAgreed(e.target.checked); if (errors.terms) setErrors((p) => { const n = { ...p }; delete n.terms; return n; }); }}
+                            onChange={(e) => {
+                              setAgreed(e.target.checked);
+                              if (errors.terms) setErrors((p) => { const n = { ...p }; delete n.terms; return n; });
+                            }}
                             className="sr-only"
                           />
                           <motion.div
-                            animate={{ backgroundColor: agreed ? '#0F9E59' : '#fff', borderColor: agreed ? '#0F9E59' : errors.terms ? '#ef4444' : '#d1d5db' }}
+                            animate={{
+                              backgroundColor: agreed ? '#006D2C' : '#fff',
+                              borderColor: agreed ? '#006D2C' : errors.terms ? '#ef4444' : '#d1d5db',
+                            }}
                             className="w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors"
                           >
                             {agreed && (
@@ -416,9 +471,9 @@ export default function SignUpView() {
                         </div>
                         <span className="text-sm text-gray-500 leading-snug">
                           I agree to the{' '}
-                          <Link href="#" className="text-[#0F9E59] font-medium hover:underline">Terms of Service</Link>
+                          <Link href="/terms" className="text-primary font-medium hover:underline">Terms of Service</Link>
                           {' '}and{' '}
-                          <Link href="#" className="text-[#0F9E59] font-medium hover:underline">Privacy Policy</Link>
+                          <Link href="/privacy-policy" className="text-primary font-medium hover:underline">Privacy Policy</Link>
                         </span>
                       </label>
                       {errors.terms && <p className="text-red-500 text-xs mt-1 ml-8">{errors.terms}</p>}
@@ -430,7 +485,7 @@ export default function SignUpView() {
                         type="submit"
                         disabled={status === 'loading'}
                         whileTap={{ scale: 0.97 }}
-                        className="w-full py-3.5 rounded-xl bg-[#0F9E59] text-white font-bold text-sm hover:bg-[#0d8a4d] disabled:opacity-70 disabled:cursor-not-allowed transition-colors duration-300"
+                        className="w-full py-3.5 rounded-xl bg-primary text-white font-bold text-sm hover:bg-[#005523] disabled:opacity-70 disabled:cursor-not-allowed transition-colors duration-300"
                       >
                         {status === 'loading' ? (
                           <span className="flex items-center justify-center gap-2">

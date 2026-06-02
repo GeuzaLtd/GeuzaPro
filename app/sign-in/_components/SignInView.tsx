@@ -8,28 +8,20 @@ import { loginAction } from '@/actions/auth';
 import { signIn } from 'next-auth/react';
 import { AnimatePresence, motion } from 'framer-motion';
 
-/* ── Left-panel floating particles ── */
-const PARTICLES = [
-  { x: '10%', size: 5, delay: 0,   dur: 5   },
-  { x: '28%', size: 3, delay: 1.4, dur: 4.5 },
-  { x: '50%', size: 6, delay: 0.7, dur: 5.5 },
-  { x: '70%', size: 4, delay: 2.1, dur: 4   },
-  { x: '88%', size: 3, delay: 0.3, dur: 6   },
-];
-
 const STATS = [
-  { value: '847+',   label: 'Devices' },
-  { value: '1,200+', label: 'Lives'   },
-  { value: '6',      label: 'Districts'},
+  { value: '500+', label: 'Devices' },
+  { value: '65+',  label: 'Lives'   },
+  { value: '15',   label: 'Partners'},
 ];
 
-/* ── Field stagger ── */
 const fieldVariants = {
   hidden:  { opacity: 0, y: 18 },
-  visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: 0.15 + i * 0.08, duration: 0.5 } }),
+  visible: (i: number) => ({
+    opacity: 1, y: 0,
+    transition: { delay: 0.15 + i * 0.08, duration: 0.5 },
+  }),
 };
 
-/* ── Eye icon ── */
 function EyeIcon({ open }: { open: boolean }) {
   return open ? (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -71,68 +63,97 @@ export default function SignInView() {
     <div className="min-h-screen flex">
 
       {/* ══════════════════════════════════════════
-          LEFT — Branded panel
+          LEFT — Branded panel (hidden on mobile)
       ══════════════════════════════════════════ */}
-      <div className="hidden lg:flex w-[45%] relative flex-col overflow-hidden">
-
-        {/* Background image + gradient */}
-        <div className="absolute inset-0">
-          <Image
-            src="/images/images/company-2.png"
-            alt="Geuza community"
-            fill
-            className="object-cover"
-            priority
-            unoptimized
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-950/92 via-gray-900/80 to-[#0F9E59]/25" />
+      <div
+        className="hidden lg:flex w-[45%] relative flex-col overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #006D2C 0%, #0F9E59 55%, #1cb86c 100%)' }}
+      >
+        {/* Dot-grid decoration */}
+        <div
+          className="absolute top-10 right-12 grid grid-cols-5 gap-2 opacity-[0.18] pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          {Array.from({ length: 20 }).map((_, i) => (
+            <span key={i} className="w-[5px] h-[5px] rounded-full bg-white block" />
+          ))}
         </div>
 
-        {/* Floating particles */}
-        {PARTICLES.map((p, i) => (
-          <motion.span
-            key={i}
-            className="absolute bottom-0 rounded-full bg-[#0F9E59]"
-            style={{ left: p.x, width: p.size, height: p.size }}
-            animate={{ y: [0, -350, -700], opacity: [0, 0.45, 0] }}
-            transition={{ duration: p.dur, delay: p.delay, repeat: Infinity, ease: 'easeOut' }}
-          />
-        ))}
+        {/* Glow rings behind crutch */}
+        <div
+          className="absolute right-[-60px] top-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full pointer-events-none"
+          style={{ background: 'rgba(255,255,255,0.07)' }}
+          aria-hidden="true"
+        />
+        <div
+          className="absolute right-[-30px] top-1/2 -translate-y-1/2 w-[340px] h-[340px] rounded-full pointer-events-none"
+          style={{ background: 'rgba(255,255,255,0.05)' }}
+          aria-hidden="true"
+        />
 
+        {/* Crutch image — floats on the right half of the panel */}
+        <div
+          className="absolute right-0 xl:right-[-10px] top-1/2 -translate-y-[54%] w-[200px] xl:w-[230px] h-[380px] xl:h-[430px] pointer-events-none"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/hero-image2.png"
+            alt=""
+            fill
+            className="object-contain"
+            style={{ filter: 'drop-shadow(0 24px 48px rgba(0,0,0,0.40))' }}
+            priority
+          />
+        </div>
+
+        {/* Main content */}
         <div className="relative z-10 flex flex-col h-full p-10 xl:p-14">
 
           {/* Logo */}
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <Link href="/" className="inline-block">
               <Image
-              src="/images/logo.png"
-              alt="Geuza Logo"
-              width={100}
-              height={30}
-              className="object-contain"
+                src="/images/logo.png"
+                alt="Geuza Logo"
+                width={100}
+                height={30}
+                className="object-contain"
               />
             </Link>
           </motion.div>
 
-          {/* Center quote */}
-          <div className="flex-1 flex flex-col justify-center">
+          {/* Centre copy — constrained width so it doesn't slide under the crutch */}
+          <div className="flex-1 flex flex-col justify-center max-w-[58%]">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.25 }}
             >
-              <div className="text-[#0F9E59]/50 font-serif text-9xl leading-none mb-1 select-none">&ldquo;</div>
-              <h2 className="font-display font-black text-white text-3xl xl:text-4xl leading-tight mb-5">
-                Smart assistive technology,<br />for a life without limits.
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 bg-white/15 border border-white/25 rounded-full px-3.5 py-1.5 mb-6 w-fit">
+                <span className="w-2 h-2 rounded-full bg-secondary flex-shrink-0" />
+                <span className="text-white text-[11px] font-bold tracking-widest uppercase">
+                  Assistive Technology
+                </span>
+              </div>
+
+              <h2 className="font-display font-black text-white text-[1.9rem] xl:text-[2.15rem] leading-tight mb-5">
+                Smart devices<br />for a life<br />
+                <span className="text-secondary">without limits.</span>
               </h2>
-              <p className="text-white/50 text-sm leading-relaxed max-w-sm">
+
+              <p className="text-white/65 text-sm leading-relaxed">
                 Sign in to manage your orders, track your donations, and stay connected
-                with the community making assistive technology accessible for everyone.
+                with the Geuza community.
               </p>
             </motion.div>
           </div>
 
-          {/* Stats */}
+          {/* Stats bar */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -142,7 +163,7 @@ export default function SignInView() {
             {STATS.map((s) => (
               <div
                 key={s.label}
-                className="flex-1 bg-white/8 border border-white/15 rounded-2xl px-3 py-4 text-center backdrop-blur-sm"
+                className="flex-1 bg-white/[0.08] border border-white/15 rounded-2xl px-3 py-4 text-center backdrop-blur-sm"
               >
                 <p className="font-display font-black text-white text-2xl">{s.value}</p>
                 <p className="text-white/45 text-xs mt-0.5">{s.label}</p>
@@ -156,19 +177,19 @@ export default function SignInView() {
       {/* ══════════════════════════════════════════
           RIGHT — Form panel
       ══════════════════════════════════════════ */}
-      <div className="flex-1 flex flex-col bg-white">
+      <div className="flex-1 flex flex-col bg-white min-w-0">
 
         {/* Top bar */}
-        <div className="flex items-center justify-between px-6 md:px-10 py-6 border-b border-gray-100">
-          {/* Mobile logo */}
+        <div className="flex items-center justify-between px-6 md:px-10 py-5 border-b border-gray-100 flex-shrink-0">
+          {/* Logo — visible only on mobile */}
           <Link href="/" className="lg:hidden">
             <Image
               src="/images/logo.png"
               alt="Geuza Logo"
-              width={100}
-              height={30}
+              width={90}
+              height={28}
               className="object-contain"
-              />
+            />
           </Link>
           <Link
             href="/"
@@ -182,8 +203,8 @@ export default function SignInView() {
         </div>
 
         {/* Form area */}
-        <div className="flex-1 flex items-center justify-center px-6 py-12">
-          <div className="w-full max-w-md">
+        <div className="flex-1 flex items-center justify-center px-5 sm:px-8 py-10 overflow-y-auto">
+          <div className="w-full max-w-[420px]">
 
             <AnimatePresence mode="wait">
               {status === 'success' ? (
@@ -200,7 +221,7 @@ export default function SignInView() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.15, type: 'spring', bounce: 0.5 }}
-                    className="w-20 h-20 rounded-full bg-[#0F9E59] shadow-xl shadow-[#0F9E59]/25 flex items-center justify-center"
+                    className="w-20 h-20 rounded-full bg-primary shadow-xl shadow-primary/25 flex items-center justify-center"
                   >
                     <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12" />
@@ -209,14 +230,14 @@ export default function SignInView() {
                   <div>
                     <h2 className="font-display font-black text-gray-900 text-2xl mb-2">Welcome Back!</h2>
                     <p className="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">
-                      You&apos;re signed in as <span className="font-semibold text-gray-700">{email}</span>. Redirecting you now…
+                      You&apos;re signed in as{' '}
+                      <span className="font-semibold text-gray-700">{email}</span>.
+                      Redirecting you now…
                     </p>
                   </div>
-                  <motion.div
-                    className="w-40 h-1 rounded-full bg-gray-100 overflow-hidden"
-                  >
+                  <motion.div className="w-40 h-1 rounded-full bg-gray-100 overflow-hidden">
                     <motion.div
-                      className="h-full bg-[#0F9E59] rounded-full"
+                      className="h-full bg-primary rounded-full"
                       initial={{ width: '0%' }}
                       animate={{ width: '100%' }}
                       transition={{ duration: 2, ease: 'linear', delay: 0.4 }}
@@ -226,21 +247,25 @@ export default function SignInView() {
 
               ) : (
 
-                /* ── Form ── */
-                <motion.div key="form" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.65 }}>
-
+                /* ── Sign-in form ── */
+                <motion.div
+                  key="form"
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.65 }}
+                >
                   {/* Heading */}
                   <div className="mb-8">
                     <motion.div
                       custom={0} variants={fieldVariants} initial="hidden" animate="visible"
-                      className="inline-flex items-center gap-2 bg-[#0F9E59]/10 rounded-full px-3 py-1.5 mb-5"
+                      className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-3 py-1.5 mb-5"
                     >
                       <motion.span
-                        className="w-1.5 h-1.5 rounded-full bg-[#0F9E59]"
+                        className="w-1.5 h-1.5 rounded-full bg-primary"
                         animate={{ opacity: [1, 0.3, 1] }}
                         transition={{ duration: 1.5, repeat: Infinity }}
                       />
-                      <span className="text-[#0F9E59] text-xs font-bold tracking-widest uppercase">Welcome Back</span>
+                      <span className="text-primary text-xs font-bold tracking-widest uppercase">Welcome Back</span>
                     </motion.div>
 
                     <motion.h1
@@ -254,7 +279,7 @@ export default function SignInView() {
                       className="text-gray-500 text-sm"
                     >
                       Don&apos;t have an account?{' '}
-                      <Link href="/sign-up" className="text-[#0F9E59] font-semibold hover:underline">
+                      <Link href="/sign-up" className="text-primary font-semibold hover:underline">
                         Create one
                       </Link>
                     </motion.p>
@@ -273,7 +298,7 @@ export default function SignInView() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@example.com"
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-[#0F9E59] focus:ring-2 focus:ring-[#0F9E59]/10 transition-all"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
                       />
                     </motion.div>
 
@@ -283,7 +308,7 @@ export default function SignInView() {
                         <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                           Password
                         </label>
-                        <Link href="#" className="text-xs text-[#0F9E59] font-medium hover:underline">
+                        <Link href="#" className="text-xs text-primary font-medium hover:underline">
                           Forgot password?
                         </Link>
                       </div>
@@ -294,7 +319,7 @@ export default function SignInView() {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="Enter your password"
-                          className="w-full px-4 py-3 pr-11 rounded-xl border border-gray-200 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-[#0F9E59] focus:ring-2 focus:ring-[#0F9E59]/10 transition-all"
+                          className="w-full px-4 py-3 pr-11 rounded-xl border border-gray-200 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
                         />
                         <button
                           type="button"
@@ -330,7 +355,7 @@ export default function SignInView() {
                         type="submit"
                         disabled={status === 'loading'}
                         whileTap={{ scale: 0.97 }}
-                        className="w-full py-3.5 rounded-xl bg-[#0F9E59] text-white font-bold text-sm hover:bg-[#0d8a4d] disabled:opacity-70 disabled:cursor-not-allowed transition-colors duration-300"
+                        className="w-full py-3.5 rounded-xl bg-primary text-white font-bold text-sm hover:bg-[#005523] disabled:opacity-70 disabled:cursor-not-allowed transition-colors duration-300"
                       >
                         {status === 'loading' ? (
                           <span className="flex items-center justify-center gap-2">
@@ -346,7 +371,10 @@ export default function SignInView() {
                     </motion.div>
 
                     {/* Divider */}
-                    <motion.div custom={6} variants={fieldVariants} initial="hidden" animate="visible" className="flex items-center gap-3">
+                    <motion.div
+                      custom={6} variants={fieldVariants} initial="hidden" animate="visible"
+                      className="flex items-center gap-3"
+                    >
                       <span className="flex-1 h-px bg-gray-100" />
                       <span className="text-xs text-gray-400 font-medium">or continue with</span>
                       <span className="flex-1 h-px bg-gray-100" />
@@ -378,7 +406,7 @@ export default function SignInView() {
         </div>
 
         {/* Bottom bar */}
-        <div className="px-6 py-5 border-t border-gray-100 text-center">
+        <div className="px-6 py-5 border-t border-gray-100 text-center flex-shrink-0">
           <p className="text-xs text-gray-400">
             &copy; {new Date().getFullYear()} Geuza. All rights reserved.
           </p>
