@@ -7,7 +7,6 @@ const PARTNERSHIP_TYPES = [
   { value: 'procurement',    label: 'Bulk Procurement' },
   { value: 'distribution',   label: 'Co-funded Distribution' },
   { value: 'sponsorship',    label: 'Financial Sponsorship' },
-  { value: 'volunteering',   label: 'Employee Volunteering' },
   { value: 'research',       label: 'Research & Development' },
   { value: 'other',          label: 'Other' },
 ];

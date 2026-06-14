@@ -36,15 +36,6 @@ const PARTNERSHIP_MODELS = [
     title: 'Financial Sponsorship',
     desc:  'Sponsor device production and reach people who cannot afford assistive technology.',
   },
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-      </svg>
-    ),
-    title: 'Employee Volunteering',
-    desc:  'Engage your team in hands-on volunteering — production, training, or community outreach.',
-  },
 ];
 
 export default function PartnerPage() {
@@ -83,7 +74,7 @@ export default function PartnerPage() {
                 Whether you are an NGO, hospital, government body, or corporation, there is a partnership model for you.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {PARTNERSHIP_MODELS.map((m) => (
                 <div key={m.title} className="border border-gray-100 rounded-2xl p-6 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group">
                   <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-all duration-300">
