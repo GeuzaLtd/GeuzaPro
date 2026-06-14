@@ -21,6 +21,7 @@ import {
   HiOutlineStar,
   HiOutlinePhotograph,
   HiOutlineTag,
+  HiOutlineBell,
 } from 'react-icons/hi';
 import Image from 'next/image';
 
@@ -37,6 +38,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/testimonials', label: 'Testimonials',  icon: HiOutlineStar },
   { href: '/dashboard/hero-images',  label: 'Hero Images',   icon: HiOutlinePhotograph },
   { href: '/dashboard/messages',     label: 'Messages',      icon: HiOutlineMail },
+  { href: '/dashboard/waitlist',     label: 'Waitlist',      icon: HiOutlineBell },
 ];
 
 export default function Sidebar() {

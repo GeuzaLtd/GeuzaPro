@@ -6,6 +6,79 @@ import Link from 'next/link';
 import { useCart, cartItemKey } from '@/lib/cart-context';
 import type { CartItem } from '@/lib/cart-context';
 import { MdLock, MdPhone, MdRecycling } from 'react-icons/md';
+import { joinWaitlist } from '@/actions/waitlist';
+
+function NotifyMeForm({ productId }: { productId: number }) {
+  const [email, setEmail]   = useState('');
+  const [name,  setName]    = useState('');
+  const [state, setState]   = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setState('loading');
+    const result = await joinWaitlist({ email, name: name || undefined, productId });
+    setState(result.success ? 'done' : 'error');
+  };
+
+  if (state === 'done') {
+    return (
+      <div className="flex items-start gap-3 bg-primary/8 border border-primary/20 rounded-2xl px-5 py-4">
+        <span className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </span>
+        <div>
+          <p className="text-sm font-bold text-gray-900">You&apos;re on the list!</p>
+          <p className="text-xs text-gray-500 mt-0.5">
+            We&apos;ll notify you at <span className="font-medium">{email}</span> as soon as this product is available.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="border border-gray-100 rounded-2xl p-5 bg-gray-50">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="w-2 h-2 rounded-full bg-secondary" />
+        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Out of Stock — Notify Me When Ready</p>
+      </div>
+      <p className="text-sm text-gray-500 mb-4 leading-relaxed">
+        This product is currently unavailable. Leave your email and we&apos;ll let you know the moment it&apos;s back.
+      </p>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <input
+          type="text"
+          placeholder="Your name (optional)"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
+        />
+        <div className="flex gap-2">
+          <input
+            type="email"
+            required
+            placeholder="your@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
+          />
+          <button
+            type="submit"
+            disabled={state === 'loading'}
+            className="px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-[#005523] disabled:opacity-60 transition-colors whitespace-nowrap"
+          >
+            {state === 'loading' ? 'Saving…' : 'Notify Me'}
+          </button>
+        </div>
+        {state === 'error' && (
+          <p className="text-red-500 text-xs">Something went wrong. Please try again.</p>
+        )}
+      </form>
+    </div>
+  );
+}
 
 interface ProductImage { id: number; url: string; isPrimary: boolean; }
 interface Category { id: number; name: string; }
@@ -263,43 +336,45 @@ export default function ProductDetail({ product }: { product: Product }) {
             </div>
           </div>
 
-          {/* Add to cart CTA */}
-          <div className="flex flex-col sm:flex-row gap-3 pt-2">
-            <button
-              onClick={handleAddToCart}
-              disabled={!inStock}
-              className={`flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-sm font-bold transition-all duration-300 ${
-                added
-                  ? 'bg-green-600 text-white shadow-lg shadow-green-600/25'
-                  : inStock
-                  ? 'bg-[#0F9E59] text-white hover:bg-[#0d8a4d] shadow-lg shadow-[#0F9E59]/20 hover:shadow-xl hover:-translate-y-0.5'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              }`}
-            >
-              {added ? (
-                <>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  Added to Cart
-                </>
-              ) : (
-                <>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
-                  </svg>
-                  Add to Cart
-                </>
-              )}
-            </button>
-
-            <Link
-              href="/cart"
-              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border-2 border-[#0F9E59] text-[#0F9E59] text-sm font-bold hover:bg-[#0F9E59] hover:text-white transition-all duration-300"
-            >
-              View Cart
-            </Link>
-          </div>
+          {/* Add to cart CTA / Notify Me */}
+          {inStock ? (
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <button
+                onClick={handleAddToCart}
+                className={`flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-sm font-bold transition-all duration-300 ${
+                  added
+                    ? 'bg-green-600 text-white shadow-lg shadow-green-600/25'
+                    : 'bg-[#0F9E59] text-white hover:bg-[#0d8a4d] shadow-lg shadow-[#0F9E59]/20 hover:shadow-xl hover:-translate-y-0.5'
+                }`}
+              >
+                {added ? (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    Added to Cart
+                  </>
+                ) : (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg>
+                    Add to Cart
+                  </>
+                )}
+              </button>
+              <Link
+                href="/cart"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border-2 border-[#0F9E59] text-[#0F9E59] text-sm font-bold hover:bg-[#0F9E59] hover:text-white transition-all duration-300"
+              >
+                View Cart
+              </Link>
+            </div>
+          ) : (
+            <div className="pt-2">
+              <NotifyMeForm productId={product.id} />
+            </div>
+          )}
 
           {/* Trust notes */}
           <div className="flex flex-wrap gap-4 pt-2">

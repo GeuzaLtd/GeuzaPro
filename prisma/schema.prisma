@@ -83,6 +83,7 @@ model Product {
   images      ProductImage[]
   cartItems   CartItem[]
   orderItems  OrderItem[]
+  waitlists   Waitlist[]
 
   @@map("products")
 }
@@ -258,7 +259,7 @@ model HeroImage {
   @@map("hero_images")
 }
 
-// ─── MESSAGES (contact form) ──────────────────────────────────────────────────
+// ─── MESSAGES (contact form + partnership inquiries) ──────────────────────────
 
 model Message {
   id               Int      @id @default(autoincrement())
@@ -266,9 +267,26 @@ model Message {
   email            String
   phone            String?
   organizationType String?
+  organizationName String?
   message          String
+  type             String   @default("contact") // contact | partnership
   isRead           Boolean  @default(false)
   createdAt        DateTime @default(now())
 
   @@map("messages")
+}
+
+// ─── WAITLIST (notify me when back in stock) ──────────────────────────────────
+
+model Waitlist {
+  id        Int      @id @default(autoincrement())
+  email     String
+  name      String?
+  productId Int
+  createdAt DateTime @default(now())
+
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([email, productId])
+  @@map("waitlists")
 }

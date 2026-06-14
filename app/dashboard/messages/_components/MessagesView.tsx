@@ -14,14 +14,15 @@ import { DashboardHeader, StatusBadge, PageHeader } from '@/components/dashboard
 import { markMessageRead, deleteMessage } from '@/actions/messages';
 
 export interface MessageRow {
-  id: number;
-  sender: string;
-  email: string;
+  id:           number;
+  sender:       string;
+  email:        string;
   organization: string | null;
-  subject: string;
-  body: string;
-  status: string;
-  date: string;
+  subject:      string;
+  body:         string;
+  type:         string;
+  status:       string;
+  date:         string;
 }
 
 function MessageDetail({
@@ -239,6 +240,9 @@ export default function MessagesView({ initialData }: { initialData: MessageRow[
                         <p className={`text-sm leading-none ${msg.status === 'Unread' ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}>
                           {msg.sender}
                         </p>
+                        {msg.type === 'partnership' && (
+                          <span className="text-[10px] font-bold bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase tracking-wide">Partnership</span>
+                        )}
                         {msg.organization && (
                           <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{msg.organization}</span>
                         )}

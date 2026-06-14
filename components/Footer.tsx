@@ -12,6 +12,7 @@ const navigationLinks = [
 ];
 
 const otherLinks = [
+  { name: 'Partner With Us', href: '/partner' },
   { name: 'Terms & Conditions', href: '/terms' },
   { name: 'Privacy policy', href: '/privacy-policy' },
   { name: 'FAQ', href: '/faq' },

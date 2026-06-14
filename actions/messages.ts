@@ -4,9 +4,12 @@ import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { sendContactMessageToAdmin } from '@/lib/email';
 
-export async function getMessages(opts?: { unreadOnly?: boolean }) {
+export async function getMessages(opts?: { unreadOnly?: boolean; type?: string }) {
   return prisma.message.findMany({
-    where: opts?.unreadOnly ? { isRead: false } : {},
+    where: {
+      ...(opts?.unreadOnly ? { isRead: false } : {}),
+      ...(opts?.type ? { type: opts.type } : {}),
+    },
     orderBy: { createdAt: 'desc' },
   });
 }
@@ -16,7 +19,9 @@ export async function createMessage(data: {
   email:             string;
   phone?:            string;
   organizationType?: string;
+  organizationName?: string;
   message:           string;
+  type?:             string;
 }) {
   const msg = await prisma.message.create({ data });
   revalidatePath('/dashboard/messages');
