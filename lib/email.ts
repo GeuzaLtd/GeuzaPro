@@ -271,6 +271,62 @@ export async function sendDonationNotificationToAdmin(opts: {
   await sendEmail(ADMIN_EMAIL, `[New Donation] ${formatted} from ${opts.name}`, html, FROM_DONATIONS);
 }
 
+// ── Waitlist back-in-stock notification ───────────────────────────────────────
+
+export async function sendWaitlistNotification(opts: {
+  name:        string | null;
+  email:       string;
+  productName: string;
+  productUrl:  string;
+}): Promise<void> {
+  const greeting = opts.name ? `Hi ${opts.name.split(' ')[0]},` : 'Hi there,';
+
+  const html = `
+    <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#374151;">
+      <div style="background:#0F9E59;padding:32px 24px;text-align:center;border-radius:12px 12px 0 0;">
+        <p style="color:rgba(255,255,255,0.6);margin:0 0 10px;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;">Geuza</p>
+        <h1 style="color:#fff;margin:0;font-size:24px;font-weight:800;letter-spacing:-0.5px;">It's back in stock!</h1>
+        <p style="color:rgba(255,255,255,0.85);margin:8px 0 0;font-size:14px;">Good news — you were first to know.</p>
+      </div>
+
+      <div style="background:#fff;padding:32px 24px;border:1px solid #e5e7eb;border-top:none;">
+        <p style="font-size:16px;margin:0 0 8px;">${greeting}</p>
+        <p style="font-size:14px;color:#6b7280;margin:0 0 24px;line-height:1.6;">
+          You asked us to let you know when
+          <strong style="color:#111827;">${opts.productName}</strong>
+          became available again. Well — it's back!
+        </p>
+
+        <div style="text-align:center;margin-bottom:28px;">
+          <a href="${opts.productUrl}"
+            style="display:inline-block;background:#FF7900;color:#fff;font-weight:700;font-size:15px;padding:14px 32px;border-radius:999px;text-decoration:none;">
+            View Product →
+          </a>
+        </div>
+
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:14px 18px;margin-bottom:24px;">
+          <p style="margin:0;font-size:13px;color:#15803d;">
+            Stocks can move fast — grab yours before it sells out again.
+          </p>
+        </div>
+
+        <p style="font-size:13px;color:#9ca3af;margin:0;">
+          You received this because you signed up for restock alerts on this product at
+          <a href="https://geuza.africa" style="color:#0F9E59;">geuza.africa</a>.<br/>
+          &copy; ${new Date().getFullYear()} Geuza. All rights reserved.
+        </p>
+      </div>
+    </div>
+  `;
+
+  await sendEmail(
+    opts.email,
+    `${opts.productName} is back in stock — Geuza`,
+    html,
+    FROM_ORDERS,
+  );
+}
+
 // ── Contact message email ─────────────────────────────────────────────────────
 
 export async function sendContactMessageToAdmin(opts: {

@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { sendWaitlistNotification } from '@/lib/email';
 
 export async function getProducts(opts?: { categoryId?: number; visible?: boolean }) {
   return prisma.product.findMany({
@@ -64,6 +65,22 @@ export async function updateProduct(
   }>
 ) {
   const { images, categoryIds, ...rest } = data;
+
+  // Detect out_stock → in_stock/low_stock transition before writing
+  let waitlistEntries: { id: number; email: string; name: string | null }[] = [];
+  if (rest.status && rest.status !== 'out_stock') {
+    const current = await prisma.product.findUnique({
+      where: { id },
+      select: { status: true },
+    });
+    if (current?.status === 'out_stock') {
+      waitlistEntries = await prisma.waitlist.findMany({
+        where: { productId: id },
+        select: { id: true, email: true, name: true },
+      });
+    }
+  }
+
   const product = await prisma.product.update({
     where: { id },
     data: {
@@ -74,6 +91,27 @@ export async function updateProduct(
       ...(images?.length ? { images: { create: images } } : {}),
     },
   });
+
+  if (waitlistEntries.length > 0) {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://geuza.africa';
+    const productUrl = `${siteUrl}/shop/${id}`;
+
+    // Fire-and-forget — a mail failure must never break the product update
+    Promise.all(
+      waitlistEntries.map((e) =>
+        sendWaitlistNotification({
+          name:        e.name,
+          email:       e.email,
+          productName: product.name,
+          productUrl,
+        })
+      )
+    ).catch((err) => console.error('[waitlist emails]', err));
+
+    await prisma.waitlist.deleteMany({ where: { productId: id } });
+    revalidatePath('/dashboard/waitlist');
+  }
+
   revalidatePath('/shop');
   revalidatePath('/dashboard/products');
   return product;
