@@ -28,11 +28,13 @@ export async function createMessage(data: {
 
   // Notify admin — non-blocking so a mail failure never surfaces to the user
   sendContactMessageToAdmin({
-    fullName:          data.fullName,
-    email:             data.email,
-    phone:             data.phone,
-    organizationType:  data.organizationType,
-    message:           data.message,
+    fullName:         data.fullName,
+    email:            data.email,
+    phone:            data.phone,
+    organizationType: data.organizationType,
+    organizationName: data.organizationName,
+    message:          data.message,
+    type:             data.type,
   }).catch((err) => console.error('[message email]', err));
 
   return msg;

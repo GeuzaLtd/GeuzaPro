@@ -334,22 +334,32 @@ export async function sendContactMessageToAdmin(opts: {
   email:             string;
   phone?:            string;
   organizationType?: string;
+  organizationName?: string;
   message:           string;
+  type?:             string;
 }): Promise<void> {
+  const isPartnership = opts.type === 'partnership';
+  const headerBg      = isPartnership ? '#006D2C' : '#111827';
+  const label         = isPartnership ? 'Partnership Inquiry' : 'Contact Message';
+  const subject       = isPartnership
+    ? `[Partnership] ${opts.organizationName ?? opts.fullName}`
+    : `[New Message] from ${opts.fullName}`;
+
   const html = `
     <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#374151;">
-      <div style="background:#111827;padding:24px;text-align:center;border-radius:12px 12px 0 0;">
+      <div style="background:${headerBg};padding:24px;text-align:center;border-radius:12px 12px 0 0;">
         <p style="color:rgba(255,255,255,0.4);margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;">Geuza Messages</p>
-        <h1 style="color:#fff;margin:0;font-size:20px;font-weight:700;">New Contact Message</h1>
+        <h1 style="color:#fff;margin:0;font-size:20px;font-weight:700;">New ${label}</h1>
       </div>
 
       <div style="background:#fff;padding:24px;border:1px solid #e5e7eb;border-top:none;">
         <h2 style="font-size:14px;font-weight:700;color:#374151;margin:0 0 12px;text-transform:uppercase;letter-spacing:0.05em;">Sender Details</h2>
         <table style="width:100%;font-size:14px;margin-bottom:24px;">
-          <tr><td style="color:#9ca3af;padding:4px 0;width:120px;">Name</td><td style="font-weight:600;">${opts.fullName}</td></tr>
+          <tr><td style="color:#9ca3af;padding:4px 0;width:140px;">Name</td><td style="font-weight:600;">${opts.fullName}</td></tr>
           <tr><td style="color:#9ca3af;padding:4px 0;">Email</td><td><a href="mailto:${opts.email}" style="color:#0F9E59;">${opts.email}</a></td></tr>
           <tr><td style="color:#9ca3af;padding:4px 0;">Phone</td><td>${opts.phone ? `<a href="tel:${opts.phone}" style="color:#0F9E59;">${opts.phone}</a>` : '<span style="color:#d1d5db;">Not provided</span>'}</td></tr>
-          ${opts.organizationType ? `<tr><td style="color:#9ca3af;padding:4px 0;">Organization</td><td style="text-transform:capitalize;">${opts.organizationType}</td></tr>` : ''}
+          ${opts.organizationName ? `<tr><td style="color:#9ca3af;padding:4px 0;">Organisation</td><td style="font-weight:600;">${opts.organizationName}</td></tr>` : ''}
+          ${opts.organizationType ? `<tr><td style="color:#9ca3af;padding:4px 0;">Org Type</td><td style="text-transform:capitalize;">${opts.organizationType}</td></tr>` : ''}
         </table>
 
         <h2 style="font-size:14px;font-weight:700;color:#374151;margin:0 0 12px;text-transform:uppercase;letter-spacing:0.05em;">Message</h2>
@@ -364,5 +374,5 @@ export async function sendContactMessageToAdmin(opts: {
     </div>
   `;
 
-  await sendEmail(ADMIN_EMAIL, `[New Message] from ${opts.fullName}`, html, FROM_MESSAGES);
+  await sendEmail(ADMIN_EMAIL, subject, html, FROM_MESSAGES);
 }
